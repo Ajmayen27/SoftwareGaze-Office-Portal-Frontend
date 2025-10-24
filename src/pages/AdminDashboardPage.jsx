@@ -4,12 +4,14 @@ import Sidebar from '../components/layout/Sidebar';
 import MobileHeader from '../components/layout/MobileHeader';
 import EmployeeManagement from '../components/admin/EmployeeManagement';
 import ExpenseManagement from '../components/admin/ExpenseManagement';
+import ExpenseManagementTest from '../components/admin/ExpenseManagementTest';
 import Analytics from '../components/admin/Analytics';
 import Card from '../components/ui/Card';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import BackendStatus from '../components/ui/BackendStatus';
 import BackendConnectionTest from '../components/ui/BackendConnectionTest';
 import BackendDiagnostics from '../components/ui/BackendDiagnostics';
+import JwtDebugger from '../components/ui/JwtDebugger';
 import { adminService } from '../services/apiService';
 
 const AdminDashboardPage = () => {
@@ -63,6 +65,8 @@ const AdminDashboardPage = () => {
                 return <EmployeeManagement />;
             case 'expenses':
                 return <ExpenseManagement />;
+            case 'expenses-test':
+                return <ExpenseManagementTest />;
             case 'analytics':
                 return <Analytics />;
             default:
@@ -166,6 +170,15 @@ const AdminDashboardPage = () => {
                                             </div>
                                         </button>
                                         <button
+                                            onClick={() => setActiveTab('expenses-test')}
+                                            className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                                        >
+                                            <div className="flex items-center">
+                                                <span className="text-lg mr-3">🧪</span>
+                                                <span className="font-medium">Test Expenses</span>
+                                            </div>
+                                        </button>
+                                        <button
                                             onClick={() => setActiveTab('analytics')}
                                             className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors"
                                         >
@@ -181,6 +194,7 @@ const AdminDashboardPage = () => {
                             <div className="space-y-6">
                                 <BackendConnectionTest />
                                 <BackendDiagnostics />
+                                <JwtDebugger />
                             </div>
                         </div>
                     </div>

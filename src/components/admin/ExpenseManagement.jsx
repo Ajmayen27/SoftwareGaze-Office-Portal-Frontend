@@ -29,18 +29,25 @@ const ExpenseManagement = () => {
     const fetchData = async () => {
         try {
             setLoading(true);
+            setError('');
+            
             const [expensesRes, monthlyRes, yearlyRes] = await Promise.all([
                 adminService.getExpenses(),
                 adminService.getMonthlyExpenses(),
                 adminService.getYearlyExpenses()
             ]);
             
-            setExpenses(expensesRes.data);
-            setMonthlyTotal(monthlyRes.data.totalMonthlyExpenses);
-            setYearlyTotal(yearlyRes.data.totalYearlyExpenses);
+            // Safe data access with fallbacks
+            setExpenses(expensesRes.data || []);
+            setMonthlyTotal(monthlyRes.data?.totalMonthlyExpenses || 0);
+            setYearlyTotal(yearlyRes.data?.totalYearlyExpenses || 0);
         } catch (err) {
-            setError('Failed to fetch expense data');
-            console.error(err);
+            console.error('Expense fetch error:', err);
+            setError('Failed to fetch expense data. Please check your backend connection.');
+            // Set default values on error
+            setExpenses([]);
+            setMonthlyTotal(0);
+            setYearlyTotal(0);
         } finally {
             setLoading(false);
         }
@@ -50,7 +57,10 @@ const ExpenseManagement = () => {
         e.preventDefault();
         try {
             const response = await adminService.addExpense(newExpense);
-            setExpenses([response.data, ...expenses]);
+            
+            // Safe data access
+            const newExpenseData = response.data || newExpense;
+            setExpenses([newExpenseData, ...expenses]);
             setAddModal(false);
             setNewExpense({
                 billType: '',
@@ -61,9 +71,9 @@ const ExpenseManagement = () => {
             showSuccess('Expense added successfully');
             fetchData(); // Refresh totals
         } catch (err) {
-            setError('Failed to add expense');
-            showError('Failed to add expense');
-            console.error(err);
+            console.error('Add expense error:', err);
+            setError('Failed to add expense. Please try again.');
+            showError('Failed to add expense. Please try again.');
         }
     };
 
@@ -115,7 +125,7 @@ const ExpenseManagement = () => {
                             </div>
                             <div className="ml-4">
                                 <p className="text-sm font-medium text-gray-600">Monthly Total</p>
-                                <p className="text-2xl font-bold text-gray-900">${monthlyTotal.toFixed(2)}</p>
+                                <p className="text-2xl font-bold text-gray-900">${(monthlyTotal || 0).toFixed(2)}</p>
                             </div>
                         </div>
                     </div>
@@ -129,7 +139,7 @@ const ExpenseManagement = () => {
                             </div>
                             <div className="ml-4">
                                 <p className="text-sm font-medium text-gray-600">Yearly Total</p>
-                                <p className="text-2xl font-bold text-gray-900">${yearlyTotal.toFixed(2)}</p>
+                                <p className="text-2xl font-bold text-gray-900">${(yearlyTotal || 0).toFixed(2)}</p>
                             </div>
                         </div>
                     </div>
@@ -166,22 +176,30 @@ const ExpenseManagement = () => {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {expenses.map((expense) => (
-                                <tr key={expense.id} className="hover:bg-gray-50">
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {expense.billType}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        ${expense.amount}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {new Date(expense.date).toLocaleDateString()}
-                                    </td>
-                                    <td className="px-6 py-4 text-sm text-gray-900">
-                                        {expense.comment}
+                            {expenses && expenses.length > 0 ? (
+                                expenses.map((expense) => (
+                                    <tr key={expense.id || Math.random()} className="hover:bg-gray-50">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            {expense.billType || 'N/A'}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            ${expense.amount || 0}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {expense.date ? new Date(expense.date).toLocaleDateString() : 'N/A'}
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-gray-900">
+                                            {expense.comment || 'No comment'}
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="4" className="px-6 py-4 text-center text-gray-500">
+                                        No expenses found
                                     </td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </table>
                 </div>

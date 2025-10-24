@@ -81,7 +81,7 @@ export const adminService = {
         mockExpenses
     ),
     addExpense: (expenseData) => apiCallWithFallback(
-        () => apiClient.post('/admin/expenses', expenseData),
+        () => apiClient.post('/admin/expense', expenseData),
         { ...expenseData, id: Date.now() }
     ),
     getMonthlyExpenses: () => apiCallWithFallback(
