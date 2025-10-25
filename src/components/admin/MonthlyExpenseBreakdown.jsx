@@ -199,10 +199,10 @@ const MonthlyExpenseBreakdown = () => {
                                         </div>
                                         <div className="flex-1 bg-gray-200 rounded-full h-2">
                                             <div 
-                                                className={`h-2 rounded-full ৳{
+                                                className={`h-2 rounded-full ${
                                                     isCurrentMonth ? 'bg-blue-600' : 'bg-gray-400'
                                                 }`}
-                                                style={{ width: `৳{Math.max(percentage, 2)}%` }}
+                                                style={{ width: `${Math.max(percentage, 2)}%` }}
                                             ></div>
                                         </div>
                                     </div>

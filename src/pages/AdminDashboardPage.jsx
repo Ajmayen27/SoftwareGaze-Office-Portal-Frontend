@@ -89,58 +89,99 @@ const AdminDashboardPage = () => {
                                 <LoadingSpinner size="lg" />
                             </div>
                         ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                <Card>
-                                    <div className="p-6">
-                                        <div className="flex items-center">
-                                            <div className="p-2 bg-blue-100 rounded-lg">
-                                                <span className="text-2xl">👥</span>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                                {/* Total Employees Card */}
+                                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                                    <div className="p-4 lg:p-6">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center">
+                                                <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
+                                                    <span className="text-2xl text-white">👥</span>
+                                                </div>
+                                                <div className="ml-4">
+                                                    <p className="text-sm font-medium text-gray-600">Total Employees</p>
+                                                    <p className="text-2xl lg:text-3xl font-bold text-gray-900 animate-pulse">
+                                                        {dashboardData.totalEmployees}
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div className="ml-4">
-                                                <p className="text-sm font-medium text-gray-600">Total Employees</p>
-                                                <p className="text-2xl font-bold text-gray-900">{dashboardData.totalEmployees}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Card>
-
-                                <Card>
-                                    <div className="p-6">
-                                        <div className="flex items-center">
-                                            <div className="p-2 bg-green-100 rounded-lg">
-                                                <span className="text-2xl">💰</span>
-                                            </div>
-                                            <div className="ml-4">
-                                                <p className="text-sm font-medium text-gray-600">Monthly Expenses</p>
-                                                <p className="text-2xl font-bold text-gray-900">${(dashboardData.monthlyExpenses || 0).toFixed(2)}</p>
+                                            <div className="text-right">
+                                                <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </Card>
 
-                                <Card>
-                                    <div className="p-6">
-                                        <div className="flex items-center">
-                                            <div className="p-2 bg-purple-100 rounded-lg">
-                                                <span className="text-2xl">📊</span>
+                                {/* Monthly Expenses Card */}
+                                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                                    <div className="p-4 lg:p-6">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center">
+                                                <div className="p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg">
+                                                    <span className="text-2xl text-white">💰</span>
+                                                </div>
+                                                <div className="ml-4">
+                                                    <p className="text-sm font-medium text-gray-600">This Month</p>
+                                                    <p className="text-xl lg:text-2xl font-bold text-gray-900">
+                                                        ${(dashboardData.monthlyExpenses || 0).toFixed(2)}
+                                                    </p>
+                                                    <p className="text-xs text-green-600 font-medium">
+                                                        Current Month Total
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div className="ml-4">
-                                                <p className="text-sm font-medium text-gray-600">Yearly Expenses</p>
-                                                <p className="text-2xl font-bold text-gray-900">${(dashboardData.yearlyExpenses || 0).toFixed(2)}</p>
+                                            <div className="text-right">
+                                                <div className="w-3 h-3 bg-green-400 rounded-full animate-bounce"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </Card>
 
-                                <Card>
-                                    <div className="p-6">
-                                        <div className="flex items-center">
-                                            <div className="p-2 bg-orange-100 rounded-lg">
-                                                <span className="text-2xl">📋</span>
+                                {/* Yearly Expenses Card */}
+                                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                                    <div className="p-4 lg:p-6">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center">
+                                                <div className="p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg">
+                                                    <span className="text-2xl text-white">📊</span>
+                                                </div>
+                                                <div className="ml-4">
+                                                    <p className="text-sm font-medium text-gray-600">This Year</p>
+                                                    <p className="text-xl lg:text-2xl font-bold text-gray-900">
+                                                        ${(dashboardData.yearlyExpenses || 0).toFixed(2)}
+                                                    </p>
+                                                    <p className="text-xs text-purple-600 font-medium">
+                                                        {new Date().getFullYear()} Total
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div className="ml-4">
-                                                <p className="text-sm font-medium text-gray-600">Total Expenses</p>
-                                                <p className="text-2xl font-bold text-gray-900">{dashboardData.totalExpenses}</p>
+                                            <div className="text-right">
+                                                <div className="w-3 h-3 bg-purple-400 rounded-full animate-pulse"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Card>
+
+                                {/* Total Expenses Count Card */}
+                                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                                    <div className="p-4 lg:p-6">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center">
+                                                <div className="p-3 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg">
+                                                    <span className="text-2xl text-white">📋</span>
+                                                </div>
+                                                <div className="ml-4">
+                                                    <p className="text-sm font-medium text-gray-600">Total Records</p>
+                                                    <p className="text-2xl lg:text-3xl font-bold text-gray-900">
+                                                        {dashboardData.totalExpenses}
+                                                    </p>
+                                                    <p className="text-xs text-orange-600 font-medium">
+                                                        Expense Records
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <div className="w-3 h-3 bg-orange-400 rounded-full animate-bounce"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -149,55 +190,84 @@ const AdminDashboardPage = () => {
                         )}
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <Card>
-                                <div className="px-6 py-4 border-b border-gray-200">
-                                    <h3 className="text-lg font-medium text-gray-900">Quick Actions</h3>
+                            <Card className="transform transition-all duration-300 hover:shadow-xl">
+                                <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+                                    <h3 className="text-lg font-medium text-gray-900 flex items-center">
+                                        <span className="mr-2">⚡</span>
+                                        Quick Actions
+                                    </h3>
                                 </div>
                                 <div className="p-6">
                                     <div className="space-y-3">
                                         <button
                                             onClick={() => setActiveTab('employees')}
-                                            className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                                            className="w-full text-left p-4 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 transition-all duration-300 transform hover:scale-105 hover:shadow-md group"
                                         >
                                             <div className="flex items-center">
-                                                <span className="text-lg mr-3">👥</span>
-                                                <span className="font-medium">Manage Employees</span>
+                                                <div className="p-2 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors duration-300">
+                                                    <span className="text-lg">👥</span>
+                                                </div>
+                                                <div className="ml-4">
+                                                    <span className="font-medium text-gray-900">Manage Employees</span>
+                                                    <p className="text-sm text-gray-500">Add, edit, or remove employees</p>
+                                                </div>
+                                                <div className="ml-auto">
+                                                    <span className="text-blue-500 group-hover:translate-x-1 transition-transform duration-300">→</span>
+                                                </div>
                                             </div>
                                         </button>
+                                        
                                         <button
                                             onClick={() => setActiveTab('expenses')}
-                                            className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                                            className="w-full text-left p-4 rounded-xl hover:bg-gradient-to-r hover:from-green-50 hover:to-green-100 transition-all duration-300 transform hover:scale-105 hover:shadow-md group"
                                         >
                                             <div className="flex items-center">
-                                                <span className="text-lg mr-3">💰</span>
-                                                <span className="font-medium">Manage Expenses</span>
+                                                <div className="p-2 bg-green-100 rounded-lg group-hover:bg-green-200 transition-colors duration-300">
+                                                    <span className="text-lg">💰</span>
+                                                </div>
+                                                <div className="ml-4">
+                                                    <span className="font-medium text-gray-900">Manage Expenses</span>
+                                                    <p className="text-sm text-gray-500">Track and manage expenses</p>
+                                                </div>
+                                                <div className="ml-auto">
+                                                    <span className="text-green-500 group-hover:translate-x-1 transition-transform duration-300">→</span>
+                                                </div>
                                             </div>
                                         </button>
-                                        <button
-                                            onClick={() => setActiveTab('expenses-test')}
-                                            className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors"
-                                        >
-                                            <div className="flex items-center">
-                                                <span className="text-lg mr-3">🧪</span>
-                                                <span className="font-medium">Test Expenses</span>
-                                            </div>
-                                        </button>
+                                        
                                         <button
                                             onClick={() => setActiveTab('monthly-breakdown')}
-                                            className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                                            className="w-full text-left p-4 rounded-xl hover:bg-gradient-to-r hover:from-purple-50 hover:to-purple-100 transition-all duration-300 transform hover:scale-105 hover:shadow-md group"
                                         >
                                             <div className="flex items-center">
-                                                <span className="text-lg mr-3">📅</span>
-                                                <span className="font-medium">Monthly Breakdown</span>
+                                                <div className="p-2 bg-purple-100 rounded-lg group-hover:bg-purple-200 transition-colors duration-300">
+                                                    <span className="text-lg">📅</span>
+                                                </div>
+                                                <div className="ml-4">
+                                                    <span className="font-medium text-gray-900">Monthly Breakdown</span>
+                                                    <p className="text-sm text-gray-500">View monthly expense analysis</p>
+                                                </div>
+                                                <div className="ml-auto">
+                                                    <span className="text-purple-500 group-hover:translate-x-1 transition-transform duration-300">→</span>
+                                                </div>
                                             </div>
                                         </button>
+                                        
                                         <button
                                             onClick={() => setActiveTab('analytics')}
-                                            className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                                            className="w-full text-left p-4 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-100 transition-all duration-300 transform hover:scale-105 hover:shadow-md group"
                                         >
                                             <div className="flex items-center">
-                                                <span className="text-lg mr-3">📈</span>
-                                                <span className="font-medium">View Analytics</span>
+                                                <div className="p-2 bg-orange-100 rounded-lg group-hover:bg-orange-200 transition-colors duration-300">
+                                                    <span className="text-lg">📈</span>
+                                                </div>
+                                                <div className="ml-4">
+                                                    <span className="font-medium text-gray-900">View Analytics</span>
+                                                    <p className="text-sm text-gray-500">Detailed reports and insights</p>
+                                                </div>
+                                                <div className="ml-auto">
+                                                    <span className="text-orange-500 group-hover:translate-x-1 transition-transform duration-300">→</span>
+                                                </div>
                                             </div>
                                         </button>
                                     </div>

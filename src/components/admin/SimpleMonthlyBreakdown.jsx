@@ -108,49 +108,74 @@ const SimpleMonthlyBreakdown = () => {
             )}
 
             {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card>
-                    <div className="p-6">
-                        <div className="flex items-center">
-                            <div className="p-2 bg-blue-100 rounded-lg">
-                                <span className="text-2xl">💰</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-blue-50 to-blue-100">
+                    <div className="p-4 lg:p-6">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center">
+                                <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
+                                    <span className="text-2xl text-white">💰</span>
+                                </div>
+                                <div className="ml-4">
+                                    <p className="text-sm font-medium text-gray-600">Total Year</p>
+                                    <p className="text-xl lg:text-2xl font-bold text-gray-900 animate-pulse">
+                                        ${totalForYear.toFixed(2)}
+                                    </p>
+                                    <p className="text-xs text-blue-600 font-medium">
+                                        {new Date().getFullYear()} Total
+                                    </p>
+                                </div>
                             </div>
-                            <div className="ml-4">
-                                <p className="text-sm font-medium text-gray-600">Total Year</p>
-                                <p className="text-2xl font-bold text-gray-900">${totalForYear.toFixed(2)}</p>
-                            </div>
-                        </div>
-                    </div>
-                </Card>
-
-                <Card>
-                    <div className="p-6">
-                        <div className="flex items-center">
-                            <div className="p-2 bg-green-100 rounded-lg">
-                                <span className="text-2xl">📈</span>
-                            </div>
-                            <div className="ml-4">
-                                <p className="text-sm font-medium text-gray-600">Highest Month</p>
-                                <p className="text-2xl font-bold text-gray-900">
-                                    {getMonthName(highestMonth.month)}
-                                </p>
-                                <p className="text-sm text-gray-500">${highestMonth.amount.toFixed(2)}</p>
+                            <div className="text-right">
+                                <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse"></div>
                             </div>
                         </div>
                     </div>
                 </Card>
 
-                <Card>
-                    <div className="p-6">
-                        <div className="flex items-center">
-                            <div className="p-2 bg-purple-100 rounded-lg">
-                                <span className="text-2xl">📊</span>
+                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-green-50 to-green-100">
+                    <div className="p-4 lg:p-6">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center">
+                                <div className="p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg">
+                                    <span className="text-2xl text-white">📈</span>
+                                </div>
+                                <div className="ml-4">
+                                    <p className="text-sm font-medium text-gray-600">Highest Month</p>
+                                    <p className="text-lg lg:text-xl font-bold text-gray-900">
+                                        {getMonthName(highestMonth.month)}
+                                    </p>
+                                    <p className="text-sm text-green-600 font-medium">
+                                        ${highestMonth.amount.toFixed(2)}
+                                    </p>
+                                </div>
                             </div>
-                            <div className="ml-4">
-                                <p className="text-sm font-medium text-gray-600">Average/Month</p>
-                                <p className="text-2xl font-bold text-gray-900">
-                                    ${(totalForYear / 12).toFixed(2)}
-                                </p>
+                            <div className="text-right">
+                                <div className="w-3 h-3 bg-green-400 rounded-full animate-bounce"></div>
+                            </div>
+                        </div>
+                    </div>
+                </Card>
+
+                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-purple-50 to-purple-100 sm:col-span-2 lg:col-span-1">
+                    <div className="p-4 lg:p-6">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center">
+                                <div className="p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg">
+                                    <span className="text-2xl text-white">📊</span>
+                                </div>
+                                <div className="ml-4">
+                                    <p className="text-sm font-medium text-gray-600">Average/Month</p>
+                                    <p className="text-xl lg:text-2xl font-bold text-gray-900">
+                                        ${(totalForYear / 12).toFixed(2)}
+                                    </p>
+                                    <p className="text-xs text-purple-600 font-medium">
+                                        Monthly Average
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="text-right">
+                                <div className="w-3 h-3 bg-purple-400 rounded-full animate-pulse"></div>
                             </div>
                         </div>
                     </div>
@@ -158,38 +183,58 @@ const SimpleMonthlyBreakdown = () => {
             </div>
 
             {/* Monthly Breakdown Chart */}
-            <Card>
-                <div className="px-6 py-4 border-b border-gray-200">
-                    <h3 className="text-lg font-medium text-gray-900">Monthly Expenses</h3>
+            <Card className="transform transition-all duration-300 hover:shadow-xl">
+                <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-purple-50">
+                    <h3 className="text-lg font-medium text-gray-900 flex items-center">
+                        <span className="mr-2">📊</span>
+                        Monthly Expenses Breakdown
+                    </h3>
                 </div>
                 <div className="p-6">
                     <div className="space-y-4">
-                        {Object.entries(breakdown).map(([month, amount]) => {
+                        {Object.entries(breakdown).map(([month, amount], index) => {
                             const percentage = totalForYear > 0 ? (amount / totalForYear) * 100 : 0;
                             const isCurrentMonth = new Date().getMonth() === Object.keys(breakdown).indexOf(month);
                             
                             return (
-                                <div key={month} className="flex items-center justify-between">
-                                    <div className="flex items-center space-x-3">
-                                        <div className="w-20 text-sm font-medium text-gray-700">
+                                <div 
+                                    key={month} 
+                                        className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-all duration-300 transform hover:scale-105"
+                                        style={{ animationDelay: `${index * 100}ms` }}
+                                    >
+                                    <div className="flex items-center space-x-4">
+                                        <div className="w-24 text-sm font-medium text-gray-700">
                                             {getMonthName(month)}
                                         </div>
-                                        <div className="flex-1 bg-gray-200 rounded-full h-2">
+                                        <div className="flex-1 bg-gray-200 rounded-full h-3 relative overflow-hidden">
                                             <div 
-                                                className={`h-2 rounded-full ${
-                                                    isCurrentMonth ? 'bg-blue-600' : 'bg-gray-400'
+                                                className={`h-3 rounded-full transition-all duration-1000 ease-out ${
+                                                    isCurrentMonth 
+                                                        ? 'bg-gradient-to-r from-blue-500 to-blue-600' 
+                                                        : 'bg-gradient-to-r from-gray-400 to-gray-500'
                                                 }`}
-                                                style={{ width: `${Math.max(percentage, 2)}%` }}
+                                                style={{ 
+                                                    width: `${Math.max(percentage, 2)}%`,
+                                                    animationDelay: `${index * 200}ms`
+                                                }}
                                             ></div>
+                                            {isCurrentMonth && (
+                                                <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full animate-pulse opacity-50"></div>
+                                            )}
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <div className="text-sm font-medium text-gray-900">
+                                        <div className="text-sm font-bold text-gray-900">
                                             ${amount.toFixed(2)}
                                         </div>
                                         <div className="text-xs text-gray-500">
                                             {percentage.toFixed(1)}%
                                         </div>
+                                        {isCurrentMonth && (
+                                            <div className="text-xs text-blue-600 font-medium animate-pulse">
+                                                Current
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             );

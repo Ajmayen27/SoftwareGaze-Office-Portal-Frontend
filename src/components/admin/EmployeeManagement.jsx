@@ -68,8 +68,15 @@ const EmployeeManagement = () => {
                 </div>
             )}
 
-            <Card>
-                <Table>
+            <Card className="transform transition-all duration-300 hover:shadow-xl">
+                <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+                    <h3 className="text-lg font-medium text-gray-900 flex items-center">
+                        <span className="mr-2">👥</span>
+                        Employee Directory
+                    </h3>
+                </div>
+                <div className="overflow-x-auto">
+                    <Table>
                     <Table.Header>
                         <tr>
                             <Table.Cell header>Employee</Table.Cell>
@@ -80,40 +87,66 @@ const EmployeeManagement = () => {
                         </tr>
                     </Table.Header>
                     <Table.Body>
-                        {employees.map((employee) => (
-                            <Table.Row key={employee.id}>
-                                <Table.Cell>
+                        {employees.map((employee, index) => (
+                            <Table.Row 
+                                key={employee.id}
+                                className="transform transition-all duration-300 hover:scale-105 hover:shadow-md hover:bg-gray-50"
+                                style={{ animationDelay: `${index * 100}ms` }}
+                            >
+                                <Table.Cell className="px-6 py-4">
                                     <div className="flex items-center">
-                                        <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
+                                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg transform transition-all duration-300 hover:scale-110">
                                             {employee.username.charAt(0).toUpperCase()}
                                         </div>
                                         <div className="ml-4">
-                                            <div className="text-sm font-medium text-gray-900">
+                                            <div className="text-sm font-bold text-gray-900">
                                                 {employee.username}
+                                            </div>
+                                            <div className="text-xs text-gray-500">
+                                                ID: {employee.id}
                                             </div>
                                         </div>
                                     </div>
                                 </Table.Cell>
-                                <Table.Cell>{employee.email}</Table.Cell>
-                                <Table.Cell>{employee.designation}</Table.Cell>
-                                <Table.Cell>
-                                    <Badge variant={employee.role === 'ADMIN' ? 'danger' : 'success'}>
+                                <Table.Cell className="px-6 py-4">
+                                    <div className="text-sm text-gray-900">{employee.email}</div>
+                                </Table.Cell>
+                                <Table.Cell className="px-6 py-4">
+                                    <div className="text-sm text-gray-900">{employee.designation}</div>
+                                </Table.Cell>
+                                <Table.Cell className="px-6 py-4">
+                                    <Badge 
+                                        variant={employee.role === 'ADMIN' ? 'danger' : 'success'}
+                                        className="transform transition-all duration-300 hover:scale-105"
+                                    >
                                         {employee.role}
                                     </Badge>
                                 </Table.Cell>
-                                <Table.Cell>
-                                    <Button
-                                        variant="danger"
-                                        size="sm"
-                                        onClick={() => setDeleteModal({ isOpen: true, employee })}
-                                    >
-                                        Delete
-                                    </Button>
+                                <Table.Cell className="px-6 py-4">
+                                    <div className="flex space-x-2">
+                                        <Button
+                                            variant="secondary"
+                                            size="sm"
+                                            onClick={() => handleEditEmployee(employee)}
+                                            className="transform transition-all duration-300 hover:scale-105 hover:shadow-md"
+                                        >
+                                            ✏️ Edit
+                                        </Button>
+                                        <Button
+                                            variant="danger"
+                                            size="sm"
+                                            onClick={() => setDeleteModal({ isOpen: true, employee })}
+                                            className="transform transition-all duration-300 hover:scale-105 hover:shadow-md"
+                                        >
+                                            🗑️ Delete
+                                        </Button>
+                                    </div>
                                 </Table.Cell>
                             </Table.Row>
                         ))}
                     </Table.Body>
-                </Table>
+                    </Table>
+                </div>
             </Card>
 
             <Modal
