@@ -14,6 +14,7 @@ const ExpenseManagement = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [addModal, setAddModal] = useState(false);
+    const [sortBy, setSortBy] = useState('date-desc'); // Default: newest first
     const [newExpense, setNewExpense] = useState({
         billType: '',
         amount: '',
@@ -31,16 +32,67 @@ const ExpenseManagement = () => {
             setLoading(true);
             setError('');
             
-            const [expensesRes, monthlyRes, yearlyRes] = await Promise.all([
-                adminService.getExpenses(),
-                adminService.getMonthlyExpenses(),
-                adminService.getYearlyExpenses()
-            ]);
+            const expensesRes = await adminService.getExpenses();
+            const expenses = expensesRes.data || [];
             
-            // Safe data access with fallbacks
-            setExpenses(expensesRes.data || []);
-            setMonthlyTotal(monthlyRes.data?.totalMonthlyExpenses || 0);
-            setYearlyTotal(yearlyRes.data?.totalYearlyExpenses || 0);
+            // Calculate monthly and yearly totals from expenses data (same as dashboard)
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth();
+            const currentYear = currentDate.getFullYear();
+
+            // Calculate monthly total (current month)
+            let monthlyTotal = 0;
+            let yearlyTotal = 0;
+            
+            try {
+                const monthlyExpenses = expenses.filter(expense => {
+                    if (!expense.date) return false;
+                    const expenseDate = new Date(expense.date);
+                    return expenseDate.getMonth() === currentMonth && 
+                           expenseDate.getFullYear() === currentYear;
+                });
+                monthlyTotal = monthlyExpenses.reduce((sum, expense) => sum + (parseFloat(expense.amount) || 0), 0);
+
+                // Calculate yearly total (current year)
+                const yearlyExpenses = expenses.filter(expense => {
+                    if (!expense.date) return false;
+                    const expenseDate = new Date(expense.date);
+                    return expenseDate.getFullYear() === currentYear;
+                });
+                yearlyTotal = yearlyExpenses.reduce((sum, expense) => sum + (parseFloat(expense.amount) || 0), 0);
+            } catch (calcError) {
+                console.error('Error calculating totals:', calcError);
+                // Fallback: try to get from backend endpoints
+                try {
+                    const [monthlyRes, yearlyRes] = await Promise.all([
+                        adminService.getMonthlyExpenses(),
+                        adminService.getYearlyExpenses()
+                    ]);
+                    monthlyTotal = monthlyRes.data?.totalMonthlyExpenses || 0;
+                    yearlyTotal = yearlyRes.data?.totalYearlyExpenses || 0;
+                } catch (backendError) {
+                    console.error('Backend endpoints also failed:', backendError);
+                }
+            }
+            
+            // Sort expenses by date (newest first)
+            const sortedExpenses = expenses.sort((a, b) => {
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                return dateB - dateA; // Newest first
+            });
+            
+            setExpenses(sortedExpenses);
+            setMonthlyTotal(monthlyTotal);
+            setYearlyTotal(yearlyTotal);
+            
+            console.log('Expenses Data:', {
+                totalExpenses: expenses.length,
+                monthlyTotal,
+                yearlyTotal,
+                currentMonth: currentMonth + 1,
+                currentYear
+            });
         } catch (err) {
             console.error('Expense fetch error:', err);
             setError('Failed to fetch expense data. Please check your backend connection.');
@@ -60,7 +112,35 @@ const ExpenseManagement = () => {
             
             // Safe data access
             const newExpenseData = response.data || newExpense;
-            setExpenses([newExpenseData, ...expenses]);
+            const updatedExpenses = [newExpenseData, ...expenses];
+            
+            // Recalculate totals with new expense
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth();
+            const currentYear = currentDate.getFullYear();
+            
+            // Calculate new monthly total
+            const monthlyExpenses = updatedExpenses.filter(expense => {
+                if (!expense.date) return false;
+                const expenseDate = new Date(expense.date);
+                return expenseDate.getMonth() === currentMonth && 
+                       expenseDate.getFullYear() === currentYear;
+            });
+            const newMonthlyTotal = monthlyExpenses.reduce((sum, expense) => sum + (parseFloat(expense.amount) || 0), 0);
+            
+            // Calculate new yearly total
+            const yearlyExpenses = updatedExpenses.filter(expense => {
+                if (!expense.date) return false;
+                const expenseDate = new Date(expense.date);
+                return expenseDate.getFullYear() === currentYear;
+            });
+            const newYearlyTotal = yearlyExpenses.reduce((sum, expense) => sum + (parseFloat(expense.amount) || 0), 0);
+            
+            // Update state
+            setExpenses(updatedExpenses);
+            setMonthlyTotal(newMonthlyTotal);
+            setYearlyTotal(newYearlyTotal);
+            
             setAddModal(false);
             setNewExpense({
                 billType: '',
@@ -69,7 +149,6 @@ const ExpenseManagement = () => {
                 date: new Date().toISOString().split('T')[0]
             });
             showSuccess('Expense added successfully');
-            fetchData(); // Refresh totals
         } catch (err) {
             console.error('Add expense error:', err);
             setError('Failed to add expense. Please try again.');
@@ -82,6 +161,29 @@ const ExpenseManagement = () => {
             ...newExpense,
             [e.target.name]: e.target.value
         });
+    };
+
+    const sortExpenses = (expenses, sortBy) => {
+        const sorted = [...expenses];
+        
+        switch (sortBy) {
+            case 'date-desc':
+                return sorted.sort((a, b) => new Date(b.date) - new Date(a.date)); // Newest first
+            case 'date-asc':
+                return sorted.sort((a, b) => new Date(a.date) - new Date(b.date)); // Oldest first
+            case 'amount-desc':
+                return sorted.sort((a, b) => (parseFloat(b.amount) || 0) - (parseFloat(a.amount) || 0)); // Highest first
+            case 'amount-asc':
+                return sorted.sort((a, b) => (parseFloat(a.amount) || 0) - (parseFloat(b.amount) || 0)); // Lowest first
+            case 'billType':
+                return sorted.sort((a, b) => (a.billType || '').localeCompare(b.billType || '')); // Alphabetical
+            default:
+                return sorted;
+        }
+    };
+
+    const handleSortChange = (e) => {
+        setSortBy(e.target.value);
     };
 
     if (loading) {
@@ -102,12 +204,20 @@ const ExpenseManagement = () => {
                     </h2>
                     <p className="text-gray-600 mt-1">Track and manage your office expenses</p>
                 </div>
-                <Button 
-                    onClick={() => setAddModal(true)}
-                    className="transform transition-all duration-300 hover:scale-105 hover:shadow-lg bg-gradient-to-r from-green-500 to-green-600"
-                >
-                    ➕ Add Expense
-                </Button>
+                <div className="flex space-x-3">
+                    <button
+                        onClick={fetchData}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 transform hover:scale-105"
+                    >
+                        🔄 Refresh
+                    </button>
+                    <Button 
+                        onClick={() => setAddModal(true)}
+                        className="transform transition-all duration-300 hover:scale-105 hover:shadow-lg bg-gradient-to-r from-green-500 to-green-600"
+                    >
+                        ➕ Add Expense
+                    </Button>
+                </div>
             </div>
 
             {/* Summary Cards */}
@@ -197,10 +307,26 @@ const ExpenseManagement = () => {
             {/* Expenses Table */}
             <Card className="transform transition-all duration-300 hover:shadow-xl">
                 <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-green-50 to-emerald-50">
-                    <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                        <span className="mr-2">📋</span>
-                        Recent Expenses
-                    </h3>
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <h3 className="text-lg font-medium text-gray-900 flex items-center">
+                            <span className="mr-2">📋</span>
+                            Recent Expenses
+                        </h3>
+                        <div className="flex items-center space-x-2">
+                            <label className="text-sm font-medium text-gray-700">Sort by:</label>
+                            <select
+                                value={sortBy}
+                                onChange={handleSortChange}
+                                className="px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                            >
+                                <option value="date-desc">📅 Newest First</option>
+                                <option value="date-asc">📅 Oldest First</option>
+                                <option value="amount-desc">💰 Highest Amount</option>
+                                <option value="amount-asc">💰 Lowest Amount</option>
+                                <option value="billType">🔤 Bill Type A-Z</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
@@ -222,7 +348,7 @@ const ExpenseManagement = () => {
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
                             {expenses && expenses.length > 0 ? (
-                                expenses.map((expense, index) => (
+                                sortExpenses(expenses, sortBy).map((expense, index) => (
                                     <tr 
                                         key={expense.id || Math.random()} 
                                         className="transform transition-all duration-300 hover:scale-105 hover:shadow-md hover:bg-gray-50"
