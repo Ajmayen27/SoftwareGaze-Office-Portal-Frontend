@@ -63,10 +63,12 @@ export const authService = {
 export const adminService = {
     getEmployees: () => apiClient.get('/admin/employees'),
     deleteUser: (id) => apiClient.delete(`/admin/user/${id}`),
+    updateUser: (id, userData) => apiClient.put(`/admin/user/${id}`, userData),
     getExpenses: () => apiClient.get('/admin/expenses'),
     addExpense: (expenseData) => apiClient.post('/admin/expense', expenseData),
     getMonthlyExpenses: () => apiClient.get('/admin/expenses/monthly'),
     getYearlyExpenses: () => apiClient.get('/admin/expenses/yearly'),
+    getMonthlyBreakdown: () => apiClient.get('/admin/expenses/monthly-breakdown'),
 };
 
 // General user endpoints

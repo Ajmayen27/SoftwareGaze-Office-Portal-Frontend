@@ -8,6 +8,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
         { id: 'dashboard', label: 'Dashboard', icon: '📊' },
         { id: 'employees', label: 'Employees', icon: '👥' },
         { id: 'expenses', label: 'Expenses', icon: '💰' },
+        { id: 'monthly-breakdown', label: 'Monthly Breakdown', icon: '📅' },
         { id: 'analytics', label: 'Analytics', icon: '📈' },
     ];
 

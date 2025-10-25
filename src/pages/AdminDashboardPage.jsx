@@ -5,6 +5,7 @@ import MobileHeader from '../components/layout/MobileHeader';
 import EmployeeManagement from '../components/admin/EmployeeManagement';
 import ExpenseManagement from '../components/admin/ExpenseManagement';
 import ExpenseManagementTest from '../components/admin/ExpenseManagementTest';
+import SimpleMonthlyBreakdown from '../components/admin/SimpleMonthlyBreakdown';
 import Analytics from '../components/admin/Analytics';
 import Card from '../components/ui/Card';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
@@ -68,6 +69,8 @@ const AdminDashboardPage = () => {
                 return <ExpenseManagement />;
             case 'expenses-test':
                 return <ExpenseManagementTest />;
+            case 'monthly-breakdown':
+                return <SimpleMonthlyBreakdown />;
             case 'analytics':
                 return <Analytics />;
             default:
@@ -177,6 +180,15 @@ const AdminDashboardPage = () => {
                                             <div className="flex items-center">
                                                 <span className="text-lg mr-3">🧪</span>
                                                 <span className="font-medium">Test Expenses</span>
+                                            </div>
+                                        </button>
+                                        <button
+                                            onClick={() => setActiveTab('monthly-breakdown')}
+                                            className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                                        >
+                                            <div className="flex items-center">
+                                                <span className="text-lg mr-3">📅</span>
+                                                <span className="font-medium">Monthly Breakdown</span>
                                             </div>
                                         </button>
                                         <button
