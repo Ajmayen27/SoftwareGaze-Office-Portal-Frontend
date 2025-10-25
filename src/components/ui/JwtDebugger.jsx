@@ -33,12 +33,18 @@ const JwtDebugger = () => {
     const testApiCall = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:8081/api/admin/expenses', {
-                method: 'GET',
+            const response = await fetch('http://localhost:8081/api/expense', {
+                method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify({
+                    billType: 'Test Bill',
+                    amount: 100.00,
+                    comment: 'Test expense',
+                    date: new Date().toISOString().split('T')[0]
+                })
             });
 
             if (response.ok) {
@@ -94,7 +100,7 @@ const JwtDebugger = () => {
                         onClick={testApiCall}
                         className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
                     >
-                        Test Admin API Call
+                        Test Add Expense API Call
                     </button>
                 </div>
             </div>

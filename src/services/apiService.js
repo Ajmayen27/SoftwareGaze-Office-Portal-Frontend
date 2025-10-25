@@ -64,7 +64,7 @@ export const adminService = {
     getEmployees: () => apiClient.get('/admin/employees'),
     deleteUser: (id) => apiClient.delete(`/admin/user/${id}`),
     getExpenses: () => apiClient.get('/admin/expenses'),
-    addExpense: (expenseData) => apiClient.post('/admin/expenses', expenseData),
+    addExpense: (expenseData) => apiClient.post('/admin/expense', expenseData),
     getMonthlyExpenses: () => apiClient.get('/admin/expenses/monthly'),
     getYearlyExpenses: () => apiClient.get('/admin/expenses/yearly'),
 };

@@ -12,6 +12,7 @@ import BackendStatus from '../components/ui/BackendStatus';
 import BackendConnectionTest from '../components/ui/BackendConnectionTest';
 import BackendDiagnostics from '../components/ui/BackendDiagnostics';
 import JwtDebugger from '../components/ui/JwtDebugger';
+import ExpenseDebugger from '../components/ui/ExpenseDebugger';
 import { adminService } from '../services/apiService';
 
 const AdminDashboardPage = () => {
@@ -195,6 +196,7 @@ const AdminDashboardPage = () => {
                                 <BackendConnectionTest />
                                 <BackendDiagnostics />
                                 <JwtDebugger />
+                                <ExpenseDebugger />
                             </div>
                         </div>
                     </div>
