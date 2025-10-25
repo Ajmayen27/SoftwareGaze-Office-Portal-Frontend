@@ -34,18 +34,69 @@ const AdminDashboardPage = () => {
     const fetchDashboardData = async () => {
         try {
             setLoading(true);
-            const [employeesRes, expensesRes, monthlyRes, yearlyRes] = await Promise.all([
+            
+            // Try to get data from multiple sources
+            const [employeesRes, expensesRes] = await Promise.all([
                 adminService.getEmployees(),
-                adminService.getExpenses(),
-                adminService.getMonthlyExpenses(),
-                adminService.getYearlyExpenses()
+                adminService.getExpenses()
             ]);
+
+            // Calculate monthly and yearly totals from expenses data
+            const expenses = expensesRes.data || [];
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth();
+            const currentYear = currentDate.getFullYear();
+
+            // Calculate monthly total (current month)
+            let monthlyTotal = 0;
+            let yearlyTotal = 0;
+            
+            try {
+                const monthlyExpenses = expenses.filter(expense => {
+                    if (!expense.date) return false;
+                    const expenseDate = new Date(expense.date);
+                    return expenseDate.getMonth() === currentMonth && 
+                           expenseDate.getFullYear() === currentYear;
+                });
+                monthlyTotal = monthlyExpenses.reduce((sum, expense) => sum + (parseFloat(expense.amount) || 0), 0);
+
+                // Calculate yearly total (current year)
+                const yearlyExpenses = expenses.filter(expense => {
+                    if (!expense.date) return false;
+                    const expenseDate = new Date(expense.date);
+                    return expenseDate.getFullYear() === currentYear;
+                });
+                yearlyTotal = yearlyExpenses.reduce((sum, expense) => sum + (parseFloat(expense.amount) || 0), 0);
+            } catch (calcError) {
+                console.error('Error calculating totals:', calcError);
+                // Fallback: try to get from backend endpoints
+                try {
+                    const [monthlyRes, yearlyRes] = await Promise.all([
+                        adminService.getMonthlyExpenses(),
+                        adminService.getYearlyExpenses()
+                    ]);
+                    monthlyTotal = monthlyRes.data?.totalMonthlyExpenses || 0;
+                    yearlyTotal = yearlyRes.data?.totalYearlyExpenses || 0;
+                } catch (backendError) {
+                    console.error('Backend endpoints also failed:', backendError);
+                }
+            }
+
+            // Debug logging
+            console.log('Dashboard Data:', {
+                totalExpenses: expenses.length,
+                monthlyTotal,
+                yearlyTotal,
+                currentMonth: currentMonth + 1, // +1 because getMonth() returns 0-11
+                currentYear,
+                expensesSample: expenses.slice(0, 3) // Show first 3 expenses for debugging
+            });
 
             setDashboardData({
                 totalEmployees: employeesRes.data?.length || 0,
-                totalExpenses: expensesRes.data?.length || 0,
-                monthlyExpenses: monthlyRes.data?.totalMonthlyExpenses || 0,
-                yearlyExpenses: yearlyRes.data?.totalYearlyExpenses || 0
+                totalExpenses: expenses.length,
+                monthlyExpenses: monthlyTotal,
+                yearlyExpenses: yearlyTotal
             });
         } catch (error) {
             console.error('Failed to fetch dashboard data:', error);
@@ -81,7 +132,15 @@ const AdminDashboardPage = () => {
                                 <h1 className="text-3xl font-bold text-gray-900">Welcome back, {user?.username}!</h1>
                                 <p className="text-gray-600 mt-2">Here's what's happening in your office portal.</p>
                             </div>
-                            <BackendStatus />
+                            <div className="flex items-center space-x-4">
+                                <button
+                                    onClick={fetchDashboardData}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 transform hover:scale-105"
+                                >
+                                    🔄 Refresh
+                                </button>
+                                <BackendStatus />
+                            </div>
                         </div>
 
                         {loading ? (

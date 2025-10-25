@@ -94,52 +94,94 @@ const ExpenseManagement = () => {
 
     return (
         <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-gray-900">Expense Management</h2>
-                <Button onClick={() => setAddModal(true)}>
-                    Add Expense
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 className="text-3xl font-bold text-gray-900 flex items-center">
+                        <span className="mr-3">💰</span>
+                        Expense Management
+                    </h2>
+                    <p className="text-gray-600 mt-1">Track and manage your office expenses</p>
+                </div>
+                <Button 
+                    onClick={() => setAddModal(true)}
+                    className="transform transition-all duration-300 hover:scale-105 hover:shadow-lg bg-gradient-to-r from-green-500 to-green-600"
+                >
+                    ➕ Add Expense
                 </Button>
             </div>
 
             {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card>
-                    <div className="p-6">
-                        <div className="flex items-center">
-                            <div className="p-2 bg-blue-100 rounded-lg">
-                                <span className="text-2xl">💰</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+                {/* Total Expenses Count Card */}
+                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-blue-50 to-blue-100">
+                    <div className="p-4 lg:p-6">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center">
+                                <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
+                                    <span className="text-2xl text-white">💰</span>
+                                </div>
+                                <div className="ml-4">
+                                    <p className="text-sm font-medium text-gray-600">Total Records</p>
+                                    <p className="text-xl lg:text-2xl font-bold text-gray-900 animate-pulse">
+                                        {expenses.length}
+                                    </p>
+                                    <p className="text-xs text-blue-600 font-medium">
+                                        Expense Records
+                                    </p>
+                                </div>
                             </div>
-                            <div className="ml-4">
-                                <p className="text-sm font-medium text-gray-600">Total Expenses</p>
-                                <p className="text-2xl font-bold text-gray-900">{expenses.length}</p>
-                            </div>
-                        </div>
-                    </div>
-                </Card>
-
-                <Card>
-                    <div className="p-6">
-                        <div className="flex items-center">
-                            <div className="p-2 bg-green-100 rounded-lg">
-                                <span className="text-2xl">📅</span>
-                            </div>
-                            <div className="ml-4">
-                                <p className="text-sm font-medium text-gray-600">Monthly Total</p>
-                                <p className="text-2xl font-bold text-gray-900">${(monthlyTotal || 0).toFixed(2)}</p>
+                            <div className="text-right">
+                                <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse"></div>
                             </div>
                         </div>
                     </div>
                 </Card>
 
-                <Card>
-                    <div className="p-6">
-                        <div className="flex items-center">
-                            <div className="p-2 bg-purple-100 rounded-lg">
-                                <span className="text-2xl">📊</span>
+                {/* Current Month Total Card */}
+                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-green-50 to-green-100">
+                    <div className="p-4 lg:p-6">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center">
+                                <div className="p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg">
+                                    <span className="text-2xl text-white">📅</span>
+                                </div>
+                                <div className="ml-4">
+                                    <p className="text-sm font-medium text-gray-600">This Month</p>
+                                    <p className="text-xl lg:text-2xl font-bold text-gray-900">
+                                        ${(monthlyTotal || 0).toFixed(2)}
+                                    </p>
+                                    <p className="text-xs text-green-600 font-medium">
+                                        {new Date().toLocaleString('default', { month: 'long' })} {new Date().getFullYear()}
+                                    </p>
+                                </div>
                             </div>
-                            <div className="ml-4">
-                                <p className="text-sm font-medium text-gray-600">Yearly Total</p>
-                                <p className="text-2xl font-bold text-gray-900">${(yearlyTotal || 0).toFixed(2)}</p>
+                            <div className="text-right">
+                                <div className="w-3 h-3 bg-green-400 rounded-full animate-bounce"></div>
+                            </div>
+                        </div>
+                    </div>
+                </Card>
+
+                {/* Yearly Total Card */}
+                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-purple-50 to-purple-100 sm:col-span-2 lg:col-span-1">
+                    <div className="p-4 lg:p-6">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center">
+                                <div className="p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg">
+                                    <span className="text-2xl text-white">📊</span>
+                                </div>
+                                <div className="ml-4">
+                                    <p className="text-sm font-medium text-gray-600">This Year</p>
+                                    <p className="text-xl lg:text-2xl font-bold text-gray-900">
+                                        ${(yearlyTotal || 0).toFixed(2)}
+                                    </p>
+                                    <p className="text-xs text-purple-600 font-medium">
+                                        {new Date().getFullYear()} Total
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="text-right">
+                                <div className="w-3 h-3 bg-purple-400 rounded-full animate-pulse"></div>
                             </div>
                         </div>
                     </div>
@@ -153,9 +195,12 @@ const ExpenseManagement = () => {
             )}
 
             {/* Expenses Table */}
-            <Card>
-                <div className="px-6 py-4 border-b border-gray-200">
-                    <h3 className="text-lg font-medium text-gray-900">Recent Expenses</h3>
+            <Card className="transform transition-all duration-300 hover:shadow-xl">
+                <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-green-50 to-emerald-50">
+                    <h3 className="text-lg font-medium text-gray-900 flex items-center">
+                        <span className="mr-2">📋</span>
+                        Recent Expenses
+                    </h3>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
@@ -177,19 +222,38 @@ const ExpenseManagement = () => {
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
                             {expenses && expenses.length > 0 ? (
-                                expenses.map((expense) => (
-                                    <tr key={expense.id || Math.random()} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            {expense.billType || 'N/A'}
+                                expenses.map((expense, index) => (
+                                    <tr 
+                                        key={expense.id || Math.random()} 
+                                        className="transform transition-all duration-300 hover:scale-105 hover:shadow-md hover:bg-gray-50"
+                                        style={{ animationDelay: `${index * 100}ms` }}
+                                    >
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="flex items-center">
+                                                <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                                                    {expense.billType ? expense.billType.charAt(0).toUpperCase() : 'E'}
+                                                </div>
+                                                <div className="ml-3">
+                                                    <div className="text-sm font-bold text-gray-900">
+                                                        {expense.billType || 'N/A'}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            ${expense.amount || 0}
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="text-sm font-bold text-green-600">
+                                                ${(expense.amount || 0).toFixed(2)}
+                                            </div>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {expense.date ? new Date(expense.date).toLocaleDateString() : 'N/A'}
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="text-sm text-gray-900">
+                                                {expense.date ? new Date(expense.date).toLocaleDateString() : 'N/A'}
+                                            </div>
                                         </td>
-                                        <td className="px-6 py-4 text-sm text-gray-900">
-                                            {expense.comment || 'No comment'}
+                                        <td className="px-6 py-4">
+                                            <div className="text-sm text-gray-900 max-w-xs truncate">
+                                                {expense.comment || 'No comment'}
+                                            </div>
                                         </td>
                                     </tr>
                                 ))
@@ -211,60 +275,77 @@ const ExpenseManagement = () => {
                 onClose={() => setAddModal(false)}
                 title="Add New Expense"
             >
-                <form onSubmit={handleAddExpense} className="space-y-4">
-                    <Input
-                        label="Bill Type"
-                        name="billType"
-                        value={newExpense.billType}
-                        onChange={handleInputChange}
-                        required
-                    />
-                    
-                    <Input
-                        label="Amount"
-                        name="amount"
-                        type="number"
-                        step="0.01"
-                        value={newExpense.amount}
-                        onChange={handleInputChange}
-                        required
-                    />
-                    
-                    <Input
-                        label="Date"
-                        name="date"
-                        type="date"
-                        value={newExpense.date}
-                        onChange={handleInputChange}
-                        required
-                    />
-                    
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Comment
-                        </label>
-                        <textarea
-                            name="comment"
-                            value={newExpense.comment}
-                            onChange={handleInputChange}
-                            rows="3"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                    </div>
-                    
-                    <div className="flex justify-end space-x-3">
-                        <Button
-                            type="button"
-                            variant="secondary"
-                            onClick={() => setAddModal(false)}
-                        >
-                            Cancel
-                        </Button>
-                        <Button type="submit">
-                            Add Expense
-                        </Button>
-                    </div>
-                </form>
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-lg">
+                    <form onSubmit={handleAddExpense} className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="transform transition-all duration-300 hover:scale-105">
+                                <Input
+                                    label="Bill Type"
+                                    name="billType"
+                                    value={newExpense.billType}
+                                    onChange={handleInputChange}
+                                    required
+                                    placeholder="e.g., Office Supplies, Utilities"
+                                />
+                            </div>
+                            
+                            <div className="transform transition-all duration-300 hover:scale-105">
+                                <Input
+                                    label="Amount"
+                                    name="amount"
+                                    type="number"
+                                    step="0.01"
+                                    value={newExpense.amount}
+                                    onChange={handleInputChange}
+                                    required
+                                    placeholder="0.00"
+                                />
+                            </div>
+                        </div>
+                        
+                        <div className="transform transition-all duration-300 hover:scale-105">
+                            <Input
+                                label="Date"
+                                name="date"
+                                type="date"
+                                value={newExpense.date}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        
+                        <div className="transform transition-all duration-300 hover:scale-105">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Comment
+                            </label>
+                            <textarea
+                                name="comment"
+                                value={newExpense.comment}
+                                onChange={handleInputChange}
+                                rows="3"
+                                placeholder="Add any additional details about this expense..."
+                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 hover:shadow-md"
+                            />
+                        </div>
+                        
+                        <div className="flex justify-end space-x-4 pt-4">
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                onClick={() => setAddModal(false)}
+                                className="transform transition-all duration-300 hover:scale-105 hover:shadow-md"
+                            >
+                                Cancel
+                            </Button>
+                            <Button 
+                                type="submit"
+                                className="transform transition-all duration-300 hover:scale-105 hover:shadow-md bg-gradient-to-r from-green-500 to-green-600"
+                            >
+                                💰 Add Expense
+                            </Button>
+                        </div>
+                    </form>
+                </div>
             </Modal>
         </div>
     );
