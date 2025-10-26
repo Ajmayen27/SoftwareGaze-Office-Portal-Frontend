@@ -60,7 +60,6 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                     onClick={logout}
                     className="w-full flex items-center px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                 >
-                    <span className="mr-3">🚪</span>
                     <span className="font-medium">Logout</span>
                 </button>
             </div>

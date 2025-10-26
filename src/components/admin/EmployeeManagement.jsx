@@ -71,7 +71,6 @@ const EmployeeManagement = () => {
             <Card className="transform transition-all duration-300 hover:shadow-xl">
                 <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
                     <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                        <span className="mr-2">👥</span>
                         Employee Directory
                     </h3>
                 </div>
@@ -130,7 +129,7 @@ const EmployeeManagement = () => {
                                             onClick={() => handleEditEmployee(employee)}
                                             className="transform transition-all duration-300 hover:scale-105 hover:shadow-md"
                                         >
-                                            ✏️ Edit
+                                             Edit
                                         </Button>
                                         <Button
                                             variant="danger"
@@ -138,7 +137,7 @@ const EmployeeManagement = () => {
                                             onClick={() => setDeleteModal({ isOpen: true, employee })}
                                             className="transform transition-all duration-300 hover:scale-105 hover:shadow-md"
                                         >
-                                            🗑️ Delete
+                                             Delete
                                         </Button>
                                     </div>
                                 </Table.Cell>

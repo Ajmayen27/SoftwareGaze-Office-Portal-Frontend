@@ -137,7 +137,7 @@ const AdminDashboardPage = () => {
                                     onClick={fetchDashboardData}
                                     className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 transform hover:scale-105"
                                 >
-                                    🔄 Refresh
+                                 Refresh
                                 </button>
                                 <BackendStatus />
                             </div>
