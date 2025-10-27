@@ -3,13 +3,21 @@ import { adminService } from '../../services/apiService';
 import { useNotification } from '../../contexts/NotificationContext';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
+import Input from '../ui/Input';
+import Modal from '../ui/Modal';
 import LoadingSpinner from '../ui/LoadingSpinner';
 
 const SimpleMonthlyBreakdown = () => {
     const [expenses, setExpenses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const { showError } = useNotification();
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+    const [editModal, setEditModal] = useState(false);
+    const [editingExpense, setEditingExpense] = useState(null);
+    const [deleteConfirmModal, setDeleteConfirmModal] = useState(false);
+    const [expenseToDelete, setExpenseToDelete] = useState(null);
+    const { showError, showSuccess } = useNotification();
 
     useEffect(() => {
         fetchExpenses();
@@ -27,6 +35,89 @@ const SimpleMonthlyBreakdown = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleDeleteExpense = async () => {
+        try {
+            const response = await adminService.deleteExpense(expenseToDelete);
+            // Filter out the deleted expense
+            const updatedExpenses = expenses.filter(exp => exp.id !== expenseToDelete);
+            setExpenses(updatedExpenses);
+            setDeleteConfirmModal(false);
+            setExpenseToDelete(null);
+            showSuccess('Expense deleted successfully');
+        } catch (err) {
+            console.error('Delete expense error:', err);
+            setError('Failed to delete expense');
+            showError('Failed to delete expense');
+        }
+    };
+
+    const handleUpdateExpense = async (e) => {
+        e.preventDefault();
+        try {
+            // Parse the date and format it for the backend API
+            const expenseDate = new Date(editingExpense.date);
+            const dateArray = [
+                expenseDate.getFullYear(),
+                expenseDate.getMonth(), // Note: getMonth() returns 0-11
+                expenseDate.getDate()
+            ];
+            
+            const expenseData = {
+                billType: editingExpense.billType,
+                amount: parseFloat(editingExpense.amount),
+                comment: editingExpense.comment,
+                date: dateArray
+            };
+            
+            const response = await adminService.updateExpense(editingExpense.id, expenseData);
+            
+            // Update the expense in the list
+            const updatedExpenses = expenses.map(exp => 
+                exp.id === editingExpense.id ? response.data : exp
+            );
+            setExpenses(updatedExpenses);
+            setEditModal(false);
+            setEditingExpense(null);
+            showSuccess('Expense updated successfully');
+        } catch (err) {
+            console.error('Update expense error:', err);
+            setError('Failed to update expense');
+            showError('Failed to update expense');
+        }
+    };
+
+    const openEditModal = (expense) => {
+        let expenseDate;
+        
+        // Handle date format - could be string or array [year, month, day]
+        if (Array.isArray(expense.date)) {
+            // Date is in array format [year, month, day]
+            expenseDate = new Date(expense.date[0], expense.date[1], expense.date[2]);
+        } else {
+            // Date is in string format
+            expenseDate = expense.date ? new Date(expense.date) : new Date();
+        }
+        
+        const formattedDate = expenseDate.toISOString().split('T')[0];
+        setEditingExpense({
+            ...expense,
+            date: formattedDate
+        });
+        setEditModal(true);
+    };
+
+    const openDeleteConfirm = (expenseId) => {
+        setExpenseToDelete(expenseId);
+        setDeleteConfirmModal(true);
+    };
+
+    const handleInputChange = (e) => {
+        setEditingExpense({
+            ...editingExpense,
+            [e.target.name]: e.target.value
+        });
     };
 
     const calculateMonthlyBreakdown = () => {
@@ -79,6 +170,22 @@ const SimpleMonthlyBreakdown = () => {
     const getMonthName = (monthKey) => {
         return monthKey.charAt(0).toUpperCase() + monthKey.slice(1);
     };
+
+    const getSelectedMonthExpenses = () => {
+        return expenses.filter(expense => {
+            const expenseDate = new Date(expense.date);
+            return expenseDate.getMonth() === selectedMonth && 
+                   expenseDate.getFullYear() === selectedYear;
+        });
+    };
+
+    const monthNames = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    const selectedMonthExpenses = getSelectedMonthExpenses();
+    const selectedMonthTotal = selectedMonthExpenses.reduce((sum, expense) => sum + (parseFloat(expense.amount) || 0), 0);
 
     if (loading) {
         return (
@@ -182,63 +289,115 @@ const SimpleMonthlyBreakdown = () => {
                 </Card>
             </div>
 
-            {/* Monthly Breakdown Chart */}
+            {/* Month Selection and Expenses List */}
             <Card className="transform transition-all duration-300 hover:shadow-xl">
                 <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-purple-50">
                     <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                        <span className="mr-2">📊</span>
-                        Monthly Expenses Breakdown
+                        <span className="mr-2">📅</span>
+                        Monthly Expense Details
                     </h3>
                 </div>
                 <div className="p-6">
-                    <div className="space-y-4">
-                        {Object.entries(breakdown).map(([month, amount], index) => {
-                            const percentage = totalForYear > 0 ? (amount / totalForYear) * 100 : 0;
-                            const isCurrentMonth = new Date().getMonth() === Object.keys(breakdown).indexOf(month);
-                            
-                            return (
+                    {/* Month and Year Selection */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Select Month
+                            </label>
+                            <select
+                                value={selectedMonth}
+                                onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                                {monthNames.map((month, index) => (
+                                    <option key={month} value={index}>
+                                        {month}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Select Year
+                            </label>
+                            <select
+                                value={selectedYear}
+                                onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                                {[2023, 2024, 2025, 2026].map(year => (
+                                    <option key={year} value={year}>
+                                        {year}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Total for Selected Month
+                            </label>
+                            <div className="px-4 py-2 bg-green-50 border border-green-200 rounded-lg">
+                                <p className="text-lg font-bold text-green-700">
+                                    ${selectedMonthTotal.toFixed(2)}
+                                </p>
+                                <p className="text-xs text-green-600">
+                                    {selectedMonthExpenses.length} expenses
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Expenses List */}
+                    <div className="space-y-3">
+                        {selectedMonthExpenses.length > 0 ? (
+                            selectedMonthExpenses.map((expense, index) => (
                                 <div 
-                                    key={month} 
-                                        className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-all duration-300 transform hover:scale-105"
-                                        style={{ animationDelay: `${index * 100}ms` }}
-                                    >
+                                    key={expense.id || Math.random()}
+                                    className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-all duration-300 transform hover:scale-105 border border-gray-200"
+                                    style={{ animationDelay: `${index * 50}ms` }}
+                                >
                                     <div className="flex items-center space-x-4">
-                                        <div className="w-24 text-sm font-medium text-gray-700">
-                                            {getMonthName(month)}
+                                        <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
+                                            {expense.billType ? expense.billType.charAt(0).toUpperCase() : 'E'}
                                         </div>
-                                        <div className="flex-1 bg-gray-200 rounded-full h-3 relative overflow-hidden">
-                                            <div 
-                                                className={`h-3 rounded-full transition-all duration-1000 ease-out ${
-                                                    isCurrentMonth 
-                                                        ? 'bg-gradient-to-r from-blue-500 to-blue-600' 
-                                                        : 'bg-gradient-to-r from-gray-400 to-gray-500'
-                                                }`}
-                                                style={{ 
-                                                    width: `${Math.max(percentage, 2)}%`,
-                                                    animationDelay: `${index * 200}ms`
-                                                }}
-                                            ></div>
-                                            {isCurrentMonth && (
-                                                <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full animate-pulse opacity-50"></div>
-                                            )}
+                                        <div>
+                                            <p className="font-medium text-gray-900">{expense.billType || 'N/A'}</p>
+                                            <p className="text-sm text-gray-500">
+                                                {expense.comment || 'No comment'}
+                                            </p>
                                         </div>
                                     </div>
-                                    <div className="text-right">
-                                        <div className="text-sm font-bold text-gray-900">
-                                            ${amount.toFixed(2)}
+                                    <div className="flex items-center space-x-4">
+                                        <div className="text-right">
+                                            <p className="text-lg font-bold text-green-600">
+                                                ${(expense.amount || 0).toFixed(2)}
+                                            </p>
+                                            <p className="text-xs text-gray-500">
+                                                {expense.date ? new Date(expense.date).toLocaleDateString() : 'N/A'}
+                                            </p>
                                         </div>
-                                        <div className="text-xs text-gray-500">
-                                            {percentage.toFixed(1)}%
+                                        <div className="flex space-x-2">
+                                            <button
+                                                onClick={() => openEditModal(expense)}
+                                                className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-300 text-sm font-medium"
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                onClick={() => openDeleteConfirm(expense.id)}
+                                                className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-300 text-sm font-medium"
+                                            >
+                                                Delete
+                                            </button>
                                         </div>
-                                        {isCurrentMonth && (
-                                            <div className="text-xs text-blue-600 font-medium animate-pulse">
-                                                Current
-                                            </div>
-                                        )}
                                     </div>
                                 </div>
-                            );
-                        })}
+                            ))
+                        ) : (
+                            <div className="text-center py-8">
+                                <p className="text-gray-500">No expenses found for {monthNames[selectedMonth]} {selectedYear}</p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </Card>
@@ -300,6 +459,128 @@ const SimpleMonthlyBreakdown = () => {
                     </table>
                 </div>
             </Card>
+
+            {/* Edit Expense Modal */}
+            <Modal
+                isOpen={editModal}
+                onClose={() => {
+                    setEditModal(false);
+                    setEditingExpense(null);
+                }}
+                title="Edit Expense"
+                size="md"
+            >
+                {editingExpense && (
+                    <form onSubmit={handleUpdateExpense} className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <Input
+                                    label="Bill Type"
+                                    name="billType"
+                                    value={editingExpense.billType}
+                                    onChange={handleInputChange}
+                                    required
+                                    placeholder="e.g., Office Supplies, Utilities"
+                                />
+                            </div>
+                            
+                            <div>
+                                <Input
+                                    label="Amount"
+                                    name="amount"
+                                    type="number"
+                                    step="0.01"
+                                    value={editingExpense.amount}
+                                    onChange={handleInputChange}
+                                    required
+                                    placeholder="0.00"
+                                />
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <Input
+                                label="Date"
+                                name="date"
+                                type="date"
+                                value={editingExpense.date}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Comment
+                            </label>
+                            <textarea
+                                name="comment"
+                                value={editingExpense.comment || ''}
+                                onChange={handleInputChange}
+                                rows="3"
+                                placeholder="Add any additional details about this expense..."
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                            />
+                        </div>
+                        
+                        <div className="flex justify-end space-x-4 pt-4">
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                onClick={() => {
+                                    setEditModal(false);
+                                    setEditingExpense(null);
+                                }}
+                                className="transform transition-all duration-300 hover:scale-105 hover:shadow-md"
+                            >
+                                Cancel
+                            </Button>
+                            <Button 
+                                type="submit"
+                                className="transform transition-all duration-300 hover:scale-105 hover:shadow-md bg-gradient-to-r from-blue-500 to-blue-600"
+                            >
+                                Update Expense
+                            </Button>
+                        </div>
+                    </form>
+                )}
+            </Modal>
+
+            {/* Delete Confirmation Modal */}
+            <Modal
+                isOpen={deleteConfirmModal}
+                onClose={() => {
+                    setDeleteConfirmModal(false);
+                    setExpenseToDelete(null);
+                }}
+                title="Confirm Delete"
+                size="sm"
+            >
+                <div className="space-y-4">
+                    <p className="text-gray-700">
+                        Are you sure you want to delete this expense? This action cannot be undone.
+                    </p>
+                    <div className="flex justify-end space-x-4 pt-4">
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            onClick={() => {
+                                setDeleteConfirmModal(false);
+                                setExpenseToDelete(null);
+                            }}
+                            className="transform transition-all duration-300 hover:scale-105 hover:shadow-md"
+                        >
+                            Cancel
+                        </Button>
+                        <Button 
+                            onClick={handleDeleteExpense}
+                            className="transform transition-all duration-300 hover:scale-105 hover:shadow-md bg-gradient-to-r from-red-500 to-red-600"
+                        >
+                            Delete
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 };

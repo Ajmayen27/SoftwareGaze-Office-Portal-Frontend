@@ -336,8 +336,6 @@ const AdminDashboardPage = () => {
                             <div className="space-y-6">
                                 <BackendConnectionTest />
                                 <BackendDiagnostics />
-                                <JwtDebugger />
-                                <ExpenseDebugger />
                             </div>
                         </div>
                     </div>

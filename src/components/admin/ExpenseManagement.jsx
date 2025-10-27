@@ -308,7 +308,6 @@ const ExpenseManagement = () => {
                 <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-green-50 to-emerald-50">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                            <span className="mr-2">📋</span>
                             Recent Expenses
                         </h3>
                         <div className="flex items-center space-x-2">
@@ -466,7 +465,7 @@ const ExpenseManagement = () => {
                                 type="submit"
                                 className="transform transition-all duration-300 hover:scale-105 hover:shadow-md bg-gradient-to-r from-green-500 to-green-600"
                             >
-                                💰 Add Expense
+                              Add Expense
                             </Button>
                         </div>
                     </form>
