@@ -3,6 +3,7 @@ import { adminService } from '../../services/apiService';
 import { useNotification } from '../../contexts/NotificationContext';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
+import Input from '../ui/Input';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import Modal from '../ui/Modal';
 import Table from '../ui/Table';
@@ -13,6 +14,8 @@ const EmployeeManagement = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [deleteModal, setDeleteModal] = useState({ isOpen: false, employee: null });
+    const [editModal, setEditModal] = useState(false);
+    const [editingEmployee, setEditingEmployee] = useState(null);
     const { showSuccess, showError } = useNotification();
 
     useEffect(() => {
@@ -43,6 +46,46 @@ const EmployeeManagement = () => {
             showError('Failed to delete employee');
             console.error(err);
         }
+    };
+
+    const handleEditEmployee = (employee) => {
+        setEditingEmployee({ ...employee });
+        setEditModal(true);
+    };
+
+    const handleUpdateEmployee = async (e) => {
+        e.preventDefault();
+        try {
+            const userData = {
+                username: editingEmployee.username,
+                password: editingEmployee.password,
+                email: editingEmployee.email,
+                designation: editingEmployee.designation,
+                role: editingEmployee.role
+            };
+            
+            const response = await adminService.updateUser(editingEmployee.id, userData);
+            
+            // Update the employee in the list
+            const updatedEmployees = employees.map(emp => 
+                emp.id === editingEmployee.id ? { ...emp, ...response.data } : emp
+            );
+            setEmployees(updatedEmployees);
+            setEditModal(false);
+            setEditingEmployee(null);
+            showSuccess('Employee updated successfully');
+        } catch (err) {
+            setError('Failed to update employee');
+            showError('Failed to update employee');
+            console.error(err);
+        }
+    };
+
+    const handleInputChange = (e) => {
+        setEditingEmployee({
+            ...editingEmployee,
+            [e.target.name]: e.target.value
+        });
     };
 
     if (loading) {
@@ -173,6 +216,104 @@ const EmployeeManagement = () => {
                         </Button>
                     </div>
                 </div>
+            </Modal>
+
+            {/* Edit Employee Modal */}
+            <Modal
+                isOpen={editModal}
+                onClose={() => {
+                    setEditModal(false);
+                    setEditingEmployee(null);
+                }}
+                title="Edit Employee"
+                size="lg"
+            >
+                {editingEmployee && (
+                    <form onSubmit={handleUpdateEmployee} className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <Input
+                                    label="Username"
+                                    name="username"
+                                    value={editingEmployee.username || ''}
+                                    onChange={handleInputChange}
+                                    required
+                                    placeholder="Enter username"
+                                />
+                            </div>
+                            <div>
+                                <Input
+                                    label="Password"
+                                    name="password"
+                                    type="password"
+                                    value={editingEmployee.password || ''}
+                                    onChange={handleInputChange}
+                                    required
+                                    placeholder="Enter password"
+                                />
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <Input
+                                label="Email"
+                                name="email"
+                                type="email"
+                                value={editingEmployee.email || ''}
+                                onChange={handleInputChange}
+                                required
+                                placeholder="Enter email"
+                            />
+                        </div>
+
+                        <div>
+                            <Input
+                                label="Designation"
+                                name="designation"
+                                value={editingEmployee.designation || ''}
+                                onChange={handleInputChange}
+                                required
+                                placeholder="e.g., Software Developer, Manager"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Role
+                            </label>
+                            <select
+                                name="role"
+                                value={editingEmployee.role || 'USER'}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                required
+                            >
+                                <option value="USER">USER</option>
+                                <option value="ADMIN">ADMIN</option>
+                            </select>
+                        </div>
+                        
+                        <div className="flex justify-end space-x-4 pt-4">
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                onClick={() => {
+                                    setEditModal(false);
+                                    setEditingEmployee(null);
+                                }}
+                                className="transform transition-all duration-300 hover:scale-105 hover:shadow-md"
+                            >
+                                Cancel
+                            </Button>
+                            <Button 
+                                type="submit"
+                                className="transform transition-all duration-300 hover:scale-105 hover:shadow-md bg-gradient-to-r from-blue-500 to-blue-600"
+                            >
+                                Update Employee
+                            </Button>
+                        </div>
+                    </form>
+                )}
             </Modal>
         </div>
     );
