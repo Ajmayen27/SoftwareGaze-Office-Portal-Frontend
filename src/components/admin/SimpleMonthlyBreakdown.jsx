@@ -355,7 +355,7 @@ const SimpleMonthlyBreakdown = () => {
                                     key={expense.id || Math.random()}
                                     className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-all duration-300 transform hover:scale-105 border border-gray-200"
                                     style={{ animationDelay: `${index * 50}ms` }}
-                                >
+                                    >
                                     <div className="flex items-center space-x-4">
                                         <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
                                             {expense.billType ? expense.billType.charAt(0).toUpperCase() : 'E'}
@@ -368,7 +368,7 @@ const SimpleMonthlyBreakdown = () => {
                                         </div>
                                     </div>
                                     <div className="flex items-center space-x-4">
-                                        <div className="text-right">
+                                    <div className="text-right">
                                             <p className="text-lg font-bold text-green-600">
                                                 ${(expense.amount || 0).toFixed(2)}
                                             </p>
@@ -390,14 +390,14 @@ const SimpleMonthlyBreakdown = () => {
                                                 Delete
                                             </button>
                                         </div>
-                                    </div>
-                                </div>
+                                        </div>
+                                        </div>
                             ))
                         ) : (
                             <div className="text-center py-8">
                                 <p className="text-gray-500">No expenses found for {monthNames[selectedMonth]} {selectedYear}</p>
-                            </div>
-                        )}
+                                            </div>
+                                        )}
                     </div>
                 </div>
             </Card>

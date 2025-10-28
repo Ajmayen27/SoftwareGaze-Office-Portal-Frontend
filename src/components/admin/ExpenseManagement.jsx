@@ -222,16 +222,16 @@ const ExpenseManagement = () => {
             {/* Summary Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
                 {/* Total Expenses Count Card */}
-                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-blue-50 to-blue-100">
+                <Card className="transition-all duration-200 ease-in-out hover:shadow-lg hover:bg-blue-50/90 bg-gradient-to-br from-blue-50/80 to-blue-100/80 backdrop-blur-sm border border-blue-200/30">
                     <div className="p-4 lg:p-6">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
-                                <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
-                                    <span className="text-2xl text-white">💰</span>
+                                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-md flex items-center justify-center transition-all duration-200 ease-in-out hover:shadow-lg hover:scale-105">
+                                    <div className="w-6 h-6 bg-white rounded-sm"></div>
                                 </div>
                                 <div className="ml-4">
                                     <p className="text-sm font-medium text-gray-600">Total Records</p>
-                                    <p className="text-xl lg:text-2xl font-bold text-gray-900 animate-pulse">
+                                    <p className="text-xl lg:text-2xl font-bold text-gray-900">
                                         {expenses.length}
                                     </p>
                                     <p className="text-xs text-blue-600 font-medium">
@@ -247,12 +247,12 @@ const ExpenseManagement = () => {
                 </Card>
 
                 {/* Current Month Total Card */}
-                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-green-50 to-green-100">
+                <Card className="transition-all duration-200 ease-in-out hover:shadow-lg hover:bg-green-50/90 bg-gradient-to-br from-green-50/80 to-green-100/80 backdrop-blur-sm border border-green-200/30">
                     <div className="p-4 lg:p-6">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
-                                <div className="p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg">
-                                    <span className="text-2xl text-white">📅</span>
+                                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-md flex items-center justify-center transition-all duration-200 ease-in-out hover:shadow-lg hover:scale-105">
+                                    <div className="w-6 h-6 bg-white rounded-sm"></div>
                                 </div>
                                 <div className="ml-4">
                                     <p className="text-sm font-medium text-gray-600">This Month</p>
@@ -272,12 +272,12 @@ const ExpenseManagement = () => {
                 </Card>
 
                 {/* Yearly Total Card */}
-                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-purple-50 to-purple-100 sm:col-span-2 lg:col-span-1">
+                <Card className="transition-all duration-200 ease-in-out hover:shadow-lg hover:bg-purple-50/90 bg-gradient-to-br from-purple-50/80 to-purple-100/80 backdrop-blur-sm border border-purple-200/30 sm:col-span-2 lg:col-span-1">
                     <div className="p-4 lg:p-6">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
-                                <div className="p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg">
-                                    <span className="text-2xl text-white">📊</span>
+                                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-md flex items-center justify-center transition-all duration-200 ease-in-out hover:shadow-lg hover:scale-105">
+                                    <div className="w-6 h-6 bg-white rounded-sm"></div>
                                 </div>
                                 <div className="ml-4">
                                     <p className="text-sm font-medium text-gray-600">This Year</p>
@@ -304,10 +304,13 @@ const ExpenseManagement = () => {
             )}
 
             {/* Expenses Table */}
-            <Card className="transform transition-all duration-300 hover:shadow-xl">
-                <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-green-50 to-emerald-50">
+            <Card className="transition-all duration-200 ease-in-out hover:shadow-xl bg-white/80 backdrop-blur-xl border border-white/30 overflow-hidden">
+                <div className="px-6 py-4 border-b border-white/20 bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-sm">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <h3 className="text-lg font-medium text-gray-900 flex items-center">
+                        <h3 className="text-lg font-medium text-gray-800 flex items-center">
+                            <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg mr-3 flex items-center justify-center">
+                                <div className="w-4 h-4 bg-white rounded-sm"></div>
+                            </div>
                             Recent Expenses
                         </h3>
                         <div className="flex items-center space-x-2">
@@ -315,7 +318,7 @@ const ExpenseManagement = () => {
                             <select
                                 value={sortBy}
                                 onChange={handleSortChange}
-                                className="px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                                className="px-3 py-1 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm bg-white/50 backdrop-blur-sm"
                             >
                                 <option value="date-desc">📅 Newest First</option>
                                 <option value="date-asc">📅 Oldest First</option>
@@ -326,56 +329,56 @@ const ExpenseManagement = () => {
                         </div>
                     </div>
                 </div>
-                <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                <div className="overflow-x-auto bg-white/30 backdrop-blur-sm">
+                    <table className="min-w-full divide-y divide-white/20">
+                        <thead className="bg-white/20 backdrop-blur-sm">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                                     Bill Type
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                                     Amount
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                                     Date
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                                     Comment
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
+                        <tbody className="bg-white/10 backdrop-blur-sm divide-y divide-white/20">
                             {expenses && expenses.length > 0 ? (
                                 sortExpenses(expenses, sortBy).map((expense, index) => (
                                     <tr 
                                         key={expense.id || Math.random()} 
-                                        className="transform transition-all duration-300 hover:scale-105 hover:shadow-md hover:bg-gray-50"
-                                        style={{ animationDelay: `${index * 100}ms` }}
+                                        className="transition-all duration-200 ease-in-out hover:bg-white/30 hover:shadow-md group border-b border-white/10"
+                                        style={{ animationDelay: `${index * 50}ms` }}
                                     >
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
-                                                <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
-                                                    {expense.billType ? expense.billType.charAt(0).toUpperCase() : 'E'}
+                                                <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-md group-hover:shadow-lg group-hover:scale-105 transition-all duration-200 ease-in-out">
+                                                    <div className="w-5 h-5 bg-white rounded-sm"></div>
                                                 </div>
                                                 <div className="ml-3">
-                                                    <div className="text-sm font-bold text-gray-900">
+                                                    <div className="text-sm font-bold text-gray-800">
                                                         {expense.billType || 'N/A'}
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm font-bold text-green-600">
+                                            <div className="text-sm font-bold text-green-600 bg-green-50/50 px-3 py-1 rounded-lg backdrop-blur-sm group-hover:bg-green-100/70 group-hover:scale-105 transition-all duration-200 ease-in-out">
                                                 ${(expense.amount || 0).toFixed(2)}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-900">
+                                            <div className="text-sm text-gray-800 bg-gray-50/50 px-3 py-1 rounded-lg backdrop-blur-sm group-hover:bg-gray-100/70 group-hover:scale-105 transition-all duration-200 ease-in-out">
                                                 {expense.date ? new Date(expense.date).toLocaleDateString() : 'N/A'}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <div className="text-sm text-gray-900 max-w-xs truncate">
+                                            <div className="text-sm text-gray-800 max-w-xs truncate bg-white/30 px-3 py-1 rounded-lg backdrop-blur-sm group-hover:bg-white/50 group-hover:scale-105 transition-all duration-200 ease-in-out">
                                                 {expense.comment || 'No comment'}
                                             </div>
                                         </td>
@@ -383,8 +386,13 @@ const ExpenseManagement = () => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="4" className="px-6 py-4 text-center text-gray-500">
-                                        No expenses found
+                                    <td colSpan="4" className="px-6 py-8 text-center text-gray-600 bg-white/20 backdrop-blur-sm">
+                                        <div className="flex flex-col items-center space-y-2">
+                                            <div className="w-12 h-12 bg-gradient-to-br from-gray-400 to-gray-500 rounded-xl flex items-center justify-center">
+                                                <div className="w-6 h-6 bg-white rounded-sm"></div>
+                                            </div>
+                                            <span className="text-sm font-medium">No expenses found</span>
+                                        </div>
                                     </td>
                                 </tr>
                             )}

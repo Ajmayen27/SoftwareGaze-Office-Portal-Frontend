@@ -350,11 +350,11 @@ const AdminDashboardPage = () => {
             <div className="floating-shapes"></div>
             <div className="pattern-overlay"></div>
             <div className="content-layer">
-                <MobileHeader activeTab={activeTab} setActiveTab={setActiveTab} />
-                <div className="flex">
-                    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                    <div className="flex-1 p-4 lg:p-8">
-                        {renderContent()}
+            <MobileHeader activeTab={activeTab} setActiveTab={setActiveTab} />
+            <div className="flex">
+                <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+                <div className="flex-1 p-4 lg:p-8">
+                    {renderContent()}
                     </div>
                 </div>
             </div>
