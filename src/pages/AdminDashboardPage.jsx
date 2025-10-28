@@ -127,15 +127,15 @@ const AdminDashboardPage = () => {
             default:
                 return (
                     <div className="space-y-6">
-                        <div className="flex justify-between items-start">
-                            <div>
-                                <h1 className="text-3xl font-bold text-gray-900">Welcome back, {user?.username}!</h1>
-                                <p className="text-gray-600 mt-2">Here's what's happening in your office portal.</p>
+                        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-4 lg:space-y-0">
+                            <div className="flex-1">
+                                <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.5), 0 0 20px rgba(147, 51, 234, 0.5)' }}>Welcome back, {user?.username}!</h1>
+                                <p className="text-gray-200 mt-2 font-medium text-sm sm:text-base">Here's what's happening in your office portal.</p>
                             </div>
                             <div className="flex items-center space-x-4">
                                 <button
                                     onClick={fetchDashboardData}
-                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 transform hover:scale-105"
+                                    className="px-3 py-2 sm:px-4 sm:py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:from-purple-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-sm sm:text-base"
                                 >
                                  Refresh
                                 </button>
@@ -148,24 +148,24 @@ const AdminDashboardPage = () => {
                                 <LoadingSpinner size="lg" />
                             </div>
                         ) : (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6">
                                 {/* Total Employees Card */}
                                 <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                                    <div className="p-4 lg:p-6">
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center">
-                                                <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
-                                                    <span className="text-2xl text-white">👥</span>
+                                    <div className="p-3 sm:p-4 lg:p-6">
+                                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
+                                            <div className="flex items-center w-full sm:w-auto">
+                                                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg flex items-center justify-center flex-shrink-0">
+                                                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-sm"></div>
                                                 </div>
-                                                <div className="ml-4">
-                                                    <p className="text-sm font-medium text-gray-600">Total Employees</p>
-                                                    <p className="text-2xl lg:text-3xl font-bold text-gray-900 animate-pulse">
+                                                <div className="ml-3 sm:ml-4 min-w-0 flex-1">
+                                                    <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Total Employees</p>
+                                                    <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900 animate-pulse">
                                                         {dashboardData.totalEmployees}
                                                     </p>
                                                 </div>
                                             </div>
-                                            <div className="text-right">
-                                                <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                                            <div className="flex justify-end w-full sm:w-auto">
+                                                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full animate-pulse"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -173,24 +173,24 @@ const AdminDashboardPage = () => {
 
                                 {/* Monthly Expenses Card */}
                                 <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                                    <div className="p-4 lg:p-6">
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center">
-                                                <div className="p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg">
-                                                    <span className="text-2xl text-white">💰</span>
+                                    <div className="p-3 sm:p-4 lg:p-6">
+                                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
+                                            <div className="flex items-center w-full sm:w-auto">
+                                                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg flex items-center justify-center flex-shrink-0">
+                                                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-sm"></div>
                                                 </div>
-                                                <div className="ml-4">
-                                                    <p className="text-sm font-medium text-gray-600">This Month</p>
-                                                    <p className="text-xl lg:text-2xl font-bold text-gray-900">
+                                                <div className="ml-3 sm:ml-4 min-w-0 flex-1">
+                                                    <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">This Month</p>
+                                                    <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
                                                         ${(dashboardData.monthlyExpenses || 0).toFixed(2)}
                                                     </p>
-                                                    <p className="text-xs text-green-600 font-medium">
+                                                    <p className="text-xs text-green-600 font-medium truncate">
                                                         Current Month Total
                                                     </p>
                                                 </div>
                                             </div>
-                                            <div className="text-right">
-                                                <div className="w-3 h-3 bg-green-400 rounded-full animate-bounce"></div>
+                                            <div className="flex justify-end w-full sm:w-auto">
+                                                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full animate-bounce"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -198,24 +198,24 @@ const AdminDashboardPage = () => {
 
                                 {/* Yearly Expenses Card */}
                                 <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                                    <div className="p-4 lg:p-6">
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center">
-                                                <div className="p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg">
-                                                    <span className="text-2xl text-white">📊</span>
+                                    <div className="p-3 sm:p-4 lg:p-6">
+                                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
+                                            <div className="flex items-center w-full sm:w-auto">
+                                                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg flex items-center justify-center flex-shrink-0">
+                                                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-sm"></div>
                                                 </div>
-                                                <div className="ml-4">
-                                                    <p className="text-sm font-medium text-gray-600">This Year</p>
-                                                    <p className="text-xl lg:text-2xl font-bold text-gray-900">
+                                                <div className="ml-3 sm:ml-4 min-w-0 flex-1">
+                                                    <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">This Year</p>
+                                                    <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
                                                         ${(dashboardData.yearlyExpenses || 0).toFixed(2)}
                                                     </p>
-                                                    <p className="text-xs text-purple-600 font-medium">
+                                                    <p className="text-xs text-purple-600 font-medium truncate">
                                                         {new Date().getFullYear()} Total
                                                     </p>
                                                 </div>
                                             </div>
-                                            <div className="text-right">
-                                                <div className="w-3 h-3 bg-purple-400 rounded-full animate-pulse"></div>
+                                            <div className="flex justify-end w-full sm:w-auto">
+                                                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-purple-400 rounded-full animate-pulse"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -223,24 +223,24 @@ const AdminDashboardPage = () => {
 
                                 {/* Total Expenses Count Card */}
                                 <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                                    <div className="p-4 lg:p-6">
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center">
-                                                <div className="p-3 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg">
-                                                    <span className="text-2xl text-white">📋</span>
+                                    <div className="p-3 sm:p-4 lg:p-6">
+                                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
+                                            <div className="flex items-center w-full sm:w-auto">
+                                                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg flex items-center justify-center flex-shrink-0">
+                                                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-sm"></div>
                                                 </div>
-                                                <div className="ml-4">
-                                                    <p className="text-sm font-medium text-gray-600">Total Records</p>
-                                                    <p className="text-2xl lg:text-3xl font-bold text-gray-900">
+                                                <div className="ml-3 sm:ml-4 min-w-0 flex-1">
+                                                    <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Total Records</p>
+                                                    <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900">
                                                         {dashboardData.totalExpenses}
                                                     </p>
-                                                    <p className="text-xs text-orange-600 font-medium">
+                                                    <p className="text-xs text-orange-600 font-medium truncate">
                                                         Expense Records
                                                     </p>
                                                 </div>
                                             </div>
-                                            <div className="text-right">
-                                                <div className="w-3 h-3 bg-orange-400 rounded-full animate-bounce"></div>
+                                            <div className="flex justify-end w-full sm:w-auto">
+                                                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-orange-400 rounded-full animate-bounce"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -252,7 +252,9 @@ const AdminDashboardPage = () => {
                             <Card className="transform transition-all duration-300 hover:shadow-xl">
                                 <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
                                     <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                                        <span className="mr-2">⚡</span>
+                                        <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg mr-3 flex items-center justify-center">
+                                            <div className="w-3 h-3 bg-white rounded-sm"></div>
+                                        </div>
                                         Quick Actions
                                     </h3>
                                 </div>
@@ -263,8 +265,8 @@ const AdminDashboardPage = () => {
                                             className="w-full text-left p-4 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 transition-all duration-300 transform hover:scale-105 hover:shadow-md group"
                                         >
                                             <div className="flex items-center">
-                                                <div className="p-2 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors duration-300">
-                                                    <span className="text-lg">👥</span>
+                                                <div className="w-10 h-10 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors duration-300 flex items-center justify-center">
+                                                    <div className="w-5 h-5 bg-blue-600 rounded-sm"></div>
                                                 </div>
                                                 <div className="ml-4">
                                                     <span className="font-medium text-gray-900">Manage Employees</span>
@@ -281,8 +283,8 @@ const AdminDashboardPage = () => {
                                             className="w-full text-left p-4 rounded-xl hover:bg-gradient-to-r hover:from-green-50 hover:to-green-100 transition-all duration-300 transform hover:scale-105 hover:shadow-md group"
                                         >
                                             <div className="flex items-center">
-                                                <div className="p-2 bg-green-100 rounded-lg group-hover:bg-green-200 transition-colors duration-300">
-                                                    <span className="text-lg">💰</span>
+                                                <div className="w-10 h-10 bg-green-100 rounded-lg group-hover:bg-green-200 transition-colors duration-300 flex items-center justify-center">
+                                                    <div className="w-5 h-5 bg-green-600 rounded-sm"></div>
                                                 </div>
                                                 <div className="ml-4">
                                                     <span className="font-medium text-gray-900">Manage Expenses</span>
@@ -299,8 +301,8 @@ const AdminDashboardPage = () => {
                                             className="w-full text-left p-4 rounded-xl hover:bg-gradient-to-r hover:from-purple-50 hover:to-purple-100 transition-all duration-300 transform hover:scale-105 hover:shadow-md group"
                                         >
                                             <div className="flex items-center">
-                                                <div className="p-2 bg-purple-100 rounded-lg group-hover:bg-purple-200 transition-colors duration-300">
-                                                    <span className="text-lg">📅</span>
+                                                <div className="w-10 h-10 bg-purple-100 rounded-lg group-hover:bg-purple-200 transition-colors duration-300 flex items-center justify-center">
+                                                    <div className="w-5 h-5 bg-purple-600 rounded-sm"></div>
                                                 </div>
                                                 <div className="ml-4">
                                                     <span className="font-medium text-gray-900">Monthly Breakdown</span>
@@ -317,8 +319,8 @@ const AdminDashboardPage = () => {
                                             className="w-full text-left p-4 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-100 transition-all duration-300 transform hover:scale-105 hover:shadow-md group"
                                         >
                                             <div className="flex items-center">
-                                                <div className="p-2 bg-orange-100 rounded-lg group-hover:bg-orange-200 transition-colors duration-300">
-                                                    <span className="text-lg">📈</span>
+                                                <div className="w-10 h-10 bg-orange-100 rounded-lg group-hover:bg-orange-200 transition-colors duration-300 flex items-center justify-center">
+                                                    <div className="w-5 h-5 bg-orange-600 rounded-sm"></div>
                                                 </div>
                                                 <div className="ml-4">
                                                     <span className="font-medium text-gray-900">View Analytics</span>
@@ -344,12 +346,16 @@ const AdminDashboardPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <MobileHeader activeTab={activeTab} setActiveTab={setActiveTab} />
-            <div className="flex">
-                <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                <div className="flex-1 p-4 lg:p-8">
-                    {renderContent()}
+        <div className="min-h-screen modern-bg">
+            <div className="floating-shapes"></div>
+            <div className="pattern-overlay"></div>
+            <div className="content-layer">
+                <MobileHeader activeTab={activeTab} setActiveTab={setActiveTab} />
+                <div className="flex">
+                    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+                    <div className="flex-1 p-4 lg:p-8">
+                        {renderContent()}
+                    </div>
                 </div>
             </div>
         </div>

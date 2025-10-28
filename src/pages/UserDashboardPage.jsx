@@ -20,8 +20,8 @@ const UserDashboardPage = () => {
                 return (
                     <div className="space-y-6">
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900">Welcome, {user?.username}!</h1>
-                            <p className="text-gray-600 mt-2">Here's your personal dashboard.</p>
+                            <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">Welcome, {user?.username}!</h1>
+                            <p className="text-gray-700 mt-2 font-medium">Here's your personal dashboard.</p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -140,12 +140,16 @@ const UserDashboardPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <MobileHeader activeTab={activeTab} setActiveTab={setActiveTab} />
-            <div className="flex">
-                <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                <div className="flex-1 p-4 lg:p-8">
-                    {renderContent()}
+        <div className="min-h-screen modern-bg">
+            <div className="floating-shapes"></div>
+            <div className="pattern-overlay"></div>
+            <div className="content-layer">
+                <MobileHeader activeTab={activeTab} setActiveTab={setActiveTab} />
+                <div className="flex">
+                    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+                    <div className="flex-1 p-4 lg:p-8">
+                        {renderContent()}
+                    </div>
                 </div>
             </div>
         </div>

@@ -46,52 +46,83 @@ const SignupPage = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-100 py-12">
-            <div className="w-full max-w-md">
+        <div className="min-h-screen flex flex-col items-center justify-center modern-bg">
+            <div className="floating-shapes"></div>
+            <div className="pattern-overlay"></div>
+            
+            {/* Attractive Banner */}
+            <div className="w-full max-w-5xl mx-auto px-4 relative z-10 mb-8 animate-slide-down">
+                <div className="text-center">
+                    {/* Main Title */}
+                    <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight animate-fade-in drop-shadow-2xl" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.5), 0 0 20px rgba(147, 51, 234, 0.5)' }}>
+                        Software Gaze Portal
+                    </h1>
+                    
+                    {/* Tagline */}
+                    <p className="text-xl md:text-2xl text-gray-200 font-light tracking-wide mb-6 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+                        Join Your Digital Workspace
+                    </p>
+                    
+                    {/* Subtle animated dots */}
+                    <div className="flex items-center justify-center space-x-2 animate-fade-in" style={{ animationDelay: '0.7s' }}>
+                        <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                        <div className="w-2 h-2 bg-indigo-400 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
+                        <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '0.6s' }}></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div className="w-full max-w-4xl relative z-10">
                 <Card className="p-8">
                     <div className="text-center mb-8">
-                        <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
-                        <p className="text-gray-600">Join the Software Gaze Portal</p>
+                        <h1 className="text-2xl font-bold text-gray-800 mb-2">Create Account</h1>
+                        <p className="text-gray-600 text-sm">Get started today</p>
                     </div>
                     
                     <form onSubmit={handleSignup} className="space-y-6">
-                        <div className="grid grid-cols-1 gap-4">
-                            <Input
-                                label="Username"
-                                name="username"
-                                type="text"
-                                value={formData.username}
-                                onChange={handleChange}
-                                required
-                            />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-4">
+                                <Input
+                                    label="Username"
+                                    name="username"
+                                    type="text"
+                                    value={formData.username}
+                                    onChange={handleChange}
+                                    required
+                                />
+                                
+                                <Input
+                                    label="Email"
+                                    name="email"
+                                    type="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
                             
-                            <Input
-                                label="Email"
-                                name="email"
-                                type="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                required
-                            />
-                            
-                            <Input
-                                label="Password"
-                                name="password"
-                                type="password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                required
-                            />
-                            
-                            <Input
-                                label="Designation"
-                                name="designation"
-                                type="text"
-                                value={formData.designation}
-                                onChange={handleChange}
-                                required
-                            />
-                            
+                            <div className="space-y-4">
+                                <Input
+                                    label="Password"
+                                    name="password"
+                                    type="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    required
+                                />
+                                
+                                <Input
+                                    label="Designation"
+                                    name="designation"
+                                    type="text"
+                                    value={formData.designation}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     Role
@@ -106,6 +137,7 @@ const SignupPage = () => {
                                     <option value="ADMIN">Admin</option>
                                 </select>
                             </div>
+                            <div></div> {/* Empty div for spacing */}
                         </div>
                         
                         {message && (
