@@ -132,34 +132,35 @@ const AttendanceManagement = () => {
             const response = await adminService.getIndividualAttendance(individualUsername, individualMonth, individualYear);
             console.log('Individual attendance API response:', response);
             console.log('Response data:', response.data);
+            console.log('Response status:', response.status);
             
-            // Handle different response structures
-            let attendanceData = null;
-            if (response.data) {
-                // Check if response.data is the object itself or if it has a data property
-                attendanceData = response.data.attendances ? response.data : response.data;
-            }
+            // Axios wraps the response, so response.data contains the actual API response
+            const responseData = response.data;
             
-            // Check if response has data and attendances array with length > 0
-            if (attendanceData && attendanceData.attendances && Array.isArray(attendanceData.attendances) && attendanceData.attendances.length > 0) {
-                setIndividualAttendance(attendanceData);
-                showSuccess(`Found ${attendanceData.attendances.length} attendance record(s) for ${individualUsername}`);
+            // New API structure: { month, year, employee, attendances: [{ day, punchIn, punchOut }] }
+            // Check if response has attendances array
+            if (responseData && responseData.attendances && Array.isArray(responseData.attendances) && responseData.attendances.length > 0) {
+                setIndividualAttendance(responseData);
+                showSuccess(`Found ${responseData.attendances.length} attendance record(s) for ${responseData.employee || individualUsername}`);
             } else {
-                // No data found
+                // No data found - could be empty array or null
                 setIndividualAttendance(null);
                 showInfo(`No attendance records found for ${individualUsername} in ${individualMonth}/${individualYear}`);
             }
         } catch (err) {
             console.error('Failed to fetch individual attendance:', err);
+            console.error('Error response:', err.response);
+            console.error('Error response data:', err.response?.data);
+            
             const errorMessage = err.response?.data?.message || err.message || 'Failed to fetch individual attendance';
             setError(errorMessage);
-            showError(errorMessage);
             setIndividualAttendance(null);
             
-            // Check if it's a 404 or no data response
-            if (err.response?.status === 404 || err.response?.status === 200) {
-                // Sometimes backend returns 200 with empty data
-                setIndividualAttendance(null);
+            // If it's a 404, show info instead of error
+            if (err.response?.status === 404) {
+                showInfo(`No attendance records found for ${individualUsername} in ${individualMonth}/${individualYear}`);
+            } else {
+                showError(errorMessage);
             }
         } finally {
             setLoading(false);
@@ -176,7 +177,7 @@ const AttendanceManagement = () => {
     };
 
     const formatFullDateTime = (dateArray) => {
-        if (!dateArray || !Array.isArray(dateArray) || dateArray.length < 5) return { date: 'N/A', time: 'N/A' };
+        if (!dateArray || !Array.isArray(dateArray) || dateArray.length < 5) return { date: 'N/A', time: 'N/A', hour: 'N/A', minute: 'N/A' };
         const [year, month, day, hour, minute] = dateArray;
         const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
                            'July', 'August', 'September', 'October', 'November', 'December'];
@@ -184,7 +185,12 @@ const AttendanceManagement = () => {
         const ampm = hour >= 12 ? 'PM' : 'AM';
         return {
             date: `${day}, ${monthNames[month - 1]} ${year}`,
-            time: `${String(hour12).padStart(2, '0')}:${String(minute).padStart(2, '0')} ${ampm}`
+            time: `${String(hour12).padStart(2, '0')}:${String(minute).padStart(2, '0')} ${ampm}`,
+            hour: hour,
+            minute: minute,
+            day: day,
+            month: monthNames[month - 1],
+            year: year
         };
     };
 
@@ -504,12 +510,24 @@ const AttendanceManagement = () => {
                     ) : individualAttendance && individualAttendance.attendances && Array.isArray(individualAttendance.attendances) && individualAttendance.attendances.length > 0 ? (
                         <div>
                             <div className="mb-4 p-4 bg-gradient-to-r from-purple-50/50 to-indigo-50/50 rounded-lg border border-purple-200/30">
-                                <h4 className="font-semibold text-gray-800 mb-2">
-                                    Attendance for: {individualUsername} ({individualMonth}/{individualYear})
-                                </h4>
-                                <p className="text-sm text-gray-600">
-                                    Total Records: {individualAttendance.attendances.length}
-                                </p>
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <h4 className="font-semibold text-gray-800 mb-1 text-lg">
+                                            Attendance Records for: <span className="text-purple-600">{individualAttendance.employee || individualUsername}</span>
+                                        </h4>
+                                        <p className="text-sm text-gray-600">
+                                            Period: {individualAttendance.month ? new Date(individualAttendance.year, individualAttendance.month - 1).toLocaleString('default', { month: 'long' }) : new Date(individualYear, individualMonth - 1).toLocaleString('default', { month: 'long' })} {individualAttendance.year || individualYear}
+                                        </p>
+                                    </div>
+                                    <div className="text-right">
+                                        <div className="text-2xl font-bold text-purple-600">
+                                            {individualAttendance.attendances.length}
+                                        </div>
+                                        <div className="text-xs text-gray-500 uppercase">
+                                            Total Records
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             
                             <div className="overflow-x-auto">
@@ -526,50 +544,105 @@ const AttendanceManagement = () => {
                                     </Table.Header>
                                     <Table.Body>
                                         {individualAttendance.attendances.map((attendance, index) => {
-                                            const dateParts = formatDateParts(attendance.date);
-                                            const punchInDateTime = formatFullDateTime(attendance.punchIn);
-                                            const punchOutDateTime = formatFullDateTime(attendance.punchOut);
+                                            // New API structure: { day, punchIn: "HH:MM", punchOut: "HH:MM" }
+                                            // Get month and year from top-level response
+                                            const month = individualAttendance.month || individualMonth;
+                                            const year = individualAttendance.year || individualYear;
+                                            const day = attendance.day;
+                                            
+                                            // Format month name
+                                            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                                                               'July', 'August', 'September', 'October', 'November', 'December'];
+                                            const monthName = monthNames[month - 1] || 'N/A';
+                                            
+                                            // Format time strings (punchIn and punchOut are in "HH:MM" format)
+                                            const formatTimeString = (timeStr) => {
+                                                if (!timeStr || typeof timeStr !== 'string') {
+                                                    return { formatted: 'N/A', time24: null };
+                                                }
+                                                const [hours, minutes] = timeStr.split(':');
+                                                const hour24 = parseInt(hours, 10);
+                                                const minute = parseInt(minutes, 10);
+                                                if (isNaN(hour24) || isNaN(minute)) {
+                                                    return { formatted: timeStr, time24: timeStr };
+                                                }
+                                                
+                                                const hour12 = hour24 % 12 || 12;
+                                                const ampm = hour24 >= 12 ? 'PM' : 'AM';
+                                                return {
+                                                    formatted: `${String(hour12).padStart(2, '0')}:${String(minute).padStart(2, '0')} ${ampm}`,
+                                                    time24: `${String(hour24).padStart(2, '0')}:${String(minute).padStart(2, '0')}`
+                                                };
+                                            };
+                                            
+                                            const punchInTime = formatTimeString(attendance.punchIn);
+                                            const punchOutTime = formatTimeString(attendance.punchOut);
+                                            
                                             return (
                                                 <Table.Row key={index} className="hover:bg-white/30">
                                                     <Table.Cell className="font-medium">
-                                                        <div className="text-lg font-bold text-gray-800">
-                                                            {dateParts.day}
+                                                        <div className="flex flex-col items-center">
+                                                            <div className="text-2xl font-bold text-gray-800">
+                                                                {day}
+                                                            </div>
+                                                            <div className="text-xs text-gray-500 mt-1">Day</div>
                                                         </div>
                                                     </Table.Cell>
                                                     <Table.Cell>
-                                                        <div className="text-sm font-medium text-gray-700">
-                                                            {dateParts.month}
+                                                        <div className="flex flex-col items-center">
+                                                            <div className="text-lg font-semibold text-gray-700">
+                                                                {monthName}
+                                                            </div>
+                                                            <div className="text-xs text-gray-500 mt-1">Month</div>
                                                         </div>
                                                     </Table.Cell>
                                                     <Table.Cell>
-                                                        <div className="text-sm font-medium text-gray-700">
-                                                            {dateParts.year}
+                                                        <div className="flex flex-col items-center">
+                                                            <div className="text-lg font-semibold text-gray-700">
+                                                                {year}
+                                                            </div>
+                                                            <div className="text-xs text-gray-500 mt-1">Year</div>
                                                         </div>
                                                     </Table.Cell>
                                                     <Table.Cell>
                                                         <div className="bg-blue-50/50 px-3 py-2 rounded-lg border border-blue-200/30">
-                                                            <div className="text-xs text-blue-700 font-medium mb-1">
-                                                                Date: {punchInDateTime.date}
+                                                            <div className="text-xs text-blue-700 font-medium mb-1 uppercase">
+                                                                Punch In
                                                             </div>
                                                             <div className="text-sm font-bold text-blue-600">
-                                                                Time: {punchInDateTime.time}
+                                                                {punchInTime.formatted}
                                                             </div>
+                                                            {punchInTime.time24 && punchInTime.time24 !== 'N/A' && (
+                                                                <div className="text-xs text-blue-500 mt-1">
+                                                                    {punchInTime.time24} (24h)
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     </Table.Cell>
                                                     <Table.Cell>
                                                         <div className="bg-green-50/50 px-3 py-2 rounded-lg border border-green-200/30">
-                                                            <div className="text-xs text-green-700 font-medium mb-1">
-                                                                Date: {punchOutDateTime.date}
+                                                            <div className="text-xs text-green-700 font-medium mb-1 uppercase">
+                                                                Punch Out
                                                             </div>
                                                             <div className="text-sm font-bold text-green-600">
-                                                                Time: {punchOutDateTime.time}
+                                                                {punchOutTime.formatted}
                                                             </div>
+                                                            {punchOutTime.time24 && punchOutTime.time24 !== 'N/A' && (
+                                                                <div className="text-xs text-green-500 mt-1">
+                                                                    {punchOutTime.time24} (24h)
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     </Table.Cell>
                                                     <Table.Cell>
-                                                        <span className="text-sm text-gray-600">
-                                                            {attendance.comment || 'N/A'}
-                                                        </span>
+                                                        <div className="bg-gray-50/50 px-3 py-2 rounded-lg border border-gray-200/30">
+                                                            <div className="text-xs text-gray-700 font-medium mb-1 uppercase">
+                                                                Comment
+                                                            </div>
+                                                            <span className="text-sm text-gray-600">
+                                                                {attendance.comment || 'N/A'}
+                                                            </span>
+                                                        </div>
                                                     </Table.Cell>
                                                 </Table.Row>
                                             );
