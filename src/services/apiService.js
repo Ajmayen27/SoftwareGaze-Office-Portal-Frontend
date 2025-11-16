@@ -71,6 +71,10 @@ export const adminService = {
     getMonthlyExpenses: () => apiClient.get('/admin/expenses/monthly'),
     getYearlyExpenses: () => apiClient.get('/admin/expenses/yearly'),
     getMonthlyBreakdown: () => apiClient.get('/admin/expenses/monthly-breakdown'),
+    // Attendance endpoints
+    addAttendance: (attendanceData) => apiClient.post('/admin/add/attendance', attendanceData),
+    getAttendanceSummary: (month, year) => apiClient.get('/admin/attendance/summary', { params: { month, year } }),
+    getIndividualAttendance: (username, month, year) => apiClient.get(`/admin/attendance/summary/${username}`, { params: { month, year } }),
 };
 
 // General user endpoints

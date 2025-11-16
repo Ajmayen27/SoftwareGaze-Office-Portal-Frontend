@@ -9,6 +9,7 @@ const MobileHeader = ({ activeTab, setActiveTab }) => {
         { id: 'dashboard', label: 'Dashboard', icon: '📊' },
         { id: 'employees', label: 'Employees', icon: '👥' },
         { id: 'expenses', label: 'Expenses', icon: '💰' },
+        { id: 'attendance', label: 'Attendance Management', icon: '⏰' },
         { id: 'analytics', label: 'Analytics', icon: '📈' },
     ];
 

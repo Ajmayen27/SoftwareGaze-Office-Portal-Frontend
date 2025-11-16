@@ -5,6 +5,7 @@ import MobileHeader from '../components/layout/MobileHeader';
 import EmployeeManagement from '../components/admin/EmployeeManagement';
 import ExpenseManagement from '../components/admin/ExpenseManagement';
 import ExpenseManagementTest from '../components/admin/ExpenseManagementTest';
+import AttendanceManagement from '../components/admin/AttendanceManagement';
 import SimpleMonthlyBreakdown from '../components/admin/SimpleMonthlyBreakdown';
 import Analytics from '../components/admin/Analytics';
 import Card from '../components/ui/Card';
@@ -120,6 +121,8 @@ const AdminDashboardPage = () => {
                 return <ExpenseManagement />;
             case 'expenses-test':
                 return <ExpenseManagementTest />;
+            case 'attendance':
+                return <AttendanceManagement />;
             case 'monthly-breakdown':
                 return <SimpleMonthlyBreakdown />;
             case 'analytics':

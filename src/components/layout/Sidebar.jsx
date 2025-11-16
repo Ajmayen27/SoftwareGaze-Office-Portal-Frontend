@@ -8,6 +8,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
         { id: 'dashboard', label: 'Dashboard', color: 'from-blue-500 to-blue-600' },
         { id: 'employees', label: 'Employees', color: 'from-green-500 to-green-600' },
         { id: 'expenses', label: 'Expenses', color: 'from-purple-500 to-purple-600' },
+        { id: 'attendance', label: 'Attendance Management', color: 'from-teal-500 to-teal-600' },
         { id: 'monthly-breakdown', label: 'Monthly Breakdown', color: 'from-orange-500 to-orange-600' },
         { id: 'analytics', label: 'Analytics', color: 'from-indigo-500 to-indigo-600' },
     ];
