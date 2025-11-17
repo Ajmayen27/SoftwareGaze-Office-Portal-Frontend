@@ -185,7 +185,7 @@ const AdminDashboardPage = () => {
                                                 <div className="ml-3 sm:ml-4 min-w-0 flex-1">
                                                     <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">This Month</p>
                                                     <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
-                                                        ${(dashboardData.monthlyExpenses || 0).toFixed(2)}
+                                                        BDT {(dashboardData.monthlyExpenses || 0).toFixed(2)}
                                                     </p>
                                                     <p className="text-xs text-green-600 font-medium truncate">
                                                         Current Month Total
@@ -210,7 +210,7 @@ const AdminDashboardPage = () => {
                                                 <div className="ml-3 sm:ml-4 min-w-0 flex-1">
                                                     <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">This Year</p>
                                                     <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
-                                                        ${(dashboardData.yearlyExpenses || 0).toFixed(2)}
+                                                        BDT {(dashboardData.yearlyExpenses || 0).toFixed(2)}
                                                     </p>
                                                     <p className="text-xs text-purple-600 font-medium truncate">
                                                         {new Date().getFullYear()} Total

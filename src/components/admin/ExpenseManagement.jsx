@@ -257,7 +257,7 @@ const ExpenseManagement = () => {
                                 <div className="ml-4">
                                     <p className="text-sm font-medium text-gray-600">This Month</p>
                                     <p className="text-xl lg:text-2xl font-bold text-gray-900">
-                                        ${(monthlyTotal || 0).toFixed(2)}
+                                        BDT {(monthlyTotal || 0).toFixed(2)}
                                     </p>
                                     <p className="text-xs text-green-600 font-medium">
                                         {new Date().toLocaleString('default', { month: 'long' })} {new Date().getFullYear()}
@@ -282,7 +282,7 @@ const ExpenseManagement = () => {
                                 <div className="ml-4">
                                     <p className="text-sm font-medium text-gray-600">This Year</p>
                                     <p className="text-xl lg:text-2xl font-bold text-gray-900">
-                                        ${(yearlyTotal || 0).toFixed(2)}
+                                        BDT {(yearlyTotal || 0).toFixed(2)}
                                     </p>
                                     <p className="text-xs text-purple-600 font-medium">
                                         {new Date().getFullYear()} Total
@@ -369,7 +369,7 @@ const ExpenseManagement = () => {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="text-sm font-bold text-green-600 bg-green-50/50 px-3 py-1 rounded-lg backdrop-blur-sm group-hover:bg-green-100/70 group-hover:scale-105 transition-all duration-200 ease-in-out">
-                                                ${(expense.amount || 0).toFixed(2)}
+                                                BDT {(expense.amount || 0).toFixed(2)}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">

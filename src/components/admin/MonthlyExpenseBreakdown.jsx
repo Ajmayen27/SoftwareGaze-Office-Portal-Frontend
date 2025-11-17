@@ -140,7 +140,7 @@ const MonthlyExpenseBreakdown = () => {
                             </div>
                             <div className="ml-4">
                                 <p className="text-sm font-medium text-gray-600">Total Year</p>
-                                <p className="text-2xl font-bold text-gray-900">${totalForYear.toFixed(2)}</p>
+                                <p className="text-2xl font-bold text-gray-900">BDT {totalForYear.toFixed(2)}</p>
                             </div>
                         </div>
                     </div>
@@ -157,7 +157,7 @@ const MonthlyExpenseBreakdown = () => {
                                 <p className="text-2xl font-bold text-gray-900">
                                     {getMonthName(highestMonth.month)}
                                 </p>
-                                <p className="text-sm text-gray-500">${highestMonth.amount.toFixed(2)}</p>
+                                <p className="text-sm text-gray-500">BDT {highestMonth.amount.toFixed(2)}</p>
                             </div>
                         </div>
                     </div>
@@ -172,7 +172,7 @@ const MonthlyExpenseBreakdown = () => {
                             <div className="ml-4">
                                 <p className="text-sm font-medium text-gray-600">Average/Month</p>
                                 <p className="text-2xl font-bold text-gray-900">
-                                    ${(totalForYear / 12).toFixed(2)}
+                                    BDT {(totalForYear / 12).toFixed(2)}
                                 </p>
                             </div>
                         </div>
@@ -208,7 +208,7 @@ const MonthlyExpenseBreakdown = () => {
                                     </div>
                                     <div className="text-right">
                                         <div className="text-sm font-medium text-gray-900">
-                                            ${amount.toFixed(2)}
+                                            BDT {amount.toFixed(2)}
                                         </div>
                                         <div className="text-xs text-gray-500">
                                             {percentage.toFixed(1)}%
@@ -255,7 +255,7 @@ const MonthlyExpenseBreakdown = () => {
                                             {getMonthName(month)}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            ${amount.toFixed(2)}
+                                            BDT {amount.toFixed(2)}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {percentage.toFixed(1)}%

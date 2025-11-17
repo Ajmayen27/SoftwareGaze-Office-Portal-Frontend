@@ -83,7 +83,7 @@ const Analytics = () => {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-gray-600">Monthly Expenses</p>
-                                <p className="text-3xl font-bold text-gray-900">${analytics.monthlyTotal.toFixed(2)}</p>
+                                <p className="text-3xl font-bold text-gray-900">BDT {analytics.monthlyTotal.toFixed(2)}</p>
                             </div>
                             <div className="p-3 bg-blue-100 rounded-full">
                                 <span className="text-2xl">📅</span>
@@ -97,7 +97,7 @@ const Analytics = () => {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-gray-600">Yearly Expenses</p>
-                                <p className="text-3xl font-bold text-gray-900">${analytics.yearlyTotal.toFixed(2)}</p>
+                                <p className="text-3xl font-bold text-gray-900">BDT {analytics.yearlyTotal.toFixed(2)}</p>
                             </div>
                             <div className="p-3 bg-green-100 rounded-full">
                                 <span className="text-2xl">📊</span>
@@ -120,7 +120,7 @@ const Analytics = () => {
                                     <div className="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
                                     <span className="text-sm font-medium text-gray-900">{type}</span>
                                 </div>
-                                <span className="text-sm font-bold text-gray-900">${amount.toFixed(2)}</span>
+                                <span className="text-sm font-bold text-gray-900">BDT {amount.toFixed(2)}</span>
                             </div>
                         ))}
                     </div>
@@ -146,7 +146,7 @@ const Analytics = () => {
                                             }}
                                         ></div>
                                     </div>
-                                    <span className="text-sm font-bold text-gray-900">${amount.toFixed(2)}</span>
+                                    <span className="text-sm font-bold text-gray-900">BDT {amount.toFixed(2)}</span>
                                 </div>
                             </div>
                         ))}
@@ -181,7 +181,7 @@ const Analytics = () => {
                                         {expense.billType}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        ${expense.amount}
+                                        BDT {expense.amount}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {new Date(expense.date).toLocaleDateString()}
