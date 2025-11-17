@@ -15,6 +15,7 @@ import BackendConnectionTest from '../components/ui/BackendConnectionTest';
 import BackendDiagnostics from '../components/ui/BackendDiagnostics';
 import JwtDebugger from '../components/ui/JwtDebugger';
 import ExpenseDebugger from '../components/ui/ExpenseDebugger';
+import Modal from '../components/ui/Modal';
 import { adminService } from '../services/apiService';
 
 const AdminDashboardPage = () => {
@@ -26,6 +27,8 @@ const AdminDashboardPage = () => {
         totalExpenses: 0
     });
     const [loading, setLoading] = useState(true);
+    const [showConnectionModal, setShowConnectionModal] = useState(false);
+    const [showDiagnosticsModal, setShowDiagnosticsModal] = useState(false);
     const { user } = useAuth();
 
     useEffect(() => {
@@ -128,7 +131,22 @@ const AdminDashboardPage = () => {
             case 'analytics':
                 return <Analytics />;
             default:
+                const monthlyToYearlyPercent = dashboardData.yearlyExpenses > 0
+                    ? Math.min(100, (dashboardData.monthlyExpenses / dashboardData.yearlyExpenses) * 100)
+                    : 0;
+                const projectedAnnualExpenses = dashboardData.monthlyExpenses * 12;
+                const avgExpensePerEmployee = dashboardData.totalEmployees > 0
+                    ? dashboardData.yearlyExpenses / dashboardData.totalEmployees
+                    : 0;
+                const avgExpensePerRecord = dashboardData.totalExpenses > 0
+                    ? dashboardData.yearlyExpenses / dashboardData.totalExpenses
+                    : 0;
+                const expenseCoverage = projectedAnnualExpenses > 0
+                    ? Math.min(100, (dashboardData.yearlyExpenses / projectedAnnualExpenses) * 100)
+                    : 0;
+
                 return (
+                    <>
                     <div className="space-y-6">
                         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-4 lg:space-y-0">
                             <div className="flex-1">
@@ -316,34 +334,106 @@ const AdminDashboardPage = () => {
                                                 </div>
                                             </div>
                                         </button>
-                                        
-                                        <button
-                                            onClick={() => setActiveTab('analytics')}
-                                            className="w-full text-left p-4 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-100 transition-all duration-300 transform hover:scale-105 hover:shadow-md group"
-                                        >
-                                            <div className="flex items-center">
-                                                <div className="w-10 h-10 bg-orange-100 rounded-lg group-hover:bg-orange-200 transition-colors duration-300 flex items-center justify-center">
-                                                    <div className="w-5 h-5 bg-orange-600 rounded-sm"></div>
-                                                </div>
-                                                <div className="ml-4">
-                                                    <span className="font-medium text-gray-900">View Analytics</span>
-                                                    <p className="text-sm text-gray-500">Detailed reports and insights</p>
-                                                </div>
-                                                <div className="ml-auto">
-                                                    <span className="text-orange-500 group-hover:translate-x-1 transition-transform duration-300">→</span>
-                                                </div>
-                                            </div>
-                                        </button>
+                                    </div>
+
+                                    <div className="pt-5 mt-5 border-t border-gray-100">
+                                        <p className="text-sm font-semibold text-gray-700 mb-3">Backend Utilities</p>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                            <button
+                                                onClick={() => setShowConnectionModal(true)}
+                                                className="flex items-center justify-center px-4 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
+                                            >
+                                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
+                                                </svg>
+                                                Connection Test
+                                            </button>
+                                            <button
+                                                onClick={() => setShowDiagnosticsModal(true)}
+                                                className="flex items-center justify-center px-4 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
+                                            >
+                                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 11-10 10A10 10 0 0112 2z" />
+                                                </svg>
+                                                Diagnostics
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </Card>
 
-                            <div className="space-y-6">
-                                <BackendConnectionTest />
-                                <BackendDiagnostics />
-                            </div>
+                            <Card className="transform transition-all duration-300 hover:shadow-xl">
+                                <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-teal-50">
+                                    <h3 className="text-lg font-medium text-gray-900 flex items-center">
+                                        <div className="w-6 h-6 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg mr-3 flex items-center justify-center">
+                                            <div className="w-3 h-3 bg-white rounded-sm"></div>
+                                        </div>
+                                        Operational Insights
+                                    </h3>
+                                </div>
+                                <div className="p-6 space-y-6">
+                                    <div>
+                                        <div className="flex items-center justify-between mb-2">
+                                            <p className="text-sm font-semibold text-gray-700">Monthly spend vs yearly budget</p>
+                                            <span className="text-sm font-bold text-emerald-600">{monthlyToYearlyPercent.toFixed(1)}%</span>
+                                        </div>
+                                        <div className="w-full h-3 rounded-full bg-gray-100">
+                                            <div
+                                                className="h-3 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500"
+                                                style={{ width: `${monthlyToYearlyPercent}%` }}
+                                            ></div>
+                                        </div>
+                                        <p className="text-xs text-gray-500 mt-1">BDT {(dashboardData.monthlyExpenses || 0).toFixed(2)} of BDT {(dashboardData.yearlyExpenses || 0).toFixed(2)} spent</p>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div className="p-4 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100">
+                                            <p className="text-xs font-semibold text-blue-600 uppercase tracking-wide">Projected Annual Spend</p>
+                                            <p className="text-2xl font-bold text-blue-900 mt-1">BDT {projectedAnnualExpenses.toFixed(2)}</p>
+                                            <p className="text-xs text-blue-600 mt-1">Based on current month</p>
+                                        </div>
+
+                                        <div className="p-4 rounded-xl bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-100">
+                                            <p className="text-xs font-semibold text-orange-600 uppercase tracking-wide">Expense Coverage</p>
+                                            <p className="text-2xl font-bold text-orange-900 mt-1">{expenseCoverage.toFixed(1)}%</p>
+                                            <p className="text-xs text-orange-600 mt-1">Yearly expenses vs projection</p>
+                                        </div>
+
+                                        <div className="p-4 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100">
+                                            <p className="text-xs font-semibold text-purple-600 uppercase tracking-wide">Avg. per Employee</p>
+                                            <p className="text-2xl font-bold text-purple-900 mt-1">BDT {avgExpensePerEmployee.toFixed(2)}</p>
+                                            <p className="text-xs text-purple-600 mt-1">Annual spend per employee</p>
+                                        </div>
+
+                                        <div className="p-4 rounded-xl bg-gradient-to-br from-gray-50 to-slate-50 border border-gray-100">
+                                            <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Avg. per Expense Record</p>
+                                            <p className="text-2xl font-bold text-slate-900 mt-1">BDT {avgExpensePerRecord.toFixed(2)}</p>
+                                            <p className="text-xs text-slate-600 mt-1">Yearly spend per entry</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Card>
                         </div>
                     </div>
+                    <Modal
+                        isOpen={showConnectionModal}
+                        onClose={() => setShowConnectionModal(false)}
+                        title="Backend Connection Test"
+                    >
+                        <div className="max-h-[70vh] overflow-y-auto">
+                            <BackendConnectionTest />
+                        </div>
+                    </Modal>
+                    <Modal
+                        isOpen={showDiagnosticsModal}
+                        onClose={() => setShowDiagnosticsModal(false)}
+                        title="Backend Diagnostics"
+                    >
+                        <div className="max-h-[70vh] overflow-y-auto">
+                            <BackendDiagnostics />
+                        </div>
+                    </Modal>
+                    </>
                 );
         }
     };
