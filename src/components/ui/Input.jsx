@@ -7,20 +7,20 @@ const Input = ({
     ...props 
 }) => {
     return (
-        <div className="mb-4">
+        <div className="mb-5">
             {label && (
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-[var(--color-text-secondary)] mb-2 tracking-wide uppercase">
                     {label}
                 </label>
             )}
             <input
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
-                    error ? 'border-red-500' : 'border-gray-300'
+                className={`w-full px-4 py-3 text-base rounded-xl bg-[rgba(10,15,35,0.65)] border-2 focus:outline-none focus:ring-2 focus:ring-[#38bdf8] focus:border-[#38bdf8] transition-all duration-200 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] ${
+                    error ? 'border-[#f87171]' : 'border-[rgba(148,163,184,0.25)]'
                 } ${className}`}
                 {...props}
             />
             {error && (
-                <p className="mt-1 text-sm text-red-600">{error}</p>
+                <p className="mt-2 text-sm font-medium text-[#fca5a5]">{error}</p>
             )}
         </div>
     );

@@ -446,7 +446,7 @@ const AdminDashboardPage = () => {
             <MobileHeader activeTab={activeTab} setActiveTab={setActiveTab} />
             <div className="flex">
                 <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                <div className="flex-1 p-4 lg:p-8">
+                <div className="flex-1 p-4 lg:p-8 text-[var(--color-text-primary)]">
                     {renderContent()}
                     </div>
                 </div>
