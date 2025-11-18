@@ -25,8 +25,8 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
             <div className="p-7 border-b border-[rgba(148,163,184,0.15)] bg-[rgba(10,15,35,0.8)]">
                 <div className="rounded-2xl p-5 bg-gradient-to-br from-[#0f172a] via-[#0b1120] to-[#1e1b4b] border border-[rgba(124,58,237,0.4)] shadow-[0_20px_45px_rgba(15,23,42,0.8)]">
                     <p className="text-xs uppercase tracking-[0.4em] text-[var(--color-text-muted)] mb-2">Software Gaze</p>
-                    <h1 className="text-2xl font-bold text-white">Portal</h1>
-                    <p className="text-sm text-indigo-200 mt-1">Operate in dark mode</p>
+                    <h1 className="text-2xl font-bold text-white">Office Portal</h1>
+                    
                 </div>
             </div>
             
