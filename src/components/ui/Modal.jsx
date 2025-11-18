@@ -38,10 +38,10 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
 
                 <span className="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
 
-                <div className={`inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-full ${sizes[size]}`}>
+                <div className={`inline-block align-bottom bg-[rgba(10,15,35,0.95)] backdrop-blur-xl rounded-lg text-left overflow-hidden shadow-xl border border-[rgba(148,163,184,0.25)] transform transition-all sm:my-8 sm:align-middle sm:w-full ${sizes[size]}`}>
                     {title && (
-                        <div className="px-6 py-4 border-b border-gray-200">
-                            <h3 className="text-lg font-medium text-gray-900">{title}</h3>
+                        <div className="px-6 py-4 border-b border-[rgba(148,163,184,0.25)] bg-gradient-to-r from-blue-600/20 to-indigo-600/20">
+                            <h3 className="text-lg font-medium text-white">{title}</h3>
                         </div>
                     )}
                     <div className="px-6 py-4">

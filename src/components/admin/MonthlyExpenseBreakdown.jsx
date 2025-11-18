@@ -118,7 +118,7 @@ const MonthlyExpenseBreakdown = () => {
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-gray-900">Monthly Expense Breakdown</h2>
+                <h2 className="text-2xl font-bold text-white">Monthly Expense Breakdown</h2>
                 <Button onClick={fetchBreakdown} variant="secondary">
                     Refresh Data
                 </Button>
@@ -132,46 +132,46 @@ const MonthlyExpenseBreakdown = () => {
 
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card>
+                <Card className="bg-gradient-to-br from-blue-600/20 via-blue-500/15 to-blue-400/20 border-blue-500/30">
                     <div className="p-6">
                         <div className="flex items-center">
-                            <div className="p-2 bg-blue-100 rounded-lg">
+                            <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg">
                                 <span className="text-2xl">💰</span>
                             </div>
                             <div className="ml-4">
-                                <p className="text-sm font-medium text-gray-600">Total Year</p>
-                                <p className="text-2xl font-bold text-gray-900">BDT {totalForYear.toFixed(2)}</p>
+                                <p className="text-sm font-medium text-blue-300">Total Year</p>
+                                <p className="text-2xl font-bold text-white">BDT {totalForYear.toFixed(2)}</p>
                             </div>
                         </div>
                     </div>
                 </Card>
 
-                <Card>
+                <Card className="bg-gradient-to-br from-green-600/20 via-green-500/15 to-green-400/20 border-green-500/30">
                     <div className="p-6">
                         <div className="flex items-center">
-                            <div className="p-2 bg-green-100 rounded-lg">
+                            <div className="p-2 bg-gradient-to-br from-green-500 to-green-600 rounded-lg">
                                 <span className="text-2xl">📈</span>
                             </div>
                             <div className="ml-4">
-                                <p className="text-sm font-medium text-gray-600">Highest Month</p>
-                                <p className="text-2xl font-bold text-gray-900">
+                                <p className="text-sm font-medium text-green-300">Highest Month</p>
+                                <p className="text-2xl font-bold text-white">
                                     {getMonthName(highestMonth.month)}
                                 </p>
-                                <p className="text-sm text-gray-500">BDT {highestMonth.amount.toFixed(2)}</p>
+                                <p className="text-sm text-green-400">BDT {highestMonth.amount.toFixed(2)}</p>
                             </div>
                         </div>
                     </div>
                 </Card>
 
-                <Card>
+                <Card className="bg-gradient-to-br from-purple-600/20 via-purple-500/15 to-purple-400/20 border-purple-500/30">
                     <div className="p-6">
                         <div className="flex items-center">
-                            <div className="p-2 bg-purple-100 rounded-lg">
+                            <div className="p-2 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg">
                                 <span className="text-2xl">📊</span>
                             </div>
                             <div className="ml-4">
-                                <p className="text-sm font-medium text-gray-600">Average/Month</p>
-                                <p className="text-2xl font-bold text-gray-900">
+                                <p className="text-sm font-medium text-purple-300">Average/Month</p>
+                                <p className="text-2xl font-bold text-white">
                                     BDT {(totalForYear / 12).toFixed(2)}
                                 </p>
                             </div>

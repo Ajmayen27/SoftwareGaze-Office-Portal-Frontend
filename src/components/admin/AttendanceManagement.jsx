@@ -221,8 +221,8 @@ const AttendanceManagement = () => {
         const time = now.toTimeString().split(' ')[0].substring(0, 5);
 
         return (
-            <Card className="transition-all duration-300 ease-in-out hover:shadow-2xl bg-white/95 backdrop-blur-xl border border-gray-200/50 shadow-lg rounded-2xl overflow-hidden">
-                <div className="px-8 py-5 border-b border-gray-200/50 bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 shadow-md">
+            <Card className="transition-all duration-300 ease-in-out hover:shadow-2xl backdrop-blur-xl border border-blue-500/30 shadow-lg rounded-2xl overflow-hidden">
+                <div className="px-8 py-5 border-b border-blue-500/30 bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 shadow-md">
                     <h3 className="text-2xl font-bold text-white flex items-center">
                         <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl mr-4 flex items-center justify-center shadow-lg border border-white/30">
                             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -233,21 +233,21 @@ const AttendanceManagement = () => {
                     </h3>
                     <p className="text-blue-100 text-sm mt-1 ml-14">Record new attendance entries for employees</p>
                 </div>
-                <div className="p-8 bg-gradient-to-br from-gray-50/50 to-white">
+                <div className="p-8 bg-gradient-to-br from-gray-800/30 via-gray-800/20 to-gray-900/30">
                     {error && (
-                        <div className="mb-6 bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-500 rounded-lg p-4 shadow-md">
+                        <div className="mb-6 bg-gradient-to-r from-red-600/20 to-red-500/20 border-l-4 border-red-500 rounded-lg p-4 shadow-md">
                             <div className="flex items-center">
-                                <svg className="w-5 h-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <svg className="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                                 </svg>
-                                <p className="text-red-700 text-base font-medium">{error}</p>
+                                <p className="text-red-300 text-base font-medium">{error}</p>
                             </div>
                         </div>
                     )}
                     <form onSubmit={handleAddAttendance} className="space-y-6">
                         <div>
-                            <label className="block text-base font-bold text-gray-700 mb-3 flex items-center">
-                                <svg className="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <label className="block text-base font-bold text-white mb-3 flex items-center">
+                                <svg className="w-5 h-5 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
                                 Employee Username *
@@ -255,12 +255,12 @@ const AttendanceManagement = () => {
                             <select
                                 value={attendanceForm.employeeUsername}
                                 onChange={(e) => setAttendanceForm({ ...attendanceForm, employeeUsername: e.target.value })}
-                                className="w-full px-5 py-3.5 text-base border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
+                                className="w-full px-5 py-3.5 text-base border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-800/50 text-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
                                 required
                             >
-                                <option value="">Select Employee</option>
+                                <option value="" className="bg-gray-800 text-white">Select Employee</option>
                                 {employees.map((emp) => (
-                                    <option key={emp.id} value={emp.username}>
+                                    <option key={emp.id} value={emp.username} className="bg-gray-800 text-white">
                                         {emp.username}
                                     </option>
                                 ))}
@@ -269,8 +269,8 @@ const AttendanceManagement = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label className="block text-base font-bold text-gray-700 mb-3 flex items-center">
-                                    <svg className="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <label className="block text-base font-bold text-white mb-3 flex items-center">
+                                    <svg className="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                     Punch In *
@@ -279,14 +279,14 @@ const AttendanceManagement = () => {
                                     type="datetime-local"
                                     value={attendanceForm.punchIn}
                                     onChange={(e) => setAttendanceForm({ ...attendanceForm, punchIn: e.target.value })}
-                                    className="w-full px-5 py-3.5 text-base border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
+                                    className="w-full px-5 py-3.5 text-base border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-gray-800/50 text-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
                                     required
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-base font-bold text-gray-700 mb-3 flex items-center">
-                                    <svg className="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <label className="block text-base font-bold text-white mb-3 flex items-center">
+                                    <svg className="w-5 h-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                     Punch Out *
@@ -295,15 +295,15 @@ const AttendanceManagement = () => {
                                     type="datetime-local"
                                     value={attendanceForm.punchOut}
                                     onChange={(e) => setAttendanceForm({ ...attendanceForm, punchOut: e.target.value })}
-                                    className="w-full px-5 py-3.5 text-base border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
+                                    className="w-full px-5 py-3.5 text-base border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-gray-800/50 text-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
                                     required
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-base font-bold text-gray-700 mb-3 flex items-center">
-                                <svg className="w-5 h-5 text-gray-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <label className="block text-base font-bold text-white mb-3 flex items-center">
+                                <svg className="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
                                 Comment
@@ -311,13 +311,13 @@ const AttendanceManagement = () => {
                             <textarea
                                 value={attendanceForm.comment}
                                 onChange={(e) => setAttendanceForm({ ...attendanceForm, comment: e.target.value })}
-                                className="w-full px-5 py-3.5 text-base border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm hover:shadow-md transition-all duration-200 font-medium resize-none"
+                                className="w-full px-5 py-3.5 text-base border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-800/50 text-white shadow-sm hover:shadow-md transition-all duration-200 font-medium resize-none placeholder-gray-400"
                                 rows="4"
                                 placeholder="e.g., Worked Full day, Worked Half day, Overtime, etc."
                             />
                         </div>
 
-                        <div className="flex justify-end pt-6 border-t border-gray-200">
+                        <div className="flex justify-end pt-6 border-t border-gray-700/50">
                             <Button
                                 type="submit"
                                 disabled={loading}
@@ -340,8 +340,8 @@ const AttendanceManagement = () => {
 
     const renderViewAllAttendance = () => {
         return (
-            <Card className="transition-all duration-300 ease-in-out hover:shadow-2xl bg-white/95 backdrop-blur-xl border border-gray-200/50 shadow-lg rounded-2xl overflow-hidden">
-                <div className="px-8 py-5 border-b border-gray-200/50 bg-gradient-to-r from-green-500 via-emerald-600 to-teal-600 shadow-md">
+            <Card className="transition-all duration-300 ease-in-out hover:shadow-2xl backdrop-blur-xl border border-green-500/30 shadow-lg rounded-2xl overflow-hidden">
+                <div className="px-8 py-5 border-b border-green-500/30 bg-gradient-to-r from-green-500 via-emerald-600 to-teal-600 shadow-md">
                     <h3 className="text-2xl font-bold text-white flex items-center">
                         <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl mr-4 flex items-center justify-center shadow-lg border border-white/30">
                             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -352,22 +352,22 @@ const AttendanceManagement = () => {
                     </h3>
                     <p className="text-green-100 text-sm mt-1 ml-14">View comprehensive attendance statistics for all employees</p>
                 </div>
-                <div className="p-8 bg-gradient-to-br from-gray-50/50 to-white">
+                <div className="p-8 bg-gradient-to-br from-gray-800/30 via-gray-800/20 to-gray-900/30">
                     {error && (
-                        <div className="mb-6 bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-500 rounded-lg p-4 shadow-md">
+                        <div className="mb-6 bg-gradient-to-r from-red-600/20 to-red-500/20 border-l-4 border-red-500 rounded-lg p-4 shadow-md">
                             <div className="flex items-center">
-                                <svg className="w-5 h-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <svg className="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                                 </svg>
-                                <p className="text-red-700 text-base font-medium">{error}</p>
+                                <p className="text-red-300 text-base font-medium">{error}</p>
                             </div>
                         </div>
                     )}
                     
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                         <div>
-                            <label className="block text-base font-bold text-gray-700 mb-3 flex items-center">
-                                <svg className="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <label className="block text-base font-bold text-white mb-3 flex items-center">
+                                <svg className="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
                                 Month
@@ -375,10 +375,10 @@ const AttendanceManagement = () => {
                             <select
                                 value={summaryMonth}
                                 onChange={(e) => setSummaryMonth(parseInt(e.target.value))}
-                                className="w-full px-5 py-3.5 text-base border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
+                                className="w-full px-5 py-3.5 text-base border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-gray-800/50 text-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
                             >
                                 {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
-                                    <option key={month} value={month}>
+                                    <option key={month} value={month} className="bg-gray-800 text-white">
                                         {new Date(2024, month - 1).toLocaleString('default', { month: 'long' })}
                                     </option>
                                 ))}
@@ -386,8 +386,8 @@ const AttendanceManagement = () => {
                         </div>
 
                         <div>
-                            <label className="block text-base font-bold text-gray-700 mb-3 flex items-center">
-                                <svg className="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <label className="block text-base font-bold text-white mb-3 flex items-center">
+                                <svg className="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 Year
@@ -396,7 +396,7 @@ const AttendanceManagement = () => {
                                 type="number"
                                 value={summaryYear}
                                 onChange={(e) => setSummaryYear(parseInt(e.target.value))}
-                                className="w-full px-5 py-3.5 text-base border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
+                                className="w-full px-5 py-3.5 text-base border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-gray-800/50 text-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
                                 min="2020"
                                 max="2100"
                             />
@@ -424,20 +424,20 @@ const AttendanceManagement = () => {
                             <LoadingSpinner size="lg" />
                         </div>
                     ) : allSummary.length > 0 ? (
-                        <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-md">
+                        <div className="overflow-x-auto rounded-xl border border-gray-700/50 shadow-md">
                             <Table>
                                 <Table.Header>
-                                    <tr className="bg-gradient-to-r from-green-50 to-emerald-50">
-                                        <Table.Cell header className="font-bold text-gray-700">Employee Username</Table.Cell>
-                                        <Table.Cell header className="font-bold text-gray-700">Month</Table.Cell>
-                                        <Table.Cell header className="font-bold text-gray-700">Year</Table.Cell>
-                                        <Table.Cell header className="font-bold text-gray-700">Days Present</Table.Cell>
+                                    <tr className="bg-gradient-to-r from-green-600/20 to-emerald-600/20">
+                                        <Table.Cell header className="font-bold text-base text-white">Employee Username</Table.Cell>
+                                        <Table.Cell header className="font-bold text-base text-white">Month</Table.Cell>
+                                        <Table.Cell header className="font-bold text-base text-white">Year</Table.Cell>
+                                        <Table.Cell header className="font-bold text-base text-white">Days Present</Table.Cell>
                                     </tr>
                                 </Table.Header>
                                 <Table.Body>
                                     {allSummary.map((summary, index) => (
-                                        <Table.Row key={index} className="hover:bg-gradient-to-r hover:from-green-50/50 hover:to-emerald-50/50 transition-all duration-200 border-b border-gray-100">
-                                            <Table.Cell className="font-bold text-base text-gray-800 py-4">
+                                        <Table.Row key={index} className="hover:bg-gray-800/40 transition-all duration-200 border-b border-gray-700/50">
+                                            <Table.Cell className="font-bold text-base text-white py-4">
                                                 <div className="flex items-center">
                                                     <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-emerald-500 rounded-lg flex items-center justify-center text-white font-bold mr-3 shadow-md">
                                                         {summary.employeeUsername.charAt(0).toUpperCase()}
@@ -445,8 +445,8 @@ const AttendanceManagement = () => {
                                                     {summary.employeeUsername}
                                                 </div>
                                             </Table.Cell>
-                                            <Table.Cell className="text-base text-gray-700 font-medium py-4">{summary.month}</Table.Cell>
-                                            <Table.Cell className="text-base text-gray-700 font-medium py-4">{summary.year}</Table.Cell>
+                                            <Table.Cell className="text-base text-white font-medium py-4">{summary.month}</Table.Cell>
+                                            <Table.Cell className="text-base text-white font-medium py-4">{summary.year}</Table.Cell>
                                             <Table.Cell className="text-base py-4">
                                                 <Badge variant="success" className="px-4 py-2 font-bold shadow-md">{summary.daysPresent} days</Badge>
                                             </Table.Cell>
@@ -456,14 +456,14 @@ const AttendanceManagement = () => {
                             </Table>
                         </div>
                     ) : (
-                        <div className="text-center py-16 bg-gradient-to-br from-gray-50 to-white rounded-xl border-2 border-dashed border-gray-300">
-                            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div className="text-center py-16 bg-gradient-to-br from-gray-800/30 via-gray-700/20 to-gray-800/30 rounded-xl border-2 border-dashed border-gray-600/50">
+                            <div className="w-20 h-20 bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
                             </div>
-                            <p className="text-lg font-semibold text-gray-600 mb-2">No attendance records found</p>
-                            <p className="text-base text-gray-500">Please select month and year and click "View Summary" to load data.</p>
+                            <p className="text-lg font-semibold text-white mb-2">No attendance records found</p>
+                            <p className="text-base text-gray-300">Please select month and year and click "View Summary" to load data.</p>
                         </div>
                     )}
                 </div>
@@ -473,8 +473,8 @@ const AttendanceManagement = () => {
 
     const renderViewIndividualAttendance = () => {
         return (
-            <Card className="transition-all duration-300 ease-in-out hover:shadow-2xl bg-white/95 backdrop-blur-xl border border-gray-200/50 shadow-lg rounded-2xl overflow-hidden">
-                <div className="px-8 py-5 border-b border-gray-200/50 bg-gradient-to-r from-purple-500 via-indigo-600 to-purple-600 shadow-md">
+            <Card className="transition-all duration-300 ease-in-out hover:shadow-2xl backdrop-blur-xl border border-purple-500/30 shadow-lg rounded-2xl overflow-hidden">
+                <div className="px-8 py-5 border-b border-purple-500/30 bg-gradient-to-r from-purple-500 via-indigo-600 to-purple-600 shadow-md">
                     <h3 className="text-2xl font-bold text-white flex items-center">
                         <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl mr-4 flex items-center justify-center shadow-lg border border-white/30">
                             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -485,22 +485,22 @@ const AttendanceManagement = () => {
                     </h3>
                     <p className="text-purple-100 text-sm mt-1 ml-14">View detailed attendance records for a specific employee</p>
                 </div>
-                <div className="p-8 bg-gradient-to-br from-gray-50/50 to-white">
+                <div className="p-8 bg-gradient-to-br from-gray-800/30 via-gray-800/20 to-gray-900/30">
                     {error && (
-                        <div className="mb-6 bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-500 rounded-lg p-4 shadow-md">
+                        <div className="mb-6 bg-gradient-to-r from-red-600/20 to-red-500/20 border-l-4 border-red-500 rounded-lg p-4 shadow-md">
                             <div className="flex items-center">
-                                <svg className="w-5 h-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <svg className="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                                 </svg>
-                                <p className="text-red-700 text-base font-medium">{error}</p>
+                                <p className="text-red-300 text-base font-medium">{error}</p>
                             </div>
                         </div>
                     )}
                     
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                         <div>
-                            <label className="block text-base font-bold text-gray-700 mb-3 flex items-center">
-                                <svg className="w-5 h-5 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <label className="block text-base font-bold text-white mb-3 flex items-center">
+                                <svg className="w-5 h-5 text-purple-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
                                 Employee Username *
@@ -508,12 +508,12 @@ const AttendanceManagement = () => {
                             <select
                                 value={individualUsername}
                                 onChange={(e) => setIndividualUsername(e.target.value)}
-                                className="w-full px-5 py-3.5 text-base border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
+                                className="w-full px-5 py-3.5 text-base border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-gray-800/50 text-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
                                 required
                             >
-                                <option value="">Select Employee</option>
+                                <option value="" className="bg-gray-800 text-white">Select Employee</option>
                                 {employees.map((emp) => (
-                                    <option key={emp.id} value={emp.username}>
+                                    <option key={emp.id} value={emp.username} className="bg-gray-800 text-white">
                                         {emp.username}
                                     </option>
                                 ))}
@@ -521,8 +521,8 @@ const AttendanceManagement = () => {
                         </div>
 
                         <div>
-                            <label className="block text-base font-bold text-gray-700 mb-3 flex items-center">
-                                <svg className="w-5 h-5 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <label className="block text-base font-bold text-white mb-3 flex items-center">
+                                <svg className="w-5 h-5 text-purple-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
                                 Month
@@ -530,10 +530,10 @@ const AttendanceManagement = () => {
                             <select
                                 value={individualMonth}
                                 onChange={(e) => setIndividualMonth(parseInt(e.target.value))}
-                                className="w-full px-5 py-3.5 text-base border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
+                                className="w-full px-5 py-3.5 text-base border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-gray-800/50 text-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
                             >
                                 {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
-                                    <option key={month} value={month}>
+                                    <option key={month} value={month} className="bg-gray-800 text-white">
                                         {new Date(2024, month - 1).toLocaleString('default', { month: 'long' })}
                                     </option>
                                 ))}
@@ -541,8 +541,8 @@ const AttendanceManagement = () => {
                         </div>
 
                         <div>
-                            <label className="block text-base font-bold text-gray-700 mb-3 flex items-center">
-                                <svg className="w-5 h-5 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <label className="block text-base font-bold text-white mb-3 flex items-center">
+                                <svg className="w-5 h-5 text-purple-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 Year
@@ -551,7 +551,7 @@ const AttendanceManagement = () => {
                                 type="number"
                                 value={individualYear}
                                 onChange={(e) => setIndividualYear(parseInt(e.target.value))}
-                                className="w-full px-5 py-3.5 text-base border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
+                                className="w-full px-5 py-3.5 text-base border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-gray-800/50 text-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
                                 min="2020"
                                 max="2100"
                             />
@@ -608,14 +608,14 @@ const AttendanceManagement = () => {
                                 </div>
                             </div>
                             
-                            <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-md">
+                            <div className="overflow-x-auto rounded-xl border border-gray-700/50 shadow-md">
                                 <Table>
                                     <Table.Header>
-                                        <tr className="bg-gradient-to-r from-purple-50 to-indigo-50">
-                                            <Table.Cell header className="font-bold text-gray-700">Date</Table.Cell>
-                                            <Table.Cell header className="font-bold text-gray-700">Punch In</Table.Cell>
-                                            <Table.Cell header className="font-bold text-gray-700">Punch Out</Table.Cell>
-                                            <Table.Cell header className="font-bold text-gray-700">Comment</Table.Cell>
+                                        <tr className="bg-gradient-to-r from-purple-600/20 to-indigo-600/20">
+                                            <Table.Cell header className="font-bold text-base text-white">Date</Table.Cell>
+                                            <Table.Cell header className="font-bold text-base text-white">Punch In</Table.Cell>
+                                            <Table.Cell header className="font-bold text-base text-white">Punch Out</Table.Cell>
+                                            <Table.Cell header className="font-bold text-base text-white">Comment</Table.Cell>
                                         </tr>
                                     </Table.Header>
                                     <Table.Body>
@@ -674,53 +674,53 @@ const AttendanceManagement = () => {
                                                           null;
                                             
                                             return (
-                                                <Table.Row key={index} className="hover:bg-gradient-to-r hover:from-purple-50/50 hover:to-indigo-50/50 transition-all duration-200 border-b border-gray-100">
+                                                <Table.Row key={index} className="hover:bg-gray-800/40 transition-all duration-200 border-b border-gray-700/50">
                                                     <Table.Cell className="py-4">
-                                                        <div className="bg-gradient-to-br from-indigo-50 to-purple-50 px-4 py-3 rounded-xl border-2 border-indigo-200 shadow-sm hover:shadow-md transition-all duration-200">
-                                                            <div className="text-xs text-indigo-600 font-bold mb-1 uppercase tracking-wide">
+                                                        <div className="bg-gradient-to-br from-indigo-600/20 via-indigo-500/15 to-purple-600/20 px-4 py-3 rounded-xl border border-indigo-500/30 shadow-sm hover:shadow-md transition-all duration-200">
+                                                            <div className="text-xs text-indigo-300 font-bold mb-1 uppercase tracking-wide">
                                                                 Date
                                                             </div>
-                                                            <div className="text-lg font-bold text-indigo-700">
+                                                            <div className="text-base font-bold text-white">
                                                                 {formattedDate}
                                                             </div>
                                                         </div>
                                                     </Table.Cell>
                                                     <Table.Cell className="py-4">
-                                                        <div className="bg-gradient-to-br from-blue-50 to-cyan-50 px-4 py-3 rounded-xl border-2 border-blue-200 shadow-sm hover:shadow-md transition-all duration-200">
-                                                            <div className="text-xs text-blue-600 font-bold mb-1 uppercase tracking-wide">
+                                                        <div className="bg-gradient-to-br from-blue-600/20 via-blue-500/15 to-cyan-600/20 px-4 py-3 rounded-xl border border-blue-500/30 shadow-sm hover:shadow-md transition-all duration-200">
+                                                            <div className="text-xs text-blue-300 font-bold mb-1 uppercase tracking-wide">
                                                                 Punch In
                                                             </div>
-                                                            <div className="text-base font-bold text-blue-700">
+                                                            <div className="text-base font-bold text-white">
                                                                 {punchInTime.formatted}
                                                             </div>
                                                             {punchInTime.time24 && punchInTime.time24 !== 'N/A' && (
-                                                                <div className="text-xs text-blue-500 mt-1 font-medium">
+                                                                <div className="text-xs text-blue-400 mt-1 font-medium">
                                                                     {punchInTime.time24} (24h)
                                                                 </div>
                                                             )}
                                                         </div>
                                                     </Table.Cell>
                                                     <Table.Cell className="py-4">
-                                                        <div className="bg-gradient-to-br from-green-50 to-emerald-50 px-4 py-3 rounded-xl border-2 border-green-200 shadow-sm hover:shadow-md transition-all duration-200">
-                                                            <div className="text-xs text-green-600 font-bold mb-1 uppercase tracking-wide">
+                                                        <div className="bg-gradient-to-br from-green-600/20 via-green-500/15 to-emerald-600/20 px-4 py-3 rounded-xl border border-green-500/30 shadow-sm hover:shadow-md transition-all duration-200">
+                                                            <div className="text-xs text-green-300 font-bold mb-1 uppercase tracking-wide">
                                                                 Punch Out
                                                             </div>
-                                                            <div className="text-base font-bold text-green-700">
+                                                            <div className="text-base font-bold text-white">
                                                                 {punchOutTime.formatted}
                                                             </div>
                                                             {punchOutTime.time24 && punchOutTime.time24 !== 'N/A' && (
-                                                                <div className="text-xs text-green-500 mt-1 font-medium">
+                                                                <div className="text-xs text-green-400 mt-1 font-medium">
                                                                     {punchOutTime.time24} (24h)
                                                                 </div>
                                                             )}
                                                         </div>
                                                     </Table.Cell>
                                                     <Table.Cell className="py-4">
-                                                        <div className="bg-gradient-to-br from-gray-50 to-slate-50 px-4 py-3 rounded-xl border-2 border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 min-w-[150px]">
-                                                            <div className="text-xs text-gray-600 font-bold mb-1 uppercase tracking-wide">
+                                                        <div className="bg-gradient-to-br from-gray-700/30 via-gray-600/20 to-gray-700/30 px-4 py-3 rounded-xl border border-gray-600/30 shadow-sm hover:shadow-md transition-all duration-200 min-w-[150px]">
+                                                            <div className="text-xs text-gray-300 font-bold mb-1 uppercase tracking-wide">
                                                                 Comment
                                                             </div>
-                                                            <div className="text-base text-gray-700 break-words font-medium">
+                                                            <div className="text-base text-white break-words font-medium">
                                                                 {comment && comment.trim() !== '' ? comment : <span className="text-gray-400 italic">N/A</span>}
                                                             </div>
                                                         </div>
@@ -733,14 +733,14 @@ const AttendanceManagement = () => {
                             </div>
                         </div>
                     ) : (
-                        <div className="text-center py-16 bg-gradient-to-br from-gray-50 to-white rounded-xl border-2 border-dashed border-gray-300">
-                            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div className="text-center py-16 bg-gradient-to-br from-gray-800/30 via-gray-700/20 to-gray-800/30 rounded-xl border-2 border-dashed border-gray-600/50">
+                            <div className="w-20 h-20 bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
                             </div>
-                            <p className="text-lg font-semibold text-gray-600 mb-2">No attendance records found</p>
-                            <p className="text-base text-gray-500">Please enter username, select month and year, then click "View Attendance" to load data.</p>
+                            <p className="text-lg font-semibold text-white mb-2">No attendance records found</p>
+                            <p className="text-base text-gray-300">Please enter username, select month and year, then click "View Attendance" to load data.</p>
                         </div>
                     )}
                 </div>

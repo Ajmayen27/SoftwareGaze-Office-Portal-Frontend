@@ -202,7 +202,7 @@ const SimpleMonthlyBreakdown = () => {
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-gray-900">Monthly Expense Breakdown</h2>
+                <h2 className="text-2xl font-bold text-white">Monthly Expense Breakdown</h2>
                 <Button onClick={fetchExpenses} variant="secondary">
                     Refresh Data
                 </Button>
@@ -216,7 +216,7 @@ const SimpleMonthlyBreakdown = () => {
 
             {/* Summary Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-blue-50 to-blue-100">
+                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-blue-600/20 via-blue-500/15 to-blue-400/20 border-blue-500/30">
                     <div className="p-4 lg:p-6">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
@@ -224,11 +224,11 @@ const SimpleMonthlyBreakdown = () => {
                                     <span className="text-2xl text-white">💰</span>
                                 </div>
                                 <div className="ml-4">
-                                    <p className="text-sm font-medium text-gray-600">Total Year</p>
-                                    <p className="text-xl lg:text-2xl font-bold text-gray-900 animate-pulse">
+                                    <p className="text-sm font-medium text-blue-300">Total Year</p>
+                                    <p className="text-xl lg:text-2xl font-bold text-white animate-pulse">
                                         BDT {totalForYear.toFixed(2)}
                                     </p>
-                                    <p className="text-xs text-blue-600 font-medium">
+                                    <p className="text-xs text-blue-400 font-medium">
                                         {new Date().getFullYear()} Total
                                     </p>
                                 </div>
@@ -240,7 +240,7 @@ const SimpleMonthlyBreakdown = () => {
                     </div>
                 </Card>
 
-                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-green-50 to-green-100">
+                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-green-600/20 via-green-500/15 to-green-400/20 border-green-500/30">
                     <div className="p-4 lg:p-6">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
@@ -248,11 +248,11 @@ const SimpleMonthlyBreakdown = () => {
                                     <span className="text-2xl text-white">📈</span>
                                 </div>
                                 <div className="ml-4">
-                                    <p className="text-sm font-medium text-gray-600">Highest Month</p>
-                                    <p className="text-lg lg:text-xl font-bold text-gray-900">
+                                    <p className="text-sm font-medium text-green-300">Highest Month</p>
+                                    <p className="text-lg lg:text-xl font-bold text-white">
                                         {getMonthName(highestMonth.month)}
                                     </p>
-                                    <p className="text-sm text-green-600 font-medium">
+                                    <p className="text-sm text-green-400 font-medium">
                                         BDT {highestMonth.amount.toFixed(2)}
                                     </p>
                                 </div>
@@ -264,7 +264,7 @@ const SimpleMonthlyBreakdown = () => {
                     </div>
                 </Card>
 
-                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-purple-50 to-purple-100 sm:col-span-2 lg:col-span-1">
+                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-purple-600/20 via-purple-500/15 to-purple-400/20 border-purple-500/30 sm:col-span-2 lg:col-span-1">
                     <div className="p-4 lg:p-6">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
@@ -272,11 +272,11 @@ const SimpleMonthlyBreakdown = () => {
                                     <span className="text-2xl text-white">📊</span>
                                 </div>
                                 <div className="ml-4">
-                                    <p className="text-sm font-medium text-gray-600">Average/Month</p>
-                                    <p className="text-xl lg:text-2xl font-bold text-gray-900">
+                                    <p className="text-sm font-medium text-purple-300">Average/Month</p>
+                                    <p className="text-xl lg:text-2xl font-bold text-white">
                                         BDT {(totalForYear / 12).toFixed(2)}
                                     </p>
-                                    <p className="text-xs text-purple-600 font-medium">
+                                    <p className="text-xs text-purple-400 font-medium">
                                         Monthly Average
                                     </p>
                                 </div>
@@ -291,8 +291,8 @@ const SimpleMonthlyBreakdown = () => {
 
             {/* Month Selection and Expenses List */}
             <Card className="transform transition-all duration-300 hover:shadow-xl">
-                <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-purple-50">
-                    <h3 className="text-lg font-medium text-gray-900 flex items-center">
+                <div className="px-6 py-4 border-b border-indigo-500/30 bg-gradient-to-r from-indigo-600/20 to-purple-600/20">
+                    <h3 className="text-lg font-medium text-white flex items-center">
                         <span className="mr-2">📅</span>
                         Monthly Expense Details
                     </h3>
@@ -301,46 +301,46 @@ const SimpleMonthlyBreakdown = () => {
                     {/* Month and Year Selection */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-white mb-2">
                                 Select Month
                             </label>
                             <select
                                 value={selectedMonth}
                                 onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-4 py-2 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             >
                                 {monthNames.map((month, index) => (
-                                    <option key={month} value={index}>
+                                    <option key={month} value={index} className="bg-gray-800 text-white">
                                         {month}
                                     </option>
                                 ))}
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-white mb-2">
                                 Select Year
                             </label>
                             <select
                                 value={selectedYear}
                                 onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-4 py-2 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             >
                                 {[2023, 2024, 2025, 2026].map(year => (
-                                    <option key={year} value={year}>
+                                    <option key={year} value={year} className="bg-gray-800 text-white">
                                         {year}
                                     </option>
                                 ))}
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-white mb-2">
                                 Total for Selected Month
                             </label>
-                            <div className="px-4 py-2 bg-green-50 border border-green-200 rounded-lg">
-                                <p className="text-lg font-bold text-green-700">
+                            <div className="px-4 py-2 bg-gradient-to-br from-green-600/20 via-green-500/15 to-green-400/20 border border-green-500/30 rounded-lg">
+                                <p className="text-lg font-bold text-green-400">
                                     BDT {selectedMonthTotal.toFixed(2)}
                                 </p>
-                                <p className="text-xs text-green-600">
+                                <p className="text-xs text-green-300">
                                     {selectedMonthExpenses.length} expenses
                                 </p>
                             </div>
@@ -353,7 +353,7 @@ const SimpleMonthlyBreakdown = () => {
                             selectedMonthExpenses.map((expense, index) => (
                                 <div 
                                     key={expense.id || Math.random()}
-                                    className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-all duration-300 transform hover:scale-105 border border-gray-200"
+                                    className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-800/30 transition-all duration-300 transform hover:scale-105 border border-gray-700/50"
                                     style={{ animationDelay: `${index * 50}ms` }}
                                     >
                                     <div className="flex items-center space-x-4">
@@ -361,18 +361,18 @@ const SimpleMonthlyBreakdown = () => {
                                             {expense.billType ? expense.billType.charAt(0).toUpperCase() : 'E'}
                                         </div>
                                         <div>
-                                            <p className="font-medium text-gray-900">{expense.billType || 'N/A'}</p>
-                                            <p className="text-sm text-gray-500">
+                                            <p className="font-medium text-white">{expense.billType || 'N/A'}</p>
+                                            <p className="text-sm text-gray-300">
                                                 {expense.comment || 'No comment'}
                                             </p>
                                         </div>
                                     </div>
                                     <div className="flex items-center space-x-4">
                                     <div className="text-right">
-                                            <p className="text-lg font-bold text-green-600">
+                                            <p className="text-lg font-bold text-green-400">
                                                 BDT {(expense.amount || 0).toFixed(2)}
                                             </p>
-                                            <p className="text-xs text-gray-500">
+                                            <p className="text-xs text-gray-400">
                                                 {expense.date ? new Date(expense.date).toLocaleDateString() : 'N/A'}
                                             </p>
                                         </div>
@@ -395,7 +395,7 @@ const SimpleMonthlyBreakdown = () => {
                             ))
                         ) : (
                             <div className="text-center py-8">
-                                <p className="text-gray-500">No expenses found for {monthNames[selectedMonth]} {selectedYear}</p>
+                                <p className="text-gray-300">No expenses found for {monthNames[selectedMonth]} {selectedYear}</p>
                                             </div>
                                         )}
                     </div>
@@ -404,50 +404,50 @@ const SimpleMonthlyBreakdown = () => {
 
             {/* Monthly Details Table */}
             <Card>
-                <div className="px-6 py-4 border-b border-gray-200">
-                    <h3 className="text-lg font-medium text-gray-900">Monthly Details</h3>
+                <div className="px-6 py-4 border-b border-gray-700/50 bg-gradient-to-r from-indigo-600/20 to-purple-600/20">
+                    <h3 className="text-lg font-medium text-white">Monthly Details</h3>
                 </div>
                 <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                    <table className="min-w-full divide-y divide-gray-700/50">
+                        <thead className="bg-gray-800/50">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                     Month
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                     Amount
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                     Percentage
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                     Status
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
+                        <tbody className="bg-gray-900/30 divide-y divide-gray-700/50">
                             {Object.entries(breakdown).map(([month, amount]) => {
                                 const percentage = totalForYear > 0 ? (amount / totalForYear) * 100 : 0;
                                 const isCurrentMonth = new Date().getMonth() === Object.keys(breakdown).indexOf(month);
                                 
                                 return (
-                                    <tr key={month} className={isCurrentMonth ? 'bg-blue-50' : ''}>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <tr key={month} className={isCurrentMonth ? 'bg-blue-600/20' : ''}>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
                                             {getMonthName(month)}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                                             BDT {amount.toFixed(2)}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                                             {percentage.toFixed(1)}%
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             {isCurrentMonth ? (
-                                                <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-500/30 text-blue-300 border border-blue-500/50">
                                                     Current Month
                                                 </span>
                                             ) : (
-                                                <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
+                                                <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-700/50 text-gray-300 border border-gray-600/50">
                                                     {amount > 0 ? 'Active' : 'No Expenses'}
                                                 </span>
                                             )}
@@ -471,78 +471,80 @@ const SimpleMonthlyBreakdown = () => {
                 size="md"
             >
                 {editingExpense && (
-                    <form onSubmit={handleUpdateExpense} className="space-y-4">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <Input
-                                    label="Bill Type"
-                                    name="billType"
-                                    value={editingExpense.billType}
-                                    onChange={handleInputChange}
-                                    required
-                                    placeholder="e.g., Office Supplies, Utilities"
-                                />
+                    <div className="bg-gradient-to-br from-gray-800/30 via-gray-800/20 to-gray-900/30 backdrop-blur-sm p-6 rounded-lg border border-blue-500/30">
+                        <form onSubmit={handleUpdateExpense} className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <Input
+                                        label="Bill Type"
+                                        name="billType"
+                                        value={editingExpense.billType}
+                                        onChange={handleInputChange}
+                                        required
+                                        placeholder="e.g., Office Supplies, Utilities"
+                                    />
+                                </div>
+                                
+                                <div>
+                                    <Input
+                                        label="Amount"
+                                        name="amount"
+                                        type="number"
+                                        step="0.01"
+                                        value={editingExpense.amount}
+                                        onChange={handleInputChange}
+                                        required
+                                        placeholder="0.00"
+                                    />
+                                </div>
                             </div>
                             
                             <div>
                                 <Input
-                                    label="Amount"
-                                    name="amount"
-                                    type="number"
-                                    step="0.01"
-                                    value={editingExpense.amount}
+                                    label="Date"
+                                    name="date"
+                                    type="date"
+                                    value={editingExpense.date}
                                     onChange={handleInputChange}
                                     required
-                                    placeholder="0.00"
                                 />
                             </div>
-                        </div>
-                        
-                        <div>
-                            <Input
-                                label="Date"
-                                name="date"
-                                type="date"
-                                value={editingExpense.date}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-                        
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Comment
-                            </label>
-                            <textarea
-                                name="comment"
-                                value={editingExpense.comment || ''}
-                                onChange={handleInputChange}
-                                rows="3"
-                                placeholder="Add any additional details about this expense..."
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-                            />
-                        </div>
-                        
-                        <div className="flex justify-end space-x-4 pt-4">
-                            <Button
-                                type="button"
-                                variant="secondary"
-                                onClick={() => {
-                                    setEditModal(false);
-                                    setEditingExpense(null);
-                                }}
-                                className="transform transition-all duration-300 hover:scale-105 hover:shadow-md"
-                            >
-                                Cancel
-                            </Button>
-                            <Button 
-                                type="submit"
-                                className="transform transition-all duration-300 hover:scale-105 hover:shadow-md bg-gradient-to-r from-blue-500 to-blue-600"
-                            >
-                                Update Expense
-                            </Button>
-                        </div>
-                    </form>
+                            
+                            <div>
+                                <label className="block text-sm font-semibold text-white mb-2 tracking-wide uppercase">
+                                    Comment
+                                </label>
+                                <textarea
+                                    name="comment"
+                                    value={editingExpense.comment || ''}
+                                    onChange={handleInputChange}
+                                    rows="3"
+                                    placeholder="Add any additional details about this expense..."
+                                    className="w-full px-4 py-3 border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-800/50 text-white placeholder-gray-400 transition-all duration-300"
+                                />
+                            </div>
+                            
+                            <div className="flex justify-end space-x-4 pt-4">
+                                <Button
+                                    type="button"
+                                    variant="secondary"
+                                    onClick={() => {
+                                        setEditModal(false);
+                                        setEditingExpense(null);
+                                    }}
+                                    className="transform transition-all duration-300 hover:scale-105 hover:shadow-md"
+                                >
+                                    Cancel
+                                </Button>
+                                <Button 
+                                    type="submit"
+                                    className="transform transition-all duration-300 hover:scale-105 hover:shadow-md bg-gradient-to-r from-blue-500 to-blue-600"
+                                >
+                                    Update Expense
+                                </Button>
+                            </div>
+                        </form>
+                    </div>
                 )}
             </Modal>
 
@@ -556,28 +558,30 @@ const SimpleMonthlyBreakdown = () => {
                 title="Confirm Delete"
                 size="sm"
             >
-                <div className="space-y-4">
-                    <p className="text-gray-700">
-                        Are you sure you want to delete this expense? This action cannot be undone.
-                    </p>
-                    <div className="flex justify-end space-x-4 pt-4">
-                        <Button
-                            type="button"
-                            variant="secondary"
-                            onClick={() => {
-                                setDeleteConfirmModal(false);
-                                setExpenseToDelete(null);
-                            }}
-                            className="transform transition-all duration-300 hover:scale-105 hover:shadow-md"
-                        >
-                            Cancel
-                        </Button>
-                        <Button 
-                            onClick={handleDeleteExpense}
-                            className="transform transition-all duration-300 hover:scale-105 hover:shadow-md bg-gradient-to-r from-red-500 to-red-600"
-                        >
-                            Delete
-                        </Button>
+                <div className="bg-gradient-to-br from-gray-800/30 via-gray-800/20 to-gray-900/30 backdrop-blur-sm p-6 rounded-lg border border-red-500/30">
+                    <div className="space-y-4">
+                        <p className="text-white">
+                            Are you sure you want to delete this expense? This action cannot be undone.
+                        </p>
+                        <div className="flex justify-end space-x-4 pt-4">
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                onClick={() => {
+                                    setDeleteConfirmModal(false);
+                                    setExpenseToDelete(null);
+                                }}
+                                className="transform transition-all duration-300 hover:scale-105 hover:shadow-md"
+                            >
+                                Cancel
+                            </Button>
+                            <Button 
+                                onClick={handleDeleteExpense}
+                                className="transform transition-all duration-300 hover:scale-105 hover:shadow-md bg-gradient-to-r from-red-500 to-red-600"
+                            >
+                                Delete
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </Modal>

@@ -100,91 +100,91 @@ const EmployeeManagement = () => {
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h2 className="text-3xl font-bold text-gray-900 flex items-center">
+                    <h2 className="text-3xl font-bold text-white flex items-center">
                         Employee Management
                     </h2>
-                    <p className="text-gray-600 mt-1">Manage your team members and their roles</p>
+                    <p className="text-gray-300 mt-1">Manage your team members and their roles</p>
                 </div>
                 <div className="flex items-center space-x-4">
-                    <div className="text-sm text-gray-600 bg-white/50 px-4 py-2 rounded-lg backdrop-blur-sm border border-white/30">
-                        Total: <span className="font-bold text-blue-600">{employees.length}</span> employees
+                    <div className="text-base font-medium text-white bg-gradient-to-br from-blue-600/20 via-blue-500/15 to-indigo-600/20 border border-blue-500/30 px-4 py-2 rounded-lg backdrop-blur-sm">
+                        Total: <span className="font-bold text-blue-400">{employees.length}</span> employees
                     </div>
                 </div>
             </div>
 
             {error && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                    <p className="text-red-600">{error}</p>
+                <div className="bg-gradient-to-r from-red-600/20 to-red-500/20 border-l-4 border-red-500 rounded-lg p-4">
+                    <p className="text-red-300">{error}</p>
                 </div>
             )}
 
-            <Card className="transition-all duration-200 ease-in-out hover:shadow-xl bg-white/80 backdrop-blur-xl border border-white/30 overflow-hidden">
-                <div className="px-6 py-4 border-b border-white/20 bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-sm">
-                    <h3 className="text-lg font-medium text-gray-800 flex items-center">
+            <Card className="transition-all duration-200 ease-in-out hover:shadow-xl backdrop-blur-xl border border-blue-500/30 overflow-hidden">
+                <div className="px-6 py-4 border-b border-blue-500/30 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 backdrop-blur-sm">
+                    <h3 className="text-xl font-bold text-white flex items-center">
                         <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg mr-3 flex items-center justify-center">
                             <div className="w-4 h-4 bg-white rounded-sm"></div>
                         </div>
                         Employee Directory
                     </h3>
                 </div>
-                <div className="overflow-x-auto bg-white/30 backdrop-blur-sm">
+                <div className="overflow-x-auto bg-gray-900/30 backdrop-blur-sm">
                     <Table>
                     <Table.Header>
-                        <tr className="bg-white/20 backdrop-blur-sm">
-                            <Table.Cell header className="text-gray-700">Employee</Table.Cell>
-                            <Table.Cell header className="text-gray-700">Email</Table.Cell>
-                            <Table.Cell header className="text-gray-700">Designation</Table.Cell>
-                            <Table.Cell header className="text-gray-700">Role</Table.Cell>
-                            <Table.Cell header className="text-gray-700">Actions</Table.Cell>
+                        <tr className="bg-gray-800/50 backdrop-blur-sm">
+                            <Table.Cell header className="text-base font-bold text-white uppercase tracking-wider">Employee</Table.Cell>
+                            <Table.Cell header className="text-base font-bold text-white uppercase tracking-wider">Email</Table.Cell>
+                            <Table.Cell header className="text-base font-bold text-white uppercase tracking-wider">Designation</Table.Cell>
+                            <Table.Cell header className="text-base font-bold text-white uppercase tracking-wider">Role</Table.Cell>
+                            <Table.Cell header className="text-base font-bold text-white uppercase tracking-wider">Actions</Table.Cell>
                         </tr>
                     </Table.Header>
                     <Table.Body>
                         {employees.map((employee, index) => (
                             <Table.Row 
                                 key={employee.id}
-                                className="transition-all duration-200 ease-in-out hover:bg-white/30 hover:shadow-md group border-b border-white/10"
+                                className="transition-all duration-200 ease-in-out hover:bg-gray-800/40 hover:shadow-md group border-b border-gray-700/50"
                                 style={{ animationDelay: `${index * 50}ms` }}
                             >
-                                <Table.Cell className="px-6 py-4">
+                                <Table.Cell className="px-6 py-5">
                                     <div className="flex items-center">
                                         <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold shadow-md group-hover:shadow-lg group-hover:scale-105 transition-all duration-200 ease-in-out">
                                             <div className="w-6 h-6 bg-white rounded-sm"></div>
                                         </div>
                                         <div className="ml-4">
-                                            <div className="text-sm font-bold text-gray-800">
+                                            <div className="text-base font-bold text-white">
                                                 {employee.username}
                                             </div>
-                                            <div className="text-xs text-gray-500 bg-gray-50/50 px-2 py-1 rounded-md backdrop-blur-sm">
+                                            <div className="text-sm text-gray-300 bg-gray-800/50 px-2 py-1 rounded-md backdrop-blur-sm mt-1">
                                                 ID: {employee.id}
                                             </div>
                                         </div>
                                     </div>
                                 </Table.Cell>
-                                <Table.Cell className="px-6 py-4">
-                                    <div className="text-sm text-gray-800 bg-blue-50/50 px-3 py-1 rounded-lg backdrop-blur-sm group-hover:bg-blue-100/70 group-hover:scale-105 transition-all duration-200 ease-in-out">
+                                <Table.Cell className="px-6 py-5">
+                                    <div className="text-base font-medium text-white bg-gradient-to-br from-blue-600/20 via-blue-500/15 to-indigo-600/20 border border-blue-500/30 px-4 py-2 rounded-lg backdrop-blur-sm group-hover:from-blue-600/30 group-hover:via-blue-500/25 group-hover:to-indigo-600/30 group-hover:scale-105 transition-all duration-200 ease-in-out">
                                         {employee.email}
                                     </div>
                                 </Table.Cell>
-                                <Table.Cell className="px-6 py-4">
-                                    <div className="text-sm text-gray-800 bg-gray-50/50 px-3 py-1 rounded-lg backdrop-blur-sm group-hover:bg-gray-100/70 group-hover:scale-105 transition-all duration-200 ease-in-out">
+                                <Table.Cell className="px-6 py-5">
+                                    <div className="text-base font-medium text-white bg-gradient-to-br from-gray-700/30 via-gray-600/20 to-gray-700/30 border border-gray-600/30 px-4 py-2 rounded-lg backdrop-blur-sm group-hover:from-gray-700/40 group-hover:via-gray-600/30 group-hover:to-gray-700/40 group-hover:scale-105 transition-all duration-200 ease-in-out">
                                         {employee.designation}
                                     </div>
                                 </Table.Cell>
-                                <Table.Cell className="px-6 py-4">
+                                <Table.Cell className="px-6 py-5">
                                     <Badge 
                                         variant={employee.role === 'ADMIN' ? 'danger' : 'success'}
-                                        className="transition-all duration-200 ease-in-out group-hover:scale-105"
+                                        className="transition-all duration-200 ease-in-out group-hover:scale-105 text-base font-bold px-3 py-1"
                                     >
                                         {employee.role}
                                     </Badge>
                                 </Table.Cell>
-                                <Table.Cell className="px-6 py-4">
+                                <Table.Cell className="px-6 py-5">
                                     <div className="flex space-x-2">
                                         <Button
                                             variant="secondary"
                                             size="sm"
                                             onClick={() => handleEditEmployee(employee)}
-                                            className="transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-md"
+                                            className="transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-md text-base font-medium px-4 py-2"
                                         >
                                              Edit
                                         </Button>
@@ -192,7 +192,7 @@ const EmployeeManagement = () => {
                                             variant="danger"
                                             size="sm"
                                             onClick={() => setDeleteModal({ isOpen: true, employee })}
-                                            className="transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-md"
+                                            className="transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-md text-base font-medium px-4 py-2"
                                         >
                                              Delete
                                         </Button>
@@ -210,17 +210,17 @@ const EmployeeManagement = () => {
                 onClose={() => setDeleteModal({ isOpen: false, employee: null })}
                 title="Delete Employee"
             >
-                <div className="bg-gradient-to-br from-red-50/80 to-red-100/80 backdrop-blur-sm p-6 rounded-lg border border-red-200/30">
+                <div className="bg-gradient-to-br from-gray-800/30 via-gray-800/20 to-gray-900/30 backdrop-blur-sm p-6 rounded-lg border border-red-500/30">
                     <div className="space-y-4">
                         <div className="flex items-center space-x-3">
                             <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center">
                                 <div className="w-6 h-6 bg-white rounded-sm"></div>
                             </div>
                             <div>
-                                <p className="text-gray-800 font-medium">
-                                    Are you sure you want to delete <strong>{deleteModal.employee?.username}</strong>?
+                                <p className="text-white font-medium">
+                                    Are you sure you want to delete <strong className="text-red-400">{deleteModal.employee?.username}</strong>?
                                 </p>
-                                <p className="text-sm text-gray-600 mt-1">
+                                <p className="text-sm text-gray-300 mt-1">
                                     This action cannot be undone.
                                 </p>
                             </div>
@@ -256,7 +256,7 @@ const EmployeeManagement = () => {
                 size="lg"
             >
                 {editingEmployee && (
-                    <div className="bg-gradient-to-br from-blue-50/80 to-indigo-50/80 backdrop-blur-sm p-6 rounded-lg border border-blue-200/30">
+                    <div className="bg-gradient-to-br from-gray-800/30 via-gray-800/20 to-gray-900/30 backdrop-blur-sm p-6 rounded-lg border border-blue-500/30">
                         <form onSubmit={handleUpdateEmployee} className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="transform transition-all duration-200 ease-in-out hover:scale-105">
@@ -306,18 +306,18 @@ const EmployeeManagement = () => {
                             </div>
 
                             <div className="transform transition-all duration-200 ease-in-out hover:scale-105">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-semibold text-white mb-2 tracking-wide uppercase">
                                     Role
                                 </label>
                                 <select
                                     name="role"
                                     value={editingEmployee.role || 'USER'}
                                     onChange={handleInputChange}
-                                    className="w-full px-4 py-3 border border-white/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm transition-all duration-200 ease-in-out hover:shadow-md"
+                                    className="w-full px-4 py-3 border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-800/50 text-white transition-all duration-200 ease-in-out hover:shadow-md"
                                     required
                                 >
-                                    <option value="USER">USER</option>
-                                    <option value="ADMIN">ADMIN</option>
+                                    <option value="USER" className="bg-gray-800 text-white">USER</option>
+                                    <option value="ADMIN" className="bg-gray-800 text-white">ADMIN</option>
                                 </select>
                             </div>
                             

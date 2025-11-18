@@ -171,7 +171,7 @@ const AdminDashboardPage = () => {
                         ) : (
                             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6">
                                 {/* Total Employees Card */}
-                                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-blue-600/20 via-blue-500/15 to-blue-400/20 border-blue-500/30">
                                     <div className="p-3 sm:p-4 lg:p-6">
                                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
                                             <div className="flex items-center w-full sm:w-auto">
@@ -179,21 +179,21 @@ const AdminDashboardPage = () => {
                                                     <div className="w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-sm"></div>
                                                 </div>
                                                 <div className="ml-3 sm:ml-4 min-w-0 flex-1">
-                                                    <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Total Employees</p>
-                                                    <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900 animate-pulse">
+                                                    <p className="text-xs sm:text-sm font-medium text-blue-300 truncate">Total Employees</p>
+                                                    <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-white animate-pulse">
                                                         {dashboardData.totalEmployees}
                                                     </p>
                                                 </div>
                                             </div>
                                             <div className="flex justify-end w-full sm:w-auto">
-                                                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full animate-pulse"></div>
+                                                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-blue-400 rounded-full animate-pulse"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </Card>
 
                                 {/* Monthly Expenses Card */}
-                                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-green-600/20 via-green-500/15 to-green-400/20 border-green-500/30">
                                     <div className="p-3 sm:p-4 lg:p-6">
                                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
                                             <div className="flex items-center w-full sm:w-auto">
@@ -201,11 +201,11 @@ const AdminDashboardPage = () => {
                                                     <div className="w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-sm"></div>
                                                 </div>
                                                 <div className="ml-3 sm:ml-4 min-w-0 flex-1">
-                                                    <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">This Month</p>
-                                                    <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
+                                                    <p className="text-xs sm:text-sm font-medium text-green-300 truncate">This Month</p>
+                                                    <p className="text-lg sm:text-xl lg:text-2xl font-bold text-white">
                                                         BDT {(dashboardData.monthlyExpenses || 0).toFixed(2)}
                                                     </p>
-                                                    <p className="text-xs text-green-600 font-medium truncate">
+                                                    <p className="text-xs text-green-400 font-medium truncate">
                                                         Current Month Total
                                                     </p>
                                                 </div>
@@ -218,7 +218,7 @@ const AdminDashboardPage = () => {
                                 </Card>
 
                                 {/* Yearly Expenses Card */}
-                                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-purple-600/20 via-purple-500/15 to-purple-400/20 border-purple-500/30">
                                     <div className="p-3 sm:p-4 lg:p-6">
                                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
                                             <div className="flex items-center w-full sm:w-auto">
@@ -226,11 +226,11 @@ const AdminDashboardPage = () => {
                                                     <div className="w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-sm"></div>
                                                 </div>
                                                 <div className="ml-3 sm:ml-4 min-w-0 flex-1">
-                                                    <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">This Year</p>
-                                                    <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
+                                                    <p className="text-xs sm:text-sm font-medium text-purple-300 truncate">This Year</p>
+                                                    <p className="text-lg sm:text-xl lg:text-2xl font-bold text-white">
                                                         BDT {(dashboardData.yearlyExpenses || 0).toFixed(2)}
                                                     </p>
-                                                    <p className="text-xs text-purple-600 font-medium truncate">
+                                                    <p className="text-xs text-purple-400 font-medium truncate">
                                                         {new Date().getFullYear()} Total
                                                     </p>
                                                 </div>
@@ -243,7 +243,7 @@ const AdminDashboardPage = () => {
                                 </Card>
 
                                 {/* Total Expenses Count Card */}
-                                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                                <Card className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-orange-600/20 via-orange-500/15 to-orange-400/20 border-orange-500/30">
                                     <div className="p-3 sm:p-4 lg:p-6">
                                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
                                             <div className="flex items-center w-full sm:w-auto">
@@ -251,11 +251,11 @@ const AdminDashboardPage = () => {
                                                     <div className="w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-sm"></div>
                                                 </div>
                                                 <div className="ml-3 sm:ml-4 min-w-0 flex-1">
-                                                    <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Total Records</p>
-                                                    <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900">
+                                                    <p className="text-xs sm:text-sm font-medium text-orange-300 truncate">Total Records</p>
+                                                    <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-white">
                                                         {dashboardData.totalExpenses}
                                                     </p>
-                                                    <p className="text-xs text-orange-600 font-medium truncate">
+                                                    <p className="text-xs text-orange-400 font-medium truncate">
                                                         Expense Records
                                                     </p>
                                                 </div>
@@ -271,8 +271,8 @@ const AdminDashboardPage = () => {
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             <Card className="transform transition-all duration-300 hover:shadow-xl">
-                                <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
-                                    <h3 className="text-lg font-medium text-gray-900 flex items-center">
+                                <div className="px-6 py-4 border-b border-blue-500/30 bg-gradient-to-r from-blue-600/20 to-indigo-600/20">
+                                    <h3 className="text-lg font-medium text-white flex items-center">
                                         <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg mr-3 flex items-center justify-center">
                                             <div className="w-3 h-3 bg-white rounded-sm"></div>
                                         </div>
@@ -283,61 +283,61 @@ const AdminDashboardPage = () => {
                                     <div className="space-y-3">
                                         <button
                                             onClick={() => setActiveTab('employees')}
-                                            className="w-full text-left p-4 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 transition-all duration-300 transform hover:scale-105 hover:shadow-md group"
+                                            className="w-full text-left p-4 rounded-xl hover:bg-gradient-to-r hover:from-blue-600/20 hover:to-blue-500/20 transition-all duration-300 transform hover:scale-105 hover:shadow-md group"
                                         >
                                             <div className="flex items-center">
-                                                <div className="w-10 h-10 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors duration-300 flex items-center justify-center">
-                                                    <div className="w-5 h-5 bg-blue-600 rounded-sm"></div>
+                                                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg group-hover:from-blue-400 group-hover:to-blue-500 transition-colors duration-300 flex items-center justify-center">
+                                                    <div className="w-5 h-5 bg-white rounded-sm"></div>
                                                 </div>
                                                 <div className="ml-4">
-                                                    <span className="font-medium text-gray-900">Manage Employees</span>
-                                                    <p className="text-sm text-gray-500">Add, edit, or remove employees</p>
+                                                    <span className="font-medium text-white">Manage Employees</span>
+                                                    <p className="text-sm text-gray-300">Add, edit, or remove employees</p>
                                                 </div>
                                                 <div className="ml-auto">
-                                                    <span className="text-blue-500 group-hover:translate-x-1 transition-transform duration-300">→</span>
+                                                    <span className="text-blue-400 group-hover:translate-x-1 transition-transform duration-300">→</span>
                                                 </div>
                                             </div>
                                         </button>
                                         
                                         <button
                                             onClick={() => setActiveTab('expenses')}
-                                            className="w-full text-left p-4 rounded-xl hover:bg-gradient-to-r hover:from-green-50 hover:to-green-100 transition-all duration-300 transform hover:scale-105 hover:shadow-md group"
+                                            className="w-full text-left p-4 rounded-xl hover:bg-gradient-to-r hover:from-green-600/20 hover:to-green-500/20 transition-all duration-300 transform hover:scale-105 hover:shadow-md group"
                                         >
                                             <div className="flex items-center">
-                                                <div className="w-10 h-10 bg-green-100 rounded-lg group-hover:bg-green-200 transition-colors duration-300 flex items-center justify-center">
-                                                    <div className="w-5 h-5 bg-green-600 rounded-sm"></div>
+                                                <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg group-hover:from-green-400 group-hover:to-green-500 transition-colors duration-300 flex items-center justify-center">
+                                                    <div className="w-5 h-5 bg-white rounded-sm"></div>
                                                 </div>
                                                 <div className="ml-4">
-                                                    <span className="font-medium text-gray-900">Manage Expenses</span>
-                                                    <p className="text-sm text-gray-500">Track and manage expenses</p>
+                                                    <span className="font-medium text-white">Manage Expenses</span>
+                                                    <p className="text-sm text-gray-300">Track and manage expenses</p>
                                                 </div>
                                                 <div className="ml-auto">
-                                                    <span className="text-green-500 group-hover:translate-x-1 transition-transform duration-300">→</span>
+                                                    <span className="text-green-400 group-hover:translate-x-1 transition-transform duration-300">→</span>
                                                 </div>
                                             </div>
                                         </button>
                                         
                                         <button
                                             onClick={() => setActiveTab('monthly-breakdown')}
-                                            className="w-full text-left p-4 rounded-xl hover:bg-gradient-to-r hover:from-purple-50 hover:to-purple-100 transition-all duration-300 transform hover:scale-105 hover:shadow-md group"
+                                            className="w-full text-left p-4 rounded-xl hover:bg-gradient-to-r hover:from-purple-600/20 hover:to-purple-500/20 transition-all duration-300 transform hover:scale-105 hover:shadow-md group"
                                         >
                                             <div className="flex items-center">
-                                                <div className="w-10 h-10 bg-purple-100 rounded-lg group-hover:bg-purple-200 transition-colors duration-300 flex items-center justify-center">
-                                                    <div className="w-5 h-5 bg-purple-600 rounded-sm"></div>
+                                                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg group-hover:from-purple-400 group-hover:to-purple-500 transition-colors duration-300 flex items-center justify-center">
+                                                    <div className="w-5 h-5 bg-white rounded-sm"></div>
                                                 </div>
                                                 <div className="ml-4">
-                                                    <span className="font-medium text-gray-900">Monthly Breakdown</span>
-                                                    <p className="text-sm text-gray-500">View monthly expense analysis</p>
+                                                    <span className="font-medium text-white">Monthly Breakdown</span>
+                                                    <p className="text-sm text-gray-300">View monthly expense analysis</p>
                                                 </div>
                                                 <div className="ml-auto">
-                                                    <span className="text-purple-500 group-hover:translate-x-1 transition-transform duration-300">→</span>
+                                                    <span className="text-purple-400 group-hover:translate-x-1 transition-transform duration-300">→</span>
                                                 </div>
                                             </div>
                                         </button>
                                     </div>
 
-                                    <div className="pt-5 mt-5 border-t border-gray-100">
-                                        <p className="text-sm font-semibold text-gray-700 mb-3">Backend Utilities</p>
+                                    <div className="pt-5 mt-5 border-t border-blue-500/30">
+                                        <p className="text-sm font-semibold text-white mb-3">Backend Utilities</p>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                             <button
                                                 onClick={() => setShowConnectionModal(true)}
@@ -363,8 +363,8 @@ const AdminDashboardPage = () => {
                             </Card>
 
                             <Card className="transform transition-all duration-300 hover:shadow-xl">
-                                <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-teal-50">
-                                    <h3 className="text-lg font-medium text-gray-900 flex items-center">
+                                <div className="px-6 py-4 border-b border-emerald-500/30 bg-gradient-to-r from-emerald-600/20 to-teal-600/20">
+                                    <h3 className="text-lg font-medium text-white flex items-center">
                                         <div className="w-6 h-6 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg mr-3 flex items-center justify-center">
                                             <div className="w-3 h-3 bg-white rounded-sm"></div>
                                         </div>
@@ -374,41 +374,41 @@ const AdminDashboardPage = () => {
                                 <div className="p-6 space-y-6">
                                     <div>
                                         <div className="flex items-center justify-between mb-2">
-                                            <p className="text-sm font-semibold text-gray-700">Monthly spend vs yearly budget</p>
-                                            <span className="text-sm font-bold text-emerald-600">{monthlyToYearlyPercent.toFixed(1)}%</span>
+                                            <p className="text-sm font-semibold text-white">Monthly spend vs yearly budget</p>
+                                            <span className="text-sm font-bold text-emerald-400">{monthlyToYearlyPercent.toFixed(1)}%</span>
                                         </div>
-                                        <div className="w-full h-3 rounded-full bg-gray-100">
+                                        <div className="w-full h-3 rounded-full bg-gray-700/50">
                                             <div
                                                 className="h-3 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500"
                                                 style={{ width: `${monthlyToYearlyPercent}%` }}
                                             ></div>
                                         </div>
-                                        <p className="text-xs text-gray-500 mt-1">BDT {(dashboardData.monthlyExpenses || 0).toFixed(2)} of BDT {(dashboardData.yearlyExpenses || 0).toFixed(2)} spent</p>
+                                        <p className="text-xs text-gray-300 mt-1">BDT {(dashboardData.monthlyExpenses || 0).toFixed(2)} of BDT {(dashboardData.yearlyExpenses || 0).toFixed(2)} spent</p>
                                     </div>
 
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        <div className="p-4 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100">
-                                            <p className="text-xs font-semibold text-blue-600 uppercase tracking-wide">Projected Annual Spend</p>
-                                            <p className="text-2xl font-bold text-blue-900 mt-1">BDT {projectedAnnualExpenses.toFixed(2)}</p>
-                                            <p className="text-xs text-blue-600 mt-1">Based on current month</p>
+                                        <div className="p-4 rounded-xl bg-gradient-to-br from-blue-600/20 via-blue-500/15 to-indigo-600/20 border border-blue-500/30">
+                                            <p className="text-xs font-semibold text-blue-300 uppercase tracking-wide">Projected Annual Spend</p>
+                                            <p className="text-2xl font-bold text-white mt-1">BDT {projectedAnnualExpenses.toFixed(2)}</p>
+                                            <p className="text-xs text-blue-400 mt-1">Based on current month</p>
                                         </div>
 
-                                        <div className="p-4 rounded-xl bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-100">
-                                            <p className="text-xs font-semibold text-orange-600 uppercase tracking-wide">Expense Coverage</p>
-                                            <p className="text-2xl font-bold text-orange-900 mt-1">{expenseCoverage.toFixed(1)}%</p>
-                                            <p className="text-xs text-orange-600 mt-1">Yearly expenses vs projection</p>
+                                        <div className="p-4 rounded-xl bg-gradient-to-br from-orange-600/20 via-orange-500/15 to-amber-600/20 border border-orange-500/30">
+                                            <p className="text-xs font-semibold text-orange-300 uppercase tracking-wide">Expense Coverage</p>
+                                            <p className="text-2xl font-bold text-white mt-1">{expenseCoverage.toFixed(1)}%</p>
+                                            <p className="text-xs text-orange-400 mt-1">Yearly expenses vs projection</p>
                                         </div>
 
-                                        <div className="p-4 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100">
-                                            <p className="text-xs font-semibold text-purple-600 uppercase tracking-wide">Avg. per Employee</p>
-                                            <p className="text-2xl font-bold text-purple-900 mt-1">BDT {avgExpensePerEmployee.toFixed(2)}</p>
-                                            <p className="text-xs text-purple-600 mt-1">Annual spend per employee</p>
+                                        <div className="p-4 rounded-xl bg-gradient-to-br from-purple-600/20 via-purple-500/15 to-pink-600/20 border border-purple-500/30">
+                                            <p className="text-xs font-semibold text-purple-300 uppercase tracking-wide">Avg. per Employee</p>
+                                            <p className="text-2xl font-bold text-white mt-1">BDT {avgExpensePerEmployee.toFixed(2)}</p>
+                                            <p className="text-xs text-purple-400 mt-1">Annual spend per employee</p>
                                         </div>
 
-                                        <div className="p-4 rounded-xl bg-gradient-to-br from-gray-50 to-slate-50 border border-gray-100">
-                                            <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Avg. per Expense Record</p>
-                                            <p className="text-2xl font-bold text-slate-900 mt-1">BDT {avgExpensePerRecord.toFixed(2)}</p>
-                                            <p className="text-xs text-slate-600 mt-1">Yearly spend per entry</p>
+                                        <div className="p-4 rounded-xl bg-gradient-to-br from-gray-600/20 via-gray-500/15 to-slate-600/20 border border-gray-500/30">
+                                            <p className="text-xs font-semibold text-gray-300 uppercase tracking-wide">Avg. per Expense Record</p>
+                                            <p className="text-2xl font-bold text-white mt-1">BDT {avgExpensePerRecord.toFixed(2)}</p>
+                                            <p className="text-xs text-gray-400 mt-1">Yearly spend per entry</p>
                                         </div>
                                     </div>
                                 </div>
