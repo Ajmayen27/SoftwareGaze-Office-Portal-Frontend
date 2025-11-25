@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { mockEmployees, mockExpenses, mockAnalytics } from './mockData.js';
 
-const API_BASE_URL = 'http://localhost:8081/api';
+const API_BASE_URL = `${process.env.REACT_APP_API_URL}`;
 
 // Create axios instance with default config
 const apiClient = axios.create({
