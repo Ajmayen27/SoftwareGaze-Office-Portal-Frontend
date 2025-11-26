@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_BASE_URL } from '../../utils/constants';
 
 const JwtDebugger = () => {
     const [token, setToken] = useState('');
@@ -33,7 +34,7 @@ const JwtDebugger = () => {
     const testApiCall = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:8081/api/expense', {
+            const response = await fetch(`${API_BASE_URL.replace(/\/$/, '')}/expense`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

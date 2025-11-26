@@ -1,11 +1,8 @@
 import axios from 'axios';
-
-
-// IMPORTANT: Ensure your backend is running on port 8081
-const API_URL = `${process.env.REACT_APP_API_URL}/auth/`;
+import { API_BASE_URL } from '../utils/constants';
 
 const signup = (username, password, email, designation, role) => {
-    return axios.post(API_URL + 'signup', {
+    return axios.post(`${API_BASE_URL.replace(/\/$/, '')}/auth/signup`, {
         username,
         password,
         email,
@@ -15,7 +12,7 @@ const signup = (username, password, email, designation, role) => {
 };
 
 const signin = (username, password) => {
-    return axios.post(API_URL + 'signin', {
+    return axios.post(`${API_BASE_URL.replace(/\/$/, '')}/auth/signin`, {
         username,
         password,
     });

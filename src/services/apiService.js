@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-
-const API_BASE_URL = `${process.env.REACT_APP_API_URL}`;
+// Use Vite env var first, fallback to CRA-style REACT_APP_API_URL for compatibility
+const API_BASE_URL = import.meta.env.VITE_API_URL || (typeof process !== 'undefined' && process.env?.REACT_APP_API_URL) || 'http://localhost:8081/api';
 
 // Create axios instance with default config
 const apiClient = axios.create({
@@ -32,9 +32,9 @@ apiClient.interceptors.response.use(
         console.error('API Error:', error);
         
         if (error.code === 'ERR_NETWORK' || error.code === 'ECONNREFUSED') {
-            console.error('❌ Backend server is not running on http://localhost:8081');
-            console.error('💡 Please start your Spring Boot backend server');
-            throw new Error('Backend server is not running. Please start your Spring Boot backend server on http://localhost:8081');
+            console.error(`❌ Backend server is not reachable at ${API_BASE_URL}`);
+            console.error('💡 Please start your backend server or verify the host and port');
+            throw new Error(`Backend server is not running. Please start your backend server at ${API_BASE_URL}`);
         }
         
         if (error.response?.status === 401) {

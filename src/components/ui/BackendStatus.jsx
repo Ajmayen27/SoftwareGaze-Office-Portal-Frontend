@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../../utils/constants';
 
 const BackendStatus = () => {
     const [status, setStatus] = useState('checking');
@@ -10,7 +11,7 @@ const BackendStatus = () => {
 
     const checkBackendStatus = async () => {
         try {
-            const response = await fetch('http://localhost:8081/api/admin/expenses', {
+            const response = await fetch(`${API_BASE_URL.replace(/\/$/, '')}/admin/expenses`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,

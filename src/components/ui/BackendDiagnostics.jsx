@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_BASE_URL } from '../../utils/constants';
 
 const BackendDiagnostics = () => {
     const [diagnostics, setDiagnostics] = useState(null);
@@ -10,7 +11,7 @@ const BackendDiagnostics = () => {
 
         // Test 1: Basic connectivity
         try {
-            const response = await fetch('http://localhost:8081/actuator/health', {
+            const response = await fetch(`${API_BASE_URL.replace(/\/$/, '')}/actuator/health`, {
                 method: 'GET',
                 mode: 'cors'
             });
@@ -29,10 +30,10 @@ const BackendDiagnostics = () => {
 
         // Test 2: CORS preflight
         try {
-            const response = await fetch('http://localhost:8081/api/auth/signup', {
+            const response = await fetch(`${API_BASE_URL.replace(/\/$/, '')}/auth/signup`, {
                 method: 'OPTIONS',
                 headers: {
-                    'Origin': 'http://localhost:5173',
+                    'Origin': window.location.origin,
                     'Access-Control-Request-Method': 'POST',
                     'Access-Control-Request-Headers': 'Content-Type'
                 }
@@ -52,11 +53,11 @@ const BackendDiagnostics = () => {
 
         // Test 3: Authentication endpoint
         try {
-            const response = await fetch('http://localhost:8081/api/auth/signup', {
+            const response = await fetch(`${API_BASE_URL.replace(/\/$/, '')}/auth/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Origin': 'http://localhost:5173'
+                    'Origin': window.location.origin
                 },
                 body: JSON.stringify({
                     username: 'test',
@@ -81,10 +82,10 @@ const BackendDiagnostics = () => {
 
         // Test 4: Admin endpoint (without auth)
         try {
-            const response = await fetch('http://localhost:8081/api/admin/expenses', {
+            const response = await fetch(`${API_BASE_URL.replace(/\/$/, '')}/admin/expenses`, {
                 method: 'GET',
                 headers: {
-                    'Origin': 'http://localhost:5173'
+                    'Origin': window.location.origin
                 }
             });
             results.push({

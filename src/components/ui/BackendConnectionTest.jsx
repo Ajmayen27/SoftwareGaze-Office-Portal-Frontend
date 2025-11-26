@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../../utils/constants';
 
 const BackendConnectionTest = () => {
     const [testResults, setTestResults] = useState([]);
     const [isRunning, setIsRunning] = useState(false);
 
     const testEndpoints = [
-        { name: 'Auth Signup', url: '/api/auth/signup', method: 'POST' },
-        { name: 'Auth Signin', url: '/api/auth/signin', method: 'POST' },
-        { name: 'Get Employees', url: '/api/admin/employees', method: 'GET' },
-        { name: 'Get Expenses', url: '/api/admin/expenses', method: 'GET' },
-        { name: 'Get Users', url: '/api/users', method: 'GET' },
+        { name: 'Auth Signup', url: '/auth/signup', method: 'POST' },
+        { name: 'Auth Signin', url: '/auth/signin', method: 'POST' },
+        { name: 'Get Employees', url: '/admin/employees', method: 'GET' },
+        { name: 'Get Expenses', url: '/admin/expenses', method: 'GET' },
+        { name: 'Get Users', url: '/users', method: 'GET' },
     ];
 
     const testConnection = async () => {
@@ -18,7 +19,7 @@ const BackendConnectionTest = () => {
         
         for (const endpoint of testEndpoints) {
             try {
-                const response = await fetch(`http://localhost:8081${endpoint.url}`, {
+                const response = await fetch(`${API_BASE_URL.replace(/\/$/, '')}${endpoint.url}`, {
                     method: endpoint.method,
                     headers: {
                         'Content-Type': 'application/json',
@@ -81,7 +82,7 @@ const BackendConnectionTest = () => {
                 <h4 className="font-medium text-blue-900 mb-2">Backend Setup Checklist:</h4>
                 <ul className="text-sm text-blue-800 space-y-1">
                     <li>✅ Spring Boot server running on port 8081</li>
-                    <li>✅ CORS enabled for http://localhost:5173</li>
+                    <li>✅ CORS enabled for {window.location.origin}</li>
                     <li>✅ H2 database configured</li>
                     <li>✅ JWT authentication configured</li>
                     <li>✅ All required endpoints implemented</li>

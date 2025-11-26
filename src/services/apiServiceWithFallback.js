@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { mockEmployees, mockExpenses, mockAnalytics } from './mockData.js';
 
-const API_BASE_URL = `${process.env.REACT_APP_API_URL}`;
+// Use Vite env var first, fallback to CRA-style REACT_APP_API_URL for compatibility
+const API_BASE_URL = import.meta.env.VITE_API_URL || (typeof process !== 'undefined' && process.env?.REACT_APP_API_URL) || 'http://localhost:8081/api';
 
 // Create axios instance with default config
 const apiClient = axios.create({
