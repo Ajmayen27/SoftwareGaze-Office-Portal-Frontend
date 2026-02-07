@@ -11,19 +11,22 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.90.19",
     "axios": "^1.7.2",
     "jwt-decode": "^4.0.0",
+    "lucide-react": "^0.263.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.24.1",
     "react-hot-toast": "^2.4.1",
-    "lucide-react": "^0.263.1"
+    "react-router-dom": "^6.24.1",
+    "recharts": "^3.7.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.19",
+    "baseline-browser-mapping": "^2.9.14",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.2",
     "eslint-plugin-react-hooks": "^4.6.2",

@@ -1,5 +1,22 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
+// Robust local JWT payload decoder (small, dependency-free) — avoids bundler import issues
+function decodeToken(token) {
+    if (!token || typeof token !== 'string') throw new Error('Invalid token');
+    const parts = token.split('.');
+    if (parts.length !== 3) throw new Error('Invalid token format');
+    const payload = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    try {
+        const json = decodeURIComponent(atob(payload).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+        return JSON.parse(json);
+    } catch (err) {
+        // Fallback: try simple atob parse for tokens that are plain base64
+        try {
+            return JSON.parse(atob(payload));
+        } catch (err2) {
+            throw new Error('Failed to decode token payload');
+        }
+    }
+}
 
 const AuthContext = createContext();
 
@@ -19,13 +36,16 @@ export const AuthProvider = ({ children }) => {
         const token = localStorage.getItem('token');
         if (token) {
             try {
-                const decodedToken = jwtDecode(token);
+                const decodedToken = decodeToken(token);
+                // Debug: log non-sensitive claims to help confirm role/exp
+                console.debug('Decoded token payload (claims):', { sub: decodedToken.sub, role: decodedToken.role, exp: decodedToken.exp });
                 const currentTime = Date.now() / 1000;
                 
                 if (decodedToken.exp > currentTime) {
+                    const roleValue = Array.isArray(decodedToken.role) ? decodedToken.role[0] : decodedToken.role;
                     setUser({
                         username: decodedToken.sub,
-                        role: decodedToken.role[0],
+                        role: roleValue,
                         token: token
                     });
                 } else {
@@ -42,10 +62,11 @@ export const AuthProvider = ({ children }) => {
     const login = (token) => {
         localStorage.setItem('token', token);
         try {
-            const decodedToken = jwtDecode(token);
+            const decodedToken = decodeToken(token);            // Debug: log non-sensitive claims to help confirm role/exp
+            console.debug('Decoded token payload (claims):', { sub: decodedToken.sub, role: decodedToken.role, exp: decodedToken.exp });            const roleValue = Array.isArray(decodedToken.role) ? decodedToken.role[0] : decodedToken.role;
             setUser({
                 username: decodedToken.sub,
-                role: decodedToken.role[0],
+                role: roleValue,
                 token: token
             });
         } catch (error) {
@@ -64,7 +85,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         loading,
         isAuthenticated: !!user,
-        isAdmin: user?.role === 'ROLE_ADMIN'
+        isAdmin: !!user?.role && user.role.toString().toUpperCase().includes('ADMIN')
     };
 
     return (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { adminService } from '../../services/apiService';
+import { adminService } from '../../services/admin.service';
 import { useNotification } from '../../contexts/NotificationContext';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
@@ -13,7 +13,7 @@ const AttendanceManagement = () => {
     const [activeView, setActiveView] = useState('add'); // 'add', 'all', 'individual'
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    
+
     // Add Attendance State
     const [attendanceForm, setAttendanceForm] = useState({
         employeeUsername: '',
@@ -21,21 +21,27 @@ const AttendanceManagement = () => {
         punchOut: '',
         comment: ''
     });
-    
+
     // View All Attendance State
     const [allSummary, setAllSummary] = useState([]);
     const [summaryMonth, setSummaryMonth] = useState(new Date().getMonth() + 1);
     const [summaryYear, setSummaryYear] = useState(new Date().getFullYear());
-    
+    const [summaryStatusFilter, setSummaryStatusFilter] = useState('Present');
+
     // View Individual Attendance State
     const [individualAttendance, setIndividualAttendance] = useState(null);
     const [individualUsername, setIndividualUsername] = useState('');
     const [individualMonth, setIndividualMonth] = useState(new Date().getMonth() + 1);
     const [individualYear, setIndividualYear] = useState(new Date().getFullYear());
-    
+    const [commentFilter, setCommentFilter] = useState('');
+
+    // Delete Modal State
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [attendanceToDelete, setAttendanceToDelete] = useState(null);
+
     // Employees list for dropdown
     const [employees, setEmployees] = useState([]);
-    
+
     const { showSuccess, showError, showInfo } = useNotification();
 
     useEffect(() => {
@@ -59,7 +65,7 @@ const AttendanceManagement = () => {
         try {
             // Format the date-time strings to ISO format (datetime-local returns YYYY-MM-DDTHH:mm, need YYYY-MM-DDTHH:mm:ss)
             const formatDateTime = (dateTimeString) => {
-                if (!dateTimeString) return '';
+                if (!dateTimeString) return null;
                 // If it doesn't have seconds, add :00
                 if (dateTimeString.length === 16) {
                     return dateTimeString + ':00';
@@ -75,7 +81,7 @@ const AttendanceManagement = () => {
             };
 
             await adminService.addAttendance(attendanceData);
-            
+
             // Reset form
             setAttendanceForm({
                 employeeUsername: '',
@@ -83,7 +89,7 @@ const AttendanceManagement = () => {
                 punchOut: '',
                 comment: ''
             });
-            
+
             showSuccess(`Attendance added successfully for Employee ${attendanceData.employeeUsername}`);
         } catch (err) {
             const errorMessage = err.response?.data?.message || err.message || 'Failed to add attendance';
@@ -98,15 +104,71 @@ const AttendanceManagement = () => {
     const handleViewAllAttendance = async () => {
         setError('');
         setLoading(true);
+        setAllSummary([]);
 
         try {
-            const response = await adminService.getAttendanceSummary(summaryMonth, summaryYear);
-            setAllSummary(response.data || []);
-            if ((response.data || []).length === 0) {
-                showInfo(`No attendance records found for ${summaryMonth}/${summaryYear}`);
-            } else {
-                showSuccess(`Found ${response.data.length} employee attendance records`);
+            // Get employee list if not already available
+            let empList = employees;
+            if (empList.length === 0) {
+                try {
+                    const empRes = await adminService.getEmployees();
+                    empList = empRes.data || [];
+                    setEmployees(empList);
+                } catch (e) {
+                    console.error("Failed to fetch employees list inside summary view", e);
+                    empList = [];
+                }
             }
+
+            if (empList.length === 0) {
+                showInfo("No employees found to generate summary.");
+                setLoading(false);
+                return;
+            }
+
+            // Fetch attendance for each employee individually to count by status
+            const promises = empList.map(async (emp) => {
+                try {
+                    // Start with default object
+                    const result = {
+                        employeeUsername: emp.username,
+                        month: new Date(2024, summaryMonth - 1).toLocaleString('default', { month: 'long' }),
+                        year: summaryYear,
+                        count: 0
+                    };
+
+                    const response = await adminService.getIndividualAttendance(emp.username, summaryMonth, summaryYear);
+                    const responseData = response.data;
+
+                    if (responseData && responseData.attendances && Array.isArray(responseData.attendances)) {
+                        result.count = responseData.attendances.filter(att => {
+                            // If filter is empty/All, count everything
+                            if (summaryStatusFilter === 'All Records' || !summaryStatusFilter) return true;
+
+                            const comment = att.comment || att.Comment || att.COMMENT || att.note || att.notes || att.description || att.Description || '';
+                            // Case-sensitive exact match might be too strict if data is messy, but based on dropdown values it should be fine.
+                            return comment === summaryStatusFilter;
+                        }).length;
+                    }
+                    return result;
+
+                } catch (err) {
+                    console.error(`Failed to fetch attendance for ${emp.username}`, err);
+                    // Return zero count entry on error
+                    return {
+                        employeeUsername: emp.username,
+                        month: new Date(2024, summaryMonth - 1).toLocaleString('default', { month: 'long' }),
+                        year: summaryYear,
+                        count: 0
+                    };
+                }
+            });
+
+            const results = await Promise.all(promises);
+            setAllSummary(results);
+
+            showSuccess(`Processed attendance records for ${results.length} employees`);
+
         } catch (err) {
             const errorMessage = err.response?.data?.message || err.message || 'Failed to fetch attendance summary';
             setError(errorMessage);
@@ -133,10 +195,10 @@ const AttendanceManagement = () => {
             console.log('Individual attendance API response:', response);
             console.log('Response data:', response.data);
             console.log('Response status:', response.status);
-            
+
             // Axios wraps the response, so response.data contains the actual API response
             const responseData = response.data;
-            
+
             // New API structure: { month, year, employee, attendances: [{ day, punchIn, punchOut }] }
             // Check if response has attendances array
             if (responseData && responseData.attendances && Array.isArray(responseData.attendances) && responseData.attendances.length > 0) {
@@ -151,17 +213,56 @@ const AttendanceManagement = () => {
             console.error('Failed to fetch individual attendance:', err);
             console.error('Error response:', err.response);
             console.error('Error response data:', err.response?.data);
-            
+
             const errorMessage = err.response?.data?.message || err.message || 'Failed to fetch individual attendance';
             setError(errorMessage);
             setIndividualAttendance(null);
-            
+
             // If it's a 404, show info instead of error
             if (err.response?.status === 404) {
                 showInfo(`No attendance records found for ${individualUsername} in ${individualMonth}/${individualYear}`);
             } else {
                 showError(errorMessage);
             }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDeleteClick = (attendance) => {
+        setAttendanceToDelete(attendance);
+        setDeleteModalOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!attendanceToDelete) return;
+
+        try {
+            setLoading(true);
+
+            // Extract parameters for the new API: username, year, month, day
+            const username = individualAttendance?.employee || individualUsername;
+            const year = individualAttendance?.year || individualYear;
+            const month = individualAttendance?.month || individualMonth;
+            const day = attendanceToDelete.day;
+
+            if (!username || !year || !month || !day) {
+                showError('Cannot delete: Missing required parameters (username, year, month, or day)');
+                setLoading(false);
+                return;
+            }
+
+            await adminService.deleteAttendance(username, year, month, day);
+            showSuccess('Attendance has been deleted successfully');
+            setDeleteModalOpen(false);
+            setAttendanceToDelete(null);
+
+            // Refresh data
+            await handleViewIndividualAttendance();
+        } catch (err) {
+            const errorMessage = err.response?.data?.message || err.message || 'Failed to delete attendance';
+            showError(errorMessage);
+            console.error('Failed to delete attendance:', err);
         } finally {
             setLoading(false);
         }
@@ -179,8 +280,8 @@ const AttendanceManagement = () => {
     const formatFullDateTime = (dateArray) => {
         if (!dateArray || !Array.isArray(dateArray) || dateArray.length < 5) return { date: 'N/A', time: 'N/A', hour: 'N/A', minute: 'N/A' };
         const [year, month, day, hour, minute] = dateArray;
-        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
-                           'July', 'August', 'September', 'October', 'November', 'December'];
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'];
         const hour12 = hour % 12 || 12;
         const ampm = hour >= 12 ? 'PM' : 'AM';
         return {
@@ -197,16 +298,16 @@ const AttendanceManagement = () => {
     const formatDateArray = (dateArray) => {
         if (!dateArray || !Array.isArray(dateArray) || dateArray.length < 3) return 'N/A';
         const [year, month, day] = dateArray;
-        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
-                           'July', 'August', 'September', 'October', 'November', 'December'];
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'];
         return `${day}, ${monthNames[month - 1]} ${year}`;
     };
 
     const formatDateParts = (dateArray) => {
         if (!dateArray || !Array.isArray(dateArray) || dateArray.length < 3) return { day: 'N/A', month: 'N/A', year: 'N/A' };
         const [year, month, day] = dateArray;
-        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
-                           'July', 'August', 'September', 'October', 'November', 'December'];
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'];
         return {
             day: day,
             month: monthNames[month - 1],
@@ -273,14 +374,14 @@ const AttendanceManagement = () => {
                                     <svg className="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    Punch In *
+                                    Punch In
                                 </label>
                                 <input
                                     type="datetime-local"
                                     value={attendanceForm.punchIn}
                                     onChange={(e) => setAttendanceForm({ ...attendanceForm, punchIn: e.target.value })}
                                     className="w-full px-5 py-3.5 text-base border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-gray-800/50 text-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
-                                    required
+                                    style={{ colorScheme: 'dark' }}
                                 />
                             </div>
 
@@ -289,14 +390,14 @@ const AttendanceManagement = () => {
                                     <svg className="w-5 h-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    Punch Out *
+                                    Punch Out
                                 </label>
                                 <input
                                     type="datetime-local"
                                     value={attendanceForm.punchOut}
                                     onChange={(e) => setAttendanceForm({ ...attendanceForm, punchOut: e.target.value })}
                                     className="w-full px-5 py-3.5 text-base border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-gray-800/50 text-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
-                                    required
+                                    style={{ colorScheme: 'dark' }}
                                 />
                             </div>
                         </div>
@@ -308,13 +409,19 @@ const AttendanceManagement = () => {
                                 </svg>
                                 Comment
                             </label>
-                            <textarea
+                            <select
                                 value={attendanceForm.comment}
                                 onChange={(e) => setAttendanceForm({ ...attendanceForm, comment: e.target.value })}
-                                className="w-full px-5 py-3.5 text-base border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-800/50 text-white shadow-sm hover:shadow-md transition-all duration-200 font-medium resize-none placeholder-gray-400"
-                                rows="4"
-                                placeholder="e.g., Worked Full day, Worked Half day, Overtime, etc."
-                            />
+                                className="w-full px-5 py-3.5 text-base border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-800/50 text-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
+                            >
+                                <option value="" className="bg-gray-800 text-white">Select Status</option>
+                                <option value="Present" className="bg-gray-800 text-white">Present</option>
+                                <option value="Absent" className="bg-gray-800 text-white">Absent</option>
+                                <option value="Leave" className="bg-gray-800 text-white">Leave</option>
+                                <option value="Sick" className="bg-gray-800 text-white">Sick</option>
+                                <option value="Office Tour" className="bg-gray-800 text-white">Office Tour</option>
+                                <option value="Other" className="bg-gray-800 text-white">Other</option>
+                            </select>
                         </div>
 
                         <div className="flex justify-end pt-6 border-t border-gray-700/50">
@@ -363,8 +470,8 @@ const AttendanceManagement = () => {
                             </div>
                         </div>
                     )}
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                         <div>
                             <label className="block text-base font-bold text-white mb-3 flex items-center">
                                 <svg className="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -401,6 +508,27 @@ const AttendanceManagement = () => {
                                 max="2100"
                             />
                         </div>
+                        <div>
+                            <label className="block text-base font-bold text-white mb-3 flex items-center">
+                                <svg className="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                                Filter by Status
+                            </label>
+                            <select
+                                value={summaryStatusFilter}
+                                onChange={(e) => setSummaryStatusFilter(e.target.value)}
+                                className="w-full px-5 py-3.5 text-base border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-gray-800/50 text-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
+                            >
+                                <option value="Present" className="bg-gray-800 text-white">Present</option>
+                                <option value="Absent" className="bg-gray-800 text-white">Absent</option>
+                                <option value="Leave" className="bg-gray-800 text-white">Leave</option>
+                                <option value="Sick" className="bg-gray-800 text-white">Sick</option>
+                                <option value="Office Tour" className="bg-gray-800 text-white">Office Tour</option>
+                                <option value="Other" className="bg-gray-800 text-white">Other</option>
+                                <option value="All Records" className="bg-gray-800 text-white">All Records</option>
+                            </select>
+                        </div>
 
                         <div className="flex items-end">
                             <Button
@@ -431,7 +559,7 @@ const AttendanceManagement = () => {
                                         <Table.Cell header className="font-bold text-base text-white">Employee Username</Table.Cell>
                                         <Table.Cell header className="font-bold text-base text-white">Month</Table.Cell>
                                         <Table.Cell header className="font-bold text-base text-white">Year</Table.Cell>
-                                        <Table.Cell header className="font-bold text-base text-white">Days Present</Table.Cell>
+                                        <Table.Cell header className="font-bold text-base text-white">Days {summaryStatusFilter === 'All Records' || !summaryStatusFilter ? 'Total' : summaryStatusFilter}</Table.Cell>
                                     </tr>
                                 </Table.Header>
                                 <Table.Body>
@@ -448,7 +576,7 @@ const AttendanceManagement = () => {
                                             <Table.Cell className="text-base text-white font-medium py-4">{summary.month}</Table.Cell>
                                             <Table.Cell className="text-base text-white font-medium py-4">{summary.year}</Table.Cell>
                                             <Table.Cell className="text-base py-4">
-                                                <Badge variant="success" className="px-4 py-2 font-bold shadow-md">{summary.daysPresent} days</Badge>
+                                                <Badge variant="success" className="px-4 py-2 font-bold shadow-md">{summary.count} days</Badge>
                                             </Table.Cell>
                                         </Table.Row>
                                     ))}
@@ -496,8 +624,10 @@ const AttendanceManagement = () => {
                             </div>
                         </div>
                     )}
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+
+                    {/* Layout Refinement: Username on top row, filters and button below */}
+                    <div className="space-y-6 mb-8">
+                        {/* Row 1: Employee Username - Full width for better visibility */}
                         <div>
                             <label className="block text-base font-bold text-white mb-3 flex items-center">
                                 <svg className="w-5 h-5 text-purple-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -520,57 +650,82 @@ const AttendanceManagement = () => {
                             </select>
                         </div>
 
-                        <div>
-                            <label className="block text-base font-bold text-white mb-3 flex items-center">
-                                <svg className="w-5 h-5 text-purple-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                Month
-                            </label>
-                            <select
-                                value={individualMonth}
-                                onChange={(e) => setIndividualMonth(parseInt(e.target.value))}
-                                className="w-full px-5 py-3.5 text-base border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-gray-800/50 text-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
-                            >
-                                {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
-                                    <option key={month} value={month} className="bg-gray-800 text-white">
-                                        {new Date(2024, month - 1).toLocaleString('default', { month: 'long' })}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block text-base font-bold text-white mb-3 flex items-center">
-                                <svg className="w-5 h-5 text-purple-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                Year
-                            </label>
-                            <input
-                                type="number"
-                                value={individualYear}
-                                onChange={(e) => setIndividualYear(parseInt(e.target.value))}
-                                className="w-full px-5 py-3.5 text-base border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-gray-800/50 text-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
-                                min="2020"
-                                max="2100"
-                            />
-                        </div>
-
-                        <div className="flex items-end">
-                            <Button
-                                onClick={handleViewIndividualAttendance}
-                                disabled={loading}
-                                loading={loading}
-                                className="w-full bg-gradient-to-r from-purple-500 via-indigo-600 to-purple-600 hover:from-purple-600 hover:via-indigo-700 hover:to-purple-700 text-white font-bold px-6 py-3.5 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-                            >
-                                <span className="flex items-center justify-center">
-                                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        {/* Row 2: Filters and Action Button */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div>
+                                <label className="block text-base font-bold text-white mb-3 flex items-center">
+                                    <svg className="w-5 h-5 text-purple-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
-                                    View Attendance
-                                </span>
-                            </Button>
+                                    Month
+                                </label>
+                                <select
+                                    value={individualMonth}
+                                    onChange={(e) => setIndividualMonth(parseInt(e.target.value))}
+                                    className="w-full px-5 py-3.5 text-base border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-gray-800/50 text-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
+                                >
+                                    {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
+                                        <option key={month} value={month} className="bg-gray-800 text-white">
+                                            {new Date(2024, month - 1).toLocaleString('default', { month: 'long' })}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-base font-bold text-white mb-3 flex items-center">
+                                    <svg className="w-5 h-5 text-purple-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Year
+                                </label>
+                                <input
+                                    type="number"
+                                    value={individualYear}
+                                    onChange={(e) => setIndividualYear(parseInt(e.target.value))}
+                                    className="w-full px-5 py-3.5 text-base border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-gray-800/50 text-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
+                                    min="2020"
+                                    max="2100"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-base font-bold text-white mb-3 flex items-center">
+                                    <svg className="w-5 h-5 text-purple-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                    Status
+                                </label>
+                                <select
+                                    value={commentFilter}
+                                    onChange={(e) => setCommentFilter(e.target.value)}
+                                    className="w-full px-5 py-3.5 text-base border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-gray-800/50 text-white shadow-sm hover:shadow-md transition-all duration-200 font-medium"
+                                >
+                                    <option value="" className="bg-gray-800 text-white">All Records</option>
+                                    <option value="Present" className="bg-gray-800 text-white">Present</option>
+                                    <option value="Absent" className="bg-gray-800 text-white">Absent</option>
+                                    <option value="Leave" className="bg-gray-800 text-white">Leave</option>
+                                    <option value="Sick" className="bg-gray-800 text-white">Sick</option>
+                                    <option value="Office Tour" className="bg-gray-800 text-white">Office Tour</option>
+                                    <option value="Other" className="bg-gray-800 text-white">Other</option>
+                                </select>
+                            </div>
+
+                            <div className="flex items-end">
+                                <Button
+                                    onClick={handleViewIndividualAttendance}
+                                    disabled={loading}
+                                    loading={loading}
+                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold h-[54px] rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                                >
+                                    <span className="flex items-center justify-center">
+                                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                        </svg>
+                                        View Attendance
+                                    </span>
+                                </Button>
+                            </div>
                         </div>
                     </div>
 
@@ -607,7 +762,7 @@ const AttendanceManagement = () => {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="overflow-x-auto rounded-xl border border-gray-700/50 shadow-md">
                                 <Table>
                                     <Table.Header>
@@ -615,31 +770,45 @@ const AttendanceManagement = () => {
                                             <Table.Cell header className="font-bold text-base text-white">Date</Table.Cell>
                                             <Table.Cell header className="font-bold text-base text-white">Punch In</Table.Cell>
                                             <Table.Cell header className="font-bold text-base text-white">Punch Out</Table.Cell>
+                                            <Table.Cell header className="font-bold text-base text-white">Total Working Hours</Table.Cell>
+                                            <Table.Cell header className="font-bold text-base text-white">Over Time</Table.Cell>
                                             <Table.Cell header className="font-bold text-base text-white">Comment</Table.Cell>
+                                            <Table.Cell header className="font-bold text-base text-white">Action</Table.Cell>
                                         </tr>
                                     </Table.Header>
                                     <Table.Body>
-                                        {individualAttendance.attendances.map((attendance, index) => {
+                                        {individualAttendance.attendances.filter(attendance => {
+                                            if (!commentFilter) return true;
+                                            const comment = attendance.comment ||
+                                                attendance.Comment ||
+                                                attendance.COMMENT ||
+                                                attendance.note ||
+                                                attendance.notes ||
+                                                attendance.description ||
+                                                attendance.Description ||
+                                                '';
+                                            return comment === commentFilter;
+                                        }).map((attendance, index) => {
                                             // Debug: Log attendance object to see all fields
                                             if (index === 0) {
                                                 console.log('Attendance object:', attendance);
                                                 console.log('All attendance keys:', Object.keys(attendance));
                                             }
-                                            
+
                                             // New API structure: { day, punchIn: "HH:MM", punchOut: "HH:MM", comment?: string }
                                             // Get month and year from top-level response
                                             const month = individualAttendance.month || individualMonth;
                                             const year = individualAttendance.year || individualYear;
                                             const day = attendance.day;
-                                            
+
                                             // Format month name
-                                            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
-                                                               'July', 'August', 'September', 'October', 'November', 'December'];
+                                            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                                                'July', 'August', 'September', 'October', 'November', 'December'];
                                             const monthName = monthNames[month - 1] || 'N/A';
-                                            
+
                                             // Format date as "16 October 2025"
                                             const formattedDate = `${day} ${monthName} ${year}`;
-                                            
+
                                             // Format time strings (punchIn and punchOut are in "HH:MM" format)
                                             const formatTimeString = (timeStr) => {
                                                 if (!timeStr || typeof timeStr !== 'string') {
@@ -651,7 +820,7 @@ const AttendanceManagement = () => {
                                                 if (isNaN(hour24) || isNaN(minute)) {
                                                     return { formatted: timeStr, time24: timeStr };
                                                 }
-                                                
+
                                                 const hour12 = hour24 % 12 || 12;
                                                 const ampm = hour24 >= 12 ? 'PM' : 'AM';
                                                 return {
@@ -659,20 +828,20 @@ const AttendanceManagement = () => {
                                                     time24: `${String(hour24).padStart(2, '0')}:${String(minute).padStart(2, '0')}`
                                                 };
                                             };
-                                            
+
                                             const punchInTime = formatTimeString(attendance.punchIn);
                                             const punchOutTime = formatTimeString(attendance.punchOut);
-                                            
+
                                             // Get comment - check multiple possible field names (case-insensitive)
-                                            const comment = attendance.comment || 
-                                                          attendance.Comment || 
-                                                          attendance.COMMENT ||
-                                                          attendance.note || 
-                                                          attendance.notes ||
-                                                          attendance.description ||
-                                                          attendance.Description ||
-                                                          null;
-                                            
+                                            const comment = attendance.comment ||
+                                                attendance.Comment ||
+                                                attendance.COMMENT ||
+                                                attendance.note ||
+                                                attendance.notes ||
+                                                attendance.description ||
+                                                attendance.Description ||
+                                                null;
+
                                             return (
                                                 <Table.Row key={index} className="hover:bg-gray-800/40 transition-all duration-200 border-b border-gray-700/50">
                                                     <Table.Cell className="py-4">
@@ -716,6 +885,26 @@ const AttendanceManagement = () => {
                                                         </div>
                                                     </Table.Cell>
                                                     <Table.Cell className="py-4">
+                                                        <div className="bg-gradient-to-br from-orange-600/20 via-orange-500/15 to-amber-600/20 px-4 py-3 rounded-xl border border-orange-500/30 shadow-sm hover:shadow-md transition-all duration-200">
+                                                            <div className="text-xs text-orange-300 font-bold mb-1 uppercase tracking-wide">
+                                                                Total Hours
+                                                            </div>
+                                                            <div className="text-base font-bold text-white">
+                                                                {attendance.totalWorkingHours !== undefined && attendance.totalWorkingHours !== null ? attendance.totalWorkingHours : 'N/A'}
+                                                            </div>
+                                                        </div>
+                                                    </Table.Cell>
+                                                    <Table.Cell className="py-4">
+                                                        <div className="bg-gradient-to-br from-pink-600/20 via-pink-500/15 to-rose-600/20 px-4 py-3 rounded-xl border border-pink-500/30 shadow-sm hover:shadow-md transition-all duration-200">
+                                                            <div className="text-xs text-pink-300 font-bold mb-1 uppercase tracking-wide">
+                                                                Over Time
+                                                            </div>
+                                                            <div className="text-base font-bold text-white">
+                                                                {attendance.overTime !== undefined && attendance.overTime !== null ? attendance.overTime : 'N/A'}
+                                                            </div>
+                                                        </div>
+                                                    </Table.Cell>
+                                                    <Table.Cell className="py-4">
                                                         <div className="bg-gradient-to-br from-gray-700/30 via-gray-600/20 to-gray-700/30 px-4 py-3 rounded-xl border border-gray-600/30 shadow-sm hover:shadow-md transition-all duration-200 min-w-[150px]">
                                                             <div className="text-xs text-gray-300 font-bold mb-1 uppercase tracking-wide">
                                                                 Comment
@@ -724,6 +913,14 @@ const AttendanceManagement = () => {
                                                                 {comment && comment.trim() !== '' ? comment : <span className="text-gray-400 italic">N/A</span>}
                                                             </div>
                                                         </div>
+                                                    </Table.Cell>
+                                                    <Table.Cell className="py-4">
+                                                        <Button
+                                                            onClick={() => handleDeleteClick(attendance)}
+                                                            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
+                                                        >
+                                                            Delete
+                                                        </Button>
                                                     </Table.Cell>
                                                 </Table.Row>
                                             );
@@ -788,6 +985,33 @@ const AttendanceManagement = () => {
             {activeView === 'add' && renderAddAttendance()}
             {activeView === 'all' && renderViewAllAttendance()}
             {activeView === 'individual' && renderViewIndividualAttendance()}
+
+            {/* Delete Confirmation Modal */}
+            <Modal
+                isOpen={deleteModalOpen}
+                onClose={() => setDeleteModalOpen(false)}
+                title="Confirm Deletion"
+            >
+                <div className="space-y-4">
+                    <p className="text-gray-300 text-lg">
+                        Are you sure you want to delete this attendance record? This action cannot be undone.
+                    </p>
+                    <div className="flex justify-end space-x-3 mt-6">
+                        <Button
+                            onClick={() => setDeleteModalOpen(false)}
+                            className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg"
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={confirmDelete}
+                            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
+                        >
+                            Delete
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 };

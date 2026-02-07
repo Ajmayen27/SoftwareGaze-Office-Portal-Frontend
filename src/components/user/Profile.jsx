@@ -5,13 +5,12 @@ import Button from '../ui/Button';
 import Input from '../ui/Input';
 
 const Profile = () => {
-    const { user } = useAuth();
+    const { user, isAdmin } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
     const [profileData, setProfileData] = useState({
         username: user?.username || '',
-        email: '',
-        designation: '',
-        role: user?.role || ''
+        email: user?.email || '',
+        designation: user?.designation || '',
     });
 
     const handleInputChange = (e) => {
@@ -22,7 +21,7 @@ const Profile = () => {
     };
 
     const handleSave = () => {
-        // In a real app, this would make an API call to update the profile
+        // Future: Integration with userService.updateProfile
         console.log('Saving profile:', profileData);
         setIsEditing(false);
     };
@@ -30,7 +29,7 @@ const Profile = () => {
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-gray-900">My Profile</h2>
+                <h2 className="text-3xl font-bold text-white">My Profile</h2>
                 <Button
                     variant={isEditing ? 'secondary' : 'primary'}
                     onClick={() => setIsEditing(!isEditing)}
@@ -41,20 +40,19 @@ const Profile = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-1">
-                    <Card>
+                    <Card className="backdrop-blur-xl border-blue-500/30">
                         <div className="p-6 text-center">
-                            <div className="w-24 h-24 bg-blue-600 rounded-full flex items-center justify-center text-white text-3xl font-bold mx-auto mb-4">
+                            <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-3xl font-bold mx-auto mb-4 shadow-lg">
                                 {user?.username?.charAt(0).toUpperCase()}
                             </div>
-                            <h3 className="text-xl font-semibold text-gray-900">{user?.username}</h3>
-                            <p className="text-gray-600">{profileData.designation || 'No designation set'}</p>
+                            <h3 className="text-xl font-bold text-white">{user?.username}</h3>
+                            <p className="text-gray-300">{profileData.designation || 'Team Member'}</p>
                             <div className="mt-4">
-                                <span className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full ${
-                                    user?.role === 'ROLE_ADMIN' 
-                                        ? 'bg-red-100 text-red-800' 
-                                        : 'bg-green-100 text-green-800'
-                                }`}>
-                                    {user?.role === 'ROLE_ADMIN' ? 'Administrator' : 'User'}
+                                <span className={`inline-flex px-3 py-1 text-sm font-bold rounded-full ${isAdmin
+                                    ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                                    : 'bg-green-500/20 text-green-400 border border-green-500/30'
+                                    }`}>
+                                    {isAdmin ? 'Administrator' : 'User'}
                                 </span>
                             </div>
                         </div>
@@ -62,9 +60,9 @@ const Profile = () => {
                 </div>
 
                 <div className="lg:col-span-2">
-                    <Card>
-                        <div className="px-6 py-4 border-b border-gray-200">
-                            <h3 className="text-lg font-medium text-gray-900">Profile Information</h3>
+                    <Card className="backdrop-blur-xl border-blue-500/30">
+                        <div className="px-6 py-4 border-b border-white/10">
+                            <h3 className="text-lg font-bold text-white">Profile Information</h3>
                         </div>
                         <div className="p-6">
                             <div className="space-y-6">
@@ -76,7 +74,7 @@ const Profile = () => {
                                         onChange={handleInputChange}
                                         disabled={!isEditing}
                                     />
-                                    
+
                                     <Input
                                         label="Email"
                                         name="email"
@@ -85,7 +83,7 @@ const Profile = () => {
                                         onChange={handleInputChange}
                                         disabled={!isEditing}
                                     />
-                                    
+
                                     <Input
                                         label="Designation"
                                         name="designation"
@@ -93,16 +91,16 @@ const Profile = () => {
                                         onChange={handleInputChange}
                                         disabled={!isEditing}
                                     />
-                                    
+
                                     <div className="mb-4">
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        <label className="block text-sm font-semibold text-white mb-2 tracking-wide uppercase">
                                             Role
                                         </label>
                                         <input
                                             type="text"
-                                            value={user?.role === 'ROLE_ADMIN' ? 'Administrator' : 'User'}
+                                            value={isAdmin ? 'Administrator' : 'User'}
                                             disabled
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500"
+                                            className="w-full px-4 py-3 border-2 border-gray-600 rounded-xl bg-gray-800/50 text-gray-400 cursor-not-allowed"
                                         />
                                     </div>
                                 </div>
@@ -115,7 +113,7 @@ const Profile = () => {
                                         >
                                             Cancel
                                         </Button>
-                                        <Button onClick={handleSave}>
+                                        <Button onClick={handleSave} className="bg-gradient-to-r from-blue-500 to-indigo-600">
                                             Save Changes
                                         </Button>
                                     </div>
@@ -124,39 +122,29 @@ const Profile = () => {
                         </div>
                     </Card>
 
-                    <Card className="mt-6">
-                        <div className="px-6 py-4 border-b border-gray-200">
-                            <h3 className="text-lg font-medium text-gray-900">Account Settings</h3>
+                    <Card className="mt-6 backdrop-blur-xl border-blue-500/30">
+                        <div className="px-6 py-4 border-b border-white/10">
+                            <h3 className="text-lg font-bold text-white">Account Settings</h3>
                         </div>
                         <div className="p-6">
                             <div className="space-y-4">
-                                <div className="flex items-center justify-between">
+                                <div className="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors">
                                     <div>
-                                        <h4 className="text-sm font-medium text-gray-900">Change Password</h4>
-                                        <p className="text-sm text-gray-600">Update your account password</p>
+                                        <h4 className="text-sm font-bold text-white">Change Password</h4>
+                                        <p className="text-sm text-gray-400">Update your account password</p>
                                     </div>
                                     <Button variant="outline" size="sm">
                                         Change
                                     </Button>
                                 </div>
-                                
-                                <div className="flex items-center justify-between">
+
+                                <div className="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors">
                                     <div>
-                                        <h4 className="text-sm font-medium text-gray-900">Two-Factor Authentication</h4>
-                                        <p className="text-sm text-gray-600">Add an extra layer of security</p>
+                                        <h4 className="text-sm font-bold text-white">Two-Factor Authentication</h4>
+                                        <p className="text-sm text-gray-400">Add an extra layer of security</p>
                                     </div>
                                     <Button variant="outline" size="sm">
                                         Enable
-                                    </Button>
-                                </div>
-                                
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <h4 className="text-sm font-medium text-gray-900">Email Notifications</h4>
-                                        <p className="text-sm text-gray-600">Manage your notification preferences</p>
-                                    </div>
-                                    <Button variant="outline" size="sm">
-                                        Configure
                                     </Button>
                                 </div>
                             </div>

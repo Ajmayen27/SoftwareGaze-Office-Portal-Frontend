@@ -1,31 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { userService } from '../../services/apiService';
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { userService } from '../../services/user.service';
 import Card from '../ui/Card';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import Input from '../ui/Input';
 
 const Contacts = () => {
-    const [contacts, setContacts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
 
-    useEffect(() => {
-        fetchContacts();
-    }, []);
+    // Fetch contacts
+    const { data: contactsRes, isLoading, error: fetchError } = useQuery({
+        queryKey: ['contacts'],
+        queryFn: userService.getAllUsers
+    });
 
-    const fetchContacts = async () => {
-        try {
-            setLoading(true);
-            const response = await userService.getAllUsers();
-            setContacts(response.data);
-        } catch (err) {
-            setError('Failed to fetch contacts');
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    };
+    const contacts = contactsRes?.data || [];
 
     const filteredContacts = contacts.filter(contact =>
         contact.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -33,7 +22,7 @@ const Contacts = () => {
         contact.designation.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (loading) {
+    if (isLoading) {
         return (
             <div className="flex justify-center items-center h-64">
                 <LoadingSpinner size="lg" />
@@ -50,9 +39,9 @@ const Contacts = () => {
                 </div>
             </div>
 
-            {error && (
+            {fetchError && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                    <p className="text-red-600">{error}</p>
+                    <p className="text-red-600">Failed to fetch contacts. Please try again later.</p>
                 </div>
             )}
 
@@ -83,12 +72,11 @@ const Contacts = () => {
                                         <span className="font-medium">Email:</span> {contact.email}
                                     </p>
                                     <p className="text-sm text-gray-600">
-                                        <span className="font-medium">Role:</span> 
-                                        <span className={`ml-1 inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                            contact.role === 'ADMIN' 
-                                                ? 'bg-red-100 text-red-800' 
-                                                : 'bg-green-100 text-green-800'
-                                        }`}>
+                                        <span className="font-medium">Role:</span>
+                                        <span className={`ml-1 inline-flex px-2 py-1 text-xs font-semibold rounded-full ${contact.role === 'ADMIN'
+                                            ? 'bg-red-100 text-red-800'
+                                            : 'bg-green-100 text-green-800'
+                                            }`}>
                                             {contact.role}
                                         </span>
                                     </p>

@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import Sidebar from '../components/layout/Sidebar';
-import MobileHeader from '../components/layout/MobileHeader';
 import Contacts from '../components/user/Contacts';
 import Profile from '../components/user/Profile';
 import Card from '../components/ui/Card';
 
-const UserDashboardPage = () => {
-    const [activeTab, setActiveTab] = useState('dashboard');
+const UserDashboardPage = ({ activeTab, setActiveTab }) => {
     const { user } = useAuth();
 
     const renderContent = () => {
@@ -139,21 +136,7 @@ const UserDashboardPage = () => {
         }
     };
 
-    return (
-        <div className="min-h-screen modern-bg">
-            <div className="floating-shapes"></div>
-            <div className="pattern-overlay"></div>
-            <div className="content-layer">
-                <MobileHeader activeTab={activeTab} setActiveTab={setActiveTab} />
-                <div className="flex">
-                    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                    <div className="flex-1 p-4 lg:p-8">
-                        {renderContent()}
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+    return renderContent();
 };
 
 export default UserDashboardPage;

@@ -144,7 +144,7 @@ const BackendDiagnostics = () => {
                     <li>• Add CORS configuration to your Spring Boot app</li>
                     <li>• Update Security configuration to allow CORS</li>
                     <li>• Add @CrossOrigin annotations to controllers</li>
-                    <li>• Ensure backend is running on port 8081</li>
+                    <li>• Ensure backend is running on port 8080</li>
                     <li>• Check application.properties for CORS settings</li>
                 </ul>
             </div>

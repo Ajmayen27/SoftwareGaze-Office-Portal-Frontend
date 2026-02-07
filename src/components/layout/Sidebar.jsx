@@ -1,78 +1,124 @@
 import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import {
+    LayoutDashboard,
+    Users,
+    Banknote,
+    CalendarCheck,
+    PieChart,
+    Contact,
+    User,
+    LogOut,
+    Settings,
+    ChevronRight,
+    Building2
+} from 'lucide-react';
+import sgLogo from '../../assets/sgLogo.jpg';
 
 const Sidebar = ({ activeTab, setActiveTab }) => {
     const { user, logout } = useAuth();
 
     const adminTabs = [
-        { id: 'dashboard', label: 'Dashboard', color: 'from-blue-500 to-blue-600' },
-        { id: 'employees', label: 'Employees', color: 'from-green-500 to-green-600' },
-        { id: 'expenses', label: 'Expenses', color: 'from-purple-500 to-purple-600' },
-        { id: 'attendance', label: 'Attendance Management', color: 'from-teal-500 to-teal-600' },
-        { id: 'monthly-breakdown', label: 'Monthly Breakdown', color: 'from-orange-500 to-orange-600' },
+        { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={22} />, color: 'from-blue-500 to-blue-600' },
+        { id: 'employees', label: 'Employees', icon: <Users size={22} />, color: 'from-green-500 to-green-600' },
+        { id: 'expenses', label: 'Expenses', icon: <Banknote size={22} />, color: 'from-purple-500 to-purple-600' },
+        { id: 'attendance', label: 'Attendance', icon: <CalendarCheck size={22} />, color: 'from-teal-500 to-teal-600' },
+        { id: 'monthly-breakdown', label: 'Monthly Breakdown', icon: <PieChart size={22} />, color: 'from-orange-500 to-orange-600' },
+        { id: 'settings', label: 'Settings', icon: <Settings size={22} />, color: 'from-gray-500 to-gray-600' },
     ];
 
     const userTabs = [
-        { id: 'dashboard', label: 'Dashboard', color: 'from-blue-500 to-blue-600' },
-        { id: 'contacts', label: 'Contacts', color: 'from-green-500 to-green-600' },
-        { id: 'profile', label: 'Profile', color: 'from-purple-500 to-purple-600' },
+        { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={22} />, color: 'from-blue-500 to-blue-600' },
+        { id: 'contacts', label: 'Contacts', icon: <Contact size={22} />, color: 'from-green-500 to-green-600' },
+        { id: 'profile', label: 'Profile', icon: <User size={22} />, color: 'from-purple-500 to-purple-600' },
     ];
 
     const tabs = user?.role === 'ROLE_ADMIN' ? adminTabs : userTabs;
 
     return (
-        <div className="hidden lg:flex flex-col w-72 bg-[rgba(3,7,18,0.85)] border-r border-[rgba(148,163,184,0.2)] shadow-[0_25px_60px_rgba(2,6,23,0.8)] rounded-r-3xl overflow-hidden ml-4 mt-4 mb-4 backdrop-blur-2xl">
-            <div className="p-7 border-b border-[rgba(148,163,184,0.15)] bg-[rgba(10,15,35,0.8)]">
-                <div className="rounded-2xl p-5 bg-gradient-to-br from-[#0f172a] via-[#0b1120] to-[#1e1b4b] border border-[rgba(124,58,237,0.4)] shadow-[0_20px_45px_rgba(15,23,42,0.8)]">
-                    <p className="text-xs uppercase tracking-[0.4em] text-[var(--color-text-muted)] mb-2">Software Gaze</p>
-                    <h1 className="text-2xl font-bold text-white">Office Portal</h1>
-                    
+        <div className="hidden lg:flex flex-col lg:w-72 xl:w-80 flex-shrink-0 bg-[#0f172a]/95 border-r border-indigo-500/10 shadow-2xl ml-0 relative z-10 backdrop-blur-xl h-screen">
+            {/* Logo Area */}
+            <div className="p-6 border-b border-indigo-500/10">
+                <div className="flex items-center space-x-3 mb-6">
+                    <div className="w-11 h-11 rounded-xl overflow-hidden border border-indigo-500/20 shadow-lg shadow-indigo-600/20 flex items-center justify-center bg-white/5">
+                        <img src={sgLogo} alt="SG Logo" className="w-full h-full object-cover" />
+                    </div>
+                    <div>
+                        <h1 className="text-xl font-bold text-white tracking-tight leading-none">Portal</h1>
+                        <p className="text-xs text-indigo-300 font-medium tracking-widest uppercase mt-1">Software Gaze</p>
+                    </div>
                 </div>
-            </div>
-            
-            <div className="flex-1 px-5 py-6 space-y-3 overflow-y-auto">
-                <p className="text-[0.7rem] uppercase tracking-[0.4em] text-[var(--color-text-muted)] mb-2">Navigation</p>
-                <nav className="space-y-2">
-                    {tabs.map((tab) => (
-                        <button
-                            key={tab.id}
-                            onClick={() => setActiveTab(tab.id)}
-                            className={`w-full flex items-center px-5 py-4 text-left rounded-2xl transition-all duration-300 group ${
-                                activeTab === tab.id
-                                    ? `bg-gradient-to-r ${tab.color} text-white shadow-[0_20px_45px_rgba(15,23,42,0.65)] border border-white/10`
-                                    : 'text-[var(--color-text-secondary)] bg-[rgba(255,255,255,0.02)] hover:bg-[rgba(255,255,255,0.06)] border border-transparent hover:border-[rgba(124,58,237,0.25)]'
-                            }`}
-                        >
-                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-all duration-300 ${
-                                activeTab === tab.id
-                                    ? 'bg-white/25 text-[#0f172a]'
-                                    : `bg-gradient-to-br ${tab.color} opacity-70 group-hover:opacity-100`
-                            }`}>
-                                <span className="text-lg font-bold">{tab.label.charAt(0)}</span>
-                            </div>
-                            <span className="text-base font-semibold tracking-wide">{tab.label}</span>
-                        </button>
-                    ))}
-                </nav>
-            </div>
-            
-            <div className="p-6 border-t border-[rgba(148,163,184,0.15)] bg-[rgba(10,15,35,0.8)]">
-                <div className="flex items-center mb-5 p-4 rounded-2xl bg-[rgba(255,255,255,0.04)] border border-[rgba(148,163,184,0.2)] shadow-inner">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#7c3aed] to-[#0ea5e9] flex items-center justify-center text-white text-lg font-bold">
+
+                {/* User Card */}
+                <div className="bg-gradient-to-br from-indigo-900/30 to-violet-900/30 rounded-xl p-4 border border-indigo-500/20 flex items-center space-x-3 shadow-inner group transition-all duration-300 hover:border-indigo-500/40">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white font-bold shadow-lg text-sm">
                         {user?.username?.charAt(0).toUpperCase()}
                     </div>
-                    <div className="ml-4">
-                        <p className="text-base font-semibold text-white">{user?.username}</p>
-                        <p className="text-xs uppercase tracking-[0.4em] text-[var(--color-text-muted)] mt-1">
-                            {user?.role === 'ROLE_ADMIN' ? 'Admin' : 'User'}
-                        </p>
+                    <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-white truncate">{user?.username}</p>
+                        <div className="flex items-center">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>
+                            <p className="text-[10px] text-indigo-200 uppercase tracking-wider font-bold">{user?.role === 'ROLE_ADMIN' ? 'Admin' : 'User'}</p>
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            {/* Navigation */}
+            <div className="flex-1 px-4 py-6 overflow-y-auto custom-scrollbar">
+                <p className="text-xs font-bold text-indigo-300/60 uppercase tracking-widest mb-4 px-2">Main Menu</p>
+                <nav className="space-y-2">
+                    {tabs.map((tab) => {
+                        const isActive = activeTab === tab.id;
+                        return (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`w-full flex items-center p-3 rounded-xl transition-all duration-300 group relative overflow-hidden ${isActive
+                                    ? 'shadow-lg shadow-indigo-900/20'
+                                    : 'hover:bg-white/5'
+                                    }`}
+                            >
+                                {/* Active Background Gradient */}
+                                {isActive && (
+                                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-violet-600 opacity-90" />
+                                )}
+
+                                {/* Hover Glow Effect (Inactive) */}
+                                {!isActive && (
+                                    <div className="absolute inset-0 bg-indigo-500/0 group-hover:bg-indigo-500/10 transition-colors duration-300" />
+                                )}
+
+                                <div className={`relative z-10 mr-3 p-2 rounded-lg transition-transform duration-300 group-hover:scale-105 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-indigo-300'
+                                    }`}>
+                                    {React.cloneElement(tab.icon, {
+                                        size: 22,
+                                        strokeWidth: isActive ? 2.5 : 2
+                                    })}
+                                </div>
+
+                                <span className={`relative z-10 font-semibold text-[15px] transition-colors duration-200 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-white'
+                                    }`}>
+                                    {tab.label}
+                                </span>
+
+                                {isActive && (
+                                    <ChevronRight className="ml-auto text-white relative z-10 animate-in fade-in slide-in-from-left-2" size={16} />
+                                )}
+                            </button>
+                        );
+                    })}
+                </nav>
+            </div>
+
+            {/* Footer */}
+            <div className="p-4 border-t border-indigo-500/10 bg-[#0f172a]/50">
                 <button
                     onClick={logout}
-                    className="w-full flex items-center justify-center px-5 py-3.5 bg-gradient-to-r from-[#f43f5e] via-[#e11d48] to-[#be123c] text-white rounded-2xl font-semibold shadow-[0_20px_45px_rgba(190,18,60,0.45)] hover:translate-y-[-1px] transition-all duration-300"
+                    className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-red-900/80 hover:to-red-800/80 text-slate-300 hover:text-white rounded-xl border border-white/5 hover:border-red-500/30 transition-all duration-300 group shadow-lg"
                 >
-                    Logout
+                    <LogOut size={18} className="mr-2 group-hover:-translate-x-1 transition-transform" />
+                    <span className="font-semibold text-sm">Sign Out</span>
                 </button>
             </div>
         </div>

@@ -1,3 +1,5 @@
+
+
 // Mock data for development when backend is not available
 export const mockEmployees = [
     {
@@ -29,21 +31,24 @@ export const mockExpenses = [
         billType: "Electric Bill",
         amount: 150.75,
         comment: "Monthly electricity",
-        date: "2025-01-19"
+        date: "2025-01-19",
+        tag: 'paid'
     },
     {
         id: 2,
         billType: "Office Supplies",
         amount: 85.00,
         comment: "New keyboards and mice",
-        date: "2025-01-18"
+        date: "2025-01-18",
+        tag: 'unpaid'
     },
     {
         id: 3,
         billType: "Internet Bill",
         amount: 120.00,
         comment: "Monthly fiber connection",
-        date: "2025-01-17"
+        date: "2025-01-17",
+        tag: 'paid'
     }
 ];
 

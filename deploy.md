@@ -24,7 +24,7 @@
 
 ## Backend Requirements
 
-Make sure your backend server is running on `http://localhost:8081` with the following endpoints:
+Make sure your backend server is running on `http://localhost:8080` with the following endpoints:
 
 ### Authentication
 - `POST /api/auth/signup`
@@ -45,7 +45,7 @@ Make sure your backend server is running on `http://localhost:8081` with the fol
 
 Create a `.env` file:
 ```env
-VITE_API_BASE_URL=http://localhost:8081/api
+VITE_API_BASE_URL=http://localhost:8080/api
 ```
 
 ## Production Deployment

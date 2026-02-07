@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { authService } from '../services/apiService';
+import { authService } from '../services/auth.service';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import Card from '../components/ui/Card';
@@ -30,7 +30,7 @@ const SignupPage = () => {
         setMessage('');
         setError('');
         setLoading(true);
-        
+
         try {
             await authService.signup(formData);
             setMessage('Account created successfully! Redirecting to login...');
@@ -46,41 +46,41 @@ const SignupPage = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center modern-bg">
+        <div className="min-h-screen flex flex-col items-center justify-center modern-bg px-4 py-8 sm:px-6 lg:px-8">
             <div className="floating-shapes"></div>
             <div className="pattern-overlay"></div>
-            
+
             {/* Attractive Banner */}
-            <div className="w-full max-w-5xl mx-auto px-4 relative z-10 mb-8 animate-slide-down">
-                <div className="text-center">
+            <div className="w-full max-w-5xl mx-auto relative z-10 mb-6 sm:mb-8 lg:mb-12 animate-slide-down">
+                <div className="text-center px-2">
                     {/* Main Title */}
-                    <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight animate-fade-in drop-shadow-2xl" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.5), 0 0 20px rgba(147, 51, 234, 0.5)' }}>
+                    <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-3 sm:mb-4 leading-tight animate-fade-in drop-shadow-2xl" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.5), 0 0 20px rgba(147, 51, 234, 0.5)' }}>
                         Software Gaze Portal
                     </h1>
-                    
+
                     {/* Tagline */}
-                    <p className="text-xl md:text-2xl text-gray-200 font-light tracking-wide mb-6 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+                    <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-200 font-light tracking-wide mb-4 sm:mb-6 animate-fade-in" style={{ animationDelay: '0.3s' }}>
                         Join Your Digital Workspace
                     </p>
-                    
+
                     {/* Subtle animated dots */}
                     <div className="flex items-center justify-center space-x-2 animate-fade-in" style={{ animationDelay: '0.7s' }}>
-                        <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-                        <div className="w-2 h-2 bg-indigo-400 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
-                        <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '0.6s' }}></div>
+                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-indigo-400 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
+                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '0.6s' }}></div>
                     </div>
                 </div>
             </div>
-            
+
             <div className="w-full max-w-4xl relative z-10">
-                <Card className="p-8">
-                    <div className="text-center mb-8">
-                        <h1 className="text-2xl font-bold text-white mb-2">Create Account</h1>
-                        <p className="text-gray-300 text-sm">Get started today</p>
+                <Card className="p-4 sm:p-6 md:p-8">
+                    <div className="text-center mb-6">
+                        <h1 className="text-xl sm:text-2xl font-bold text-white mb-2">Create Account</h1>
+                        <p className="text-gray-300 text-sm font-medium">Get started today</p>
                     </div>
-                    
-                    <form onSubmit={handleSignup} className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <form onSubmit={handleSignup} className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-4">
                                 <Input
                                     label="Username"
@@ -90,7 +90,7 @@ const SignupPage = () => {
                                     onChange={handleChange}
                                     required
                                 />
-                                
+
                                 <Input
                                     label="Email"
                                     name="email"
@@ -100,7 +100,7 @@ const SignupPage = () => {
                                     required
                                 />
                             </div>
-                            
+
                             <div className="space-y-4">
                                 <Input
                                     label="Password"
@@ -110,7 +110,7 @@ const SignupPage = () => {
                                     onChange={handleChange}
                                     required
                                 />
-                                
+
                                 <Input
                                     label="Designation"
                                     name="designation"
@@ -121,37 +121,37 @@ const SignupPage = () => {
                                 />
                             </div>
                         </div>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="mb-4">
-                                <label className="block text-sm font-semibold text-white mb-2 tracking-wide uppercase">
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-xs sm:text-sm font-semibold text-white mb-2 tracking-wide uppercase">
                                     Role
                                 </label>
                                 <select
                                     name="role"
                                     value={formData.role}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-3 border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-800/50 text-white transition-all duration-200"
+                                    className="w-full px-3 py-2.5 sm:px-4 sm:py-3 border-2 border-[rgba(148,163,184,0.25)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#38bdf8] focus:border-[#38bdf8] bg-[rgba(10,15,35,0.65)] text-white transition-all duration-200 text-sm sm:text-base font-medium"
                                 >
-                                    <option value="USER" className="bg-gray-800 text-white">User</option>
-                                    <option value="ADMIN" className="bg-gray-800 text-white">Admin</option>
+                                    <option value="USER" className="bg-[#0f172a] text-white">User</option>
+                                    <option value="ADMIN" className="bg-[#0f172a] text-white">Admin</option>
                                 </select>
                             </div>
-                            <div></div> {/* Empty div for spacing */}
+                            <div className="hidden md:block"></div> {/* Empty div for spacing on desktop */}
                         </div>
-                        
+
                         {message && (
                             <div className="bg-gradient-to-r from-green-600/20 to-green-500/20 border-l-4 border-green-500 rounded-lg p-3">
                                 <p className="text-green-300 text-sm">{message}</p>
                             </div>
                         )}
-                        
+
                         {error && (
                             <div className="bg-gradient-to-r from-red-600/20 to-red-500/20 border-l-4 border-red-500 rounded-lg p-3">
                                 <p className="text-red-300 text-sm">{error}</p>
                             </div>
                         )}
-                        
+
                         <Button
                             type="submit"
                             className="w-full"
@@ -161,7 +161,7 @@ const SignupPage = () => {
                             Create Account
                         </Button>
                     </form>
-                    
+
                     <div className="mt-6 text-center">
                         <p className="text-sm text-gray-300">
                             Already have an account?{' '}

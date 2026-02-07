@@ -81,7 +81,7 @@ const BackendConnectionTest = () => {
             <div className="mt-4 p-4 bg-blue-50 rounded-lg">
                 <h4 className="font-medium text-blue-900 mb-2">Backend Setup Checklist:</h4>
                 <ul className="text-sm text-blue-800 space-y-1">
-                    <li>✅ Spring Boot server running on port 8081</li>
+                    <li>✅ Spring Boot server running on port 8080</li>
                     <li>✅ CORS enabled for {window.location.origin}</li>
                     <li>✅ H2 database configured</li>
                     <li>✅ JWT authentication configured</li>

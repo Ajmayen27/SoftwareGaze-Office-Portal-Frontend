@@ -1,33 +1,33 @@
 import React from 'react';
 
-const Button = ({ 
-    children, 
-    variant = 'primary', 
-    size = 'md', 
-    disabled = false, 
+const Button = ({
+    children,
+    variant = 'primary',
+    size = 'md',
+    disabled = false,
     loading = false,
     className = '',
-    ...props 
+    ...props
 }) => {
-    const baseClasses = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent';
-    
+    const baseClasses = 'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent';
+
     const variants = {
-        primary: 'bg-gradient-to-r from-[#7c3aed] via-[#5b21b6] to-[#0ea5e9] text-white hover:translate-y-[-1px] focus:ring-[#7c3aed] shadow-[0_15px_35px_rgba(88,28,135,0.45)]',
-        secondary: 'bg-[rgba(148,163,184,0.12)] text-slate-100 border border-[rgba(148,163,184,0.25)] hover:bg-[rgba(148,163,184,0.2)] focus:ring-[#38bdf8] shadow-[0_8px_24px_rgba(15,23,42,0.65)]',
-        danger: 'bg-gradient-to-r from-[#f43f5e] via-[#e11d48] to-[#be123c] text-white hover:translate-y-[-1px] focus:ring-[#f43f5e] shadow-[0_15px_35px_rgba(190,18,60,0.45)]',
-        success: 'bg-gradient-to-r from-[#0ea5e9] via-[#10b981] to-[#22c55e] text-white hover:translate-y-[-1px] focus:ring-[#10b981] shadow-[0_15px_35px_rgba(16,185,129,0.45)]',
-        outline: 'border-2 border-[#7c3aed] text-[#e0e7ff] hover:bg-[#7c3aed]/10 focus:ring-[#7c3aed] shadow-[0_10px_30px_rgba(124,58,237,0.25)]',
+        primary: 'bg-gradient-to-r from-[#7c3aed] via-[#5b21b6] to-[#0ea5e9] text-white hover:opacity-90 focus:ring-[#7c3aed] shadow-lg',
+        secondary: 'bg-[rgba(148,163,184,0.12)] text-slate-100 border border-[rgba(148,163,184,0.25)] hover:bg-[rgba(148,163,184,0.2)] focus:ring-[#38bdf8] shadow-md',
+        danger: 'bg-gradient-to-r from-[#f43f5e] via-[#e11d48] to-[#be123c] text-white hover:opacity-90 focus:ring-[#f43f5e] shadow-lg',
+        success: 'bg-gradient-to-r from-[#0ea5e9] via-[#10b981] to-[#22c55e] text-white hover:opacity-90 focus:ring-[#10b981] shadow-lg',
+        outline: 'border-2 border-[#7c3aed] text-[#e0e7ff] hover:bg-[#7c3aed]/10 focus:ring-[#7c3aed] shadow-sm',
     };
-    
+
     const sizes = {
-        sm: 'px-3.5 py-2 text-sm',
-        md: 'px-5 py-2.5 text-base',
-        lg: 'px-7 py-3 text-lg',
-        xl: 'px-9 py-4 text-xl',
+        sm: 'px-3 py-2 text-sm',
+        md: 'px-4 py-2.5 text-sm',
+        lg: 'px-6 py-3 text-base',
+        xl: 'px-8 py-3.5 text-base',
     };
-    
+
     const disabledClasses = disabled || loading ? 'opacity-50 cursor-not-allowed' : '';
-    
+
     return (
         <button
             className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${disabledClasses} ${className}`}

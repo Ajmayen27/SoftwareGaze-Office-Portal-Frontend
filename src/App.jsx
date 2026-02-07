@@ -1,22 +1,24 @@
-import React from 'react';
+import React, { Suspense, lazy, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import LoadingSpinner from './components/ui/LoadingSpinner';
 import ErrorBoundary from './components/ui/ErrorBoundary';
-import TestComponent from './components/ui/TestComponent';
+import MainLayout from './components/layout/MainLayout';
 
-import LoginPage from './pages/LoginPage.jsx';
-import SignupPage from './pages/SignupPage.jsx';
-import AdminDashboardPage from './pages/AdminDashboardPage.jsx';
-import UserDashboardPage from './pages/UserDashboardPage.jsx';
+// Lazy load pages
+const LoginPage = lazy(() => import('./pages/LoginPage.jsx'));
+const SignupPage = lazy(() => import('./pages/SignupPage.jsx'));
+const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage.jsx'));
+const UserDashboardPage = lazy(() => import('./pages/UserDashboardPage.jsx'));
+const TestComponent = lazy(() => import('./components/ui/TestComponent'));
 
 const ProtectedRoute = ({ children, requireAdmin = false }) => {
     const { isAuthenticated, isAdmin, loading } = useAuth();
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center modern-bg">
                 <LoadingSpinner size="lg" />
             </div>
         );
@@ -33,40 +35,59 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
     return children;
 };
 
-const AppRoutes = () => {
-    const { isAuthenticated, isAdmin } = useAuth();
+const DashboardRoutes = () => {
+    const { isAdmin } = useAuth();
+    const [activeTab, setActiveTab] = useState('dashboard');
 
     return (
-        <Routes>
-            {/* Public Routes */}
-            <Route 
-                path="/login" 
-                element={!isAuthenticated ? <LoginPage /> : <Navigate to="/" />} 
-            />
-            <Route 
-                path="/signup" 
-                element={!isAuthenticated ? <SignupPage /> : <Navigate to="/" />} 
-            />
-            
-            {/* Test Route for Tailwind */}
-            <Route 
-                path="/test" 
-                element={<TestComponent />} 
-            />
-            
-            {/* Protected Routes */}
-            <Route 
-                path="/" 
-                element={
-                    <ProtectedRoute>
-                        {isAdmin ? <AdminDashboardPage /> : <UserDashboardPage />}
-                    </ProtectedRoute>
-                } 
-            />
-            
-            {/* Catch-all route */}
-            <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
+        <MainLayout activeTab={activeTab} setActiveTab={setActiveTab}>
+            {isAdmin
+                ? <AdminDashboardPage activeTab={activeTab} setActiveTab={setActiveTab} />
+                : <UserDashboardPage activeTab={activeTab} setActiveTab={setActiveTab} />}
+        </MainLayout>
+    );
+};
+
+const AppRoutes = () => {
+    const { isAuthenticated } = useAuth();
+
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center modern-bg">
+                <LoadingSpinner size="lg" />
+            </div>
+        }>
+            <Routes>
+                {/* Public Routes */}
+                <Route
+                    path="/login"
+                    element={!isAuthenticated ? <LoginPage /> : <Navigate to="/" />}
+                />
+                <Route
+                    path="/signup"
+                    element={!isAuthenticated ? <SignupPage /> : <Navigate to="/" />}
+                />
+
+                {/* Test Route for Tailwind */}
+                <Route
+                    path="/test"
+                    element={<TestComponent />}
+                />
+
+                {/* Protected Routes */}
+                <Route
+                    path="/"
+                    element={
+                        <ProtectedRoute>
+                            <DashboardRoutes />
+                        </ProtectedRoute>
+                    }
+                />
+
+                {/* Catch-all route */}
+                <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+        </Suspense>
     );
 };
 

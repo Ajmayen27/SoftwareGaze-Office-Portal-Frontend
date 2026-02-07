@@ -1,9 +1,7 @@
 import axios from 'axios';
 
-// Use Vite env var first, fallback to CRA-style REACT_APP_API_URL for compatibility
-const API_BASE_URL = import.meta.env.VITE_API_URL || (typeof process !== 'undefined' && process.env?.REACT_APP_API_URL) || 'http://localhost:8081/api';
+const API_BASE_URL = 'http://localhost:8080/api';
 
-// Create axios instance with default config
 const apiClient = axios.create({
     baseURL: API_BASE_URL,
     headers: {
@@ -11,76 +9,52 @@ const apiClient = axios.create({
     },
 });
 
-// Request interceptor to add auth token
 apiClient.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
+        config.headers = config.headers || {};
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
+        if (config.data instanceof FormData) {
+            delete config.headers['Content-Type'];
+            delete config.headers['content-type'];
+        }
         return config;
     },
-    (error) => {
-        return Promise.reject(error);
-    }
+    (error) => Promise.reject(error)
 );
 
-// Response interceptor for error handling
 apiClient.interceptors.response.use(
     (response) => response,
     (error) => {
-        console.error('API Error:', error);
-        
+        console.error('API Error:', {
+            message: error.message,
+            code: error.code,
+            status: error.response?.status,
+            data: error.response?.data
+        });
+
         if (error.code === 'ERR_NETWORK' || error.code === 'ECONNREFUSED') {
-            console.error(`❌ Backend server is not reachable at ${API_BASE_URL}`);
-            console.error('💡 Please start your backend server or verify the host and port');
             throw new Error(`Backend server is not running. Please start your backend server at ${API_BASE_URL}`);
         }
-        
+
         if (error.response?.status === 401) {
             localStorage.removeItem('token');
             window.location.href = '/login';
         }
-        
+
         if (error.response?.status === 403) {
-            throw new Error('Access denied. You do not have permission to perform this action.');
+            const serverMsg = error.response?.data?.message || 'Access denied. You do not have permission to perform this action.';
+            throw new Error(serverMsg);
         }
-        
+
         if (error.response?.status === 404) {
             throw new Error('API endpoint not found. Please check your backend implementation.');
         }
-        
+
         return Promise.reject(error);
     }
 );
-
-// Auth endpoints
-export const authService = {
-    signup: (userData) => apiClient.post('/auth/signup', userData),
-    signin: (credentials) => apiClient.post('/auth/signin', credentials),
-};
-
-// Admin endpoints
-export const adminService = {
-    getEmployees: () => apiClient.get('/admin/employees'),
-    deleteUser: (id) => apiClient.delete(`/admin/user/${id}`),
-    updateUser: (id, userData) => apiClient.put(`/admin/update/${id}`, userData),
-    getExpenses: () => apiClient.get('/admin/expenses'),
-    addExpense: (expenseData) => apiClient.post('/admin/expense', expenseData),
-    deleteExpense: (id) => apiClient.delete(`/admin/expense/delete/${id}`),
-    updateExpense: (id, expenseData) => apiClient.put(`/admin/expense/update/${id}`, expenseData),
-    getMonthlyExpenses: () => apiClient.get('/admin/expenses/monthly'),
-    getYearlyExpenses: () => apiClient.get('/admin/expenses/yearly'),
-    getMonthlyBreakdown: () => apiClient.get('/admin/expenses/monthly-breakdown'),
-    // Attendance endpoints
-    addAttendance: (attendanceData) => apiClient.post('/admin/add/attendance', attendanceData),
-    getAttendanceSummary: (month, year) => apiClient.get('/admin/attendance/summary', { params: { month, year } }),
-    getIndividualAttendance: (username, month, year) => apiClient.get(`/admin/attendance/summary/${username}`, { params: { month, year } }),
-};
-
-// General user endpoints
-export const userService = {
-    getAllUsers: () => apiClient.get('/users'),
-};
 
 export default apiClient;

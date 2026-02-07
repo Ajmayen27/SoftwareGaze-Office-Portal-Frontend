@@ -1,5 +1,5 @@
 // API Configuration
-export const API_BASE_URL = import.meta.env.VITE_API_URL || (typeof process !== 'undefined' && process.env?.REACT_APP_API_URL) || 'http://localhost:8081/api';
+export const API_BASE_URL = 'http://localhost:8080/api';
 
 // User Roles
 export const USER_ROLES = {

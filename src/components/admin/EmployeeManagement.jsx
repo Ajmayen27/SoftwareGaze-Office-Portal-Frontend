@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { adminService } from '../../services/apiService';
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { adminService } from '../../services/admin.service';
+import { authService } from '../../services/auth.service';
 import { useNotification } from '../../contexts/NotificationContext';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
@@ -8,43 +10,79 @@ import LoadingSpinner from '../ui/LoadingSpinner';
 import Modal from '../ui/Modal';
 import Table from '../ui/Table';
 import Badge from '../ui/Badge';
+import {
+    Users,
+    UserPlus,
+    Search,
+    Mail,
+    Briefcase,
+    Shield,
+    Edit2,
+    Trash2,
+    CheckCircle,
+    XCircle,
+    Building2,
+    Save,
+    X
+} from 'lucide-react';
 
 const EmployeeManagement = () => {
-    const [employees, setEmployees] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
+    const queryClient = useQueryClient();
+    const { showSuccess, showError } = useNotification();
     const [deleteModal, setDeleteModal] = useState({ isOpen: false, employee: null });
     const [editModal, setEditModal] = useState(false);
     const [editingEmployee, setEditingEmployee] = useState(null);
-    const { showSuccess, showError } = useNotification();
+    const [createModal, setCreateModal] = useState(false);
+    const [newEmployee, setNewEmployee] = useState({
+        username: '',
+        password: '',
+        email: '',
+        designation: '',
+        role: 'USER'
+    });
 
-    useEffect(() => {
-        fetchEmployees();
-    }, []);
+    // Fetch employees
+    const { data: employeesRes, isLoading, error: fetchError } = useQuery({
+        queryKey: ['employees'],
+        queryFn: adminService.getEmployees
+    });
 
-    const fetchEmployees = async () => {
-        try {
-            setLoading(true);
-            const response = await adminService.getEmployees();
-            setEmployees(response.data);
-        } catch (err) {
-            setError('Failed to fetch employees');
-            console.error(err);
-        } finally {
-            setLoading(false);
+    const employees = employeesRes?.data || [];
+
+    // Delete mutation
+    const deleteMutation = useMutation({
+        mutationFn: adminService.deleteUser,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['employees'] });
+            showSuccess('Employee deleted successfully');
+            setDeleteModal({ isOpen: false, employee: null });
+        },
+        onError: (error) => {
+            console.error('Delete operation failed:', error);
+            const errorMessage = error.response?.data?.message || error.message || 'Failed to delete employee';
+            showError(errorMessage);
         }
-    };
+    });
+
+    // Update mutation
+    const updateMutation = useMutation({
+        mutationFn: ({ id, userData }) => adminService.updateUser(id, userData),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['employees'] });
+            showSuccess('Employee updated successfully');
+            setEditModal(false);
+            setEditingEmployee(null);
+        },
+        onError: (error) => {
+            console.error('Update operation failed:', error);
+            const errorMessage = error.response?.data?.message || error.message || 'Failed to update employee';
+            showError(errorMessage);
+        }
+    });
 
     const handleDeleteEmployee = async () => {
-        try {
-            await adminService.deleteUser(deleteModal.employee.id);
-            setEmployees(employees.filter(emp => emp.id !== deleteModal.employee.id));
-            setDeleteModal({ isOpen: false, employee: null });
-            showSuccess('Employee deleted successfully');
-        } catch (err) {
-            setError('Failed to delete employee');
-            showError('Failed to delete employee');
-            console.error(err);
+        if (deleteModal.employee) {
+            deleteMutation.mutate(deleteModal.employee.id);
         }
     };
 
@@ -55,30 +93,14 @@ const EmployeeManagement = () => {
 
     const handleUpdateEmployee = async (e) => {
         e.preventDefault();
-        try {
-            const userData = {
-                username: editingEmployee.username,
-                password: editingEmployee.password,
-                email: editingEmployee.email,
-                designation: editingEmployee.designation,
-                role: editingEmployee.role
-            };
-            
-            const response = await adminService.updateUser(editingEmployee.id, userData);
-            
-            // Update the employee in the list
-            const updatedEmployees = employees.map(emp => 
-                emp.id === editingEmployee.id ? { ...emp, ...response.data } : emp
-            );
-            setEmployees(updatedEmployees);
-            setEditModal(false);
-            setEditingEmployee(null);
-            showSuccess('Employee updated successfully');
-        } catch (err) {
-            setError('Failed to update employee');
-            showError('Failed to update employee');
-            console.error(err);
-        }
+        const userData = {
+            username: editingEmployee.username,
+            password: editingEmployee.password,
+            email: editingEmployee.email,
+            designation: editingEmployee.designation,
+            role: editingEmployee.role
+        };
+        updateMutation.mutate({ id: editingEmployee.id, userData });
     };
 
     const handleInputChange = (e) => {
@@ -88,7 +110,33 @@ const EmployeeManagement = () => {
         });
     };
 
-    if (loading) {
+    const handleCreateInputChange = (e) => {
+        setNewEmployee({
+            ...newEmployee,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleCreateUser = async (e) => {
+        e.preventDefault();
+        try {
+            await authService.signup(newEmployee);
+            queryClient.invalidateQueries({ queryKey: ['employees'] });
+            showSuccess('Employee created successfully');
+            setCreateModal(false);
+            setNewEmployee({
+                username: '',
+                password: '',
+                email: '',
+                designation: '',
+                role: 'USER'
+            });
+        } catch (error) {
+            showError(error.response?.data?.message || 'Failed to create employee');
+        }
+    };
+
+    if (isLoading) {
         return (
             <div className="flex justify-center items-center h-64">
                 <LoadingSpinner size="lg" />
@@ -97,110 +145,137 @@ const EmployeeManagement = () => {
     }
 
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                    <h2 className="text-3xl font-bold text-white flex items-center">
+        <div className="space-y-8 animate-in fade-in duration-500">
+            {/* Header Section */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-6 border-b border-indigo-500/10">
+                <div className="space-y-2">
+                    <h2 className="text-2xl font-bold text-white tracking-tight flex items-center">
+                        <Users className="mr-3 text-indigo-400" size={28} />
                         Employee Management
                     </h2>
-                    <p className="text-gray-300 mt-1">Manage your team members and their roles</p>
+                    <p className="text-slate-400 text-sm">Manage team members, roles, and access.</p>
                 </div>
-                <div className="flex items-center space-x-4">
-                    <div className="text-base font-medium text-white bg-gradient-to-br from-blue-600/20 via-blue-500/15 to-indigo-600/20 border border-blue-500/30 px-4 py-2 rounded-lg backdrop-blur-sm">
-                        Total: <span className="font-bold text-blue-400">{employees.length}</span> employees
+                <div className="flex items-center gap-4">
+                    <div className="hidden md:flex items-center px-4 py-2 bg-[#0f172a]/40 rounded-xl border border-indigo-500/10 backdrop-blur-sm">
+                        <Users className="text-indigo-400 mr-2" size={18} />
+                        <span className="text-slate-300 font-medium mr-2">Total:</span>
+                        <span className="text-white font-bold bg-indigo-500/20 px-2 py-0.5 rounded text-sm border border-indigo-500/30">
+                            {employees.length}
+                        </span>
                     </div>
+                    <Button
+                        variant="primary"
+                        onClick={() => setCreateModal(true)}
+                        className="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-lg shadow-indigo-600/20 border-0"
+                    >
+                        <UserPlus size={18} className="mr-2" />
+                        Add Member
+                    </Button>
                 </div>
             </div>
 
-            {error && (
-                <div className="bg-gradient-to-r from-red-600/20 to-red-500/20 border-l-4 border-red-500 rounded-lg p-4">
-                    <p className="text-red-300">{error}</p>
+            {fetchError && (
+                <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-center text-red-400">
+                    <XCircle className="mr-2" size={20} />
+                    Failed to fetch employees. Please try again later.
                 </div>
             )}
 
-            <Card className="transition-all duration-200 ease-in-out hover:shadow-xl backdrop-blur-xl border border-blue-500/30 overflow-hidden">
-                <div className="px-6 py-4 border-b border-blue-500/30 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 backdrop-blur-sm">
-                    <h3 className="text-xl font-bold text-white flex items-center">
-                        <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg mr-3 flex items-center justify-center">
-                            <div className="w-4 h-4 bg-white rounded-sm"></div>
-                        </div>
-                        Employee Directory
-                    </h3>
-                </div>
-                <div className="overflow-x-auto bg-gray-900/30 backdrop-blur-sm">
-                    <Table>
-                    <Table.Header>
-                        <tr className="bg-gray-800/50 backdrop-blur-sm">
-                            <Table.Cell header className="text-base font-bold text-white uppercase tracking-wider">Employee</Table.Cell>
-                            <Table.Cell header className="text-base font-bold text-white uppercase tracking-wider">Email</Table.Cell>
-                            <Table.Cell header className="text-base font-bold text-white uppercase tracking-wider">Designation</Table.Cell>
-                            <Table.Cell header className="text-base font-bold text-white uppercase tracking-wider">Role</Table.Cell>
-                            <Table.Cell header className="text-base font-bold text-white uppercase tracking-wider">Actions</Table.Cell>
-                        </tr>
-                    </Table.Header>
-                    <Table.Body>
-                        {employees.map((employee, index) => (
-                            <Table.Row 
-                                key={employee.id}
-                                className="transition-all duration-200 ease-in-out hover:bg-gray-800/40 hover:shadow-md group border-b border-gray-700/50"
-                                style={{ animationDelay: `${index * 50}ms` }}
-                            >
-                                <Table.Cell className="px-6 py-5">
-                                    <div className="flex items-center">
-                                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold shadow-md group-hover:shadow-lg group-hover:scale-105 transition-all duration-200 ease-in-out">
-                                            <div className="w-6 h-6 bg-white rounded-sm"></div>
-                                        </div>
-                                        <div className="ml-4">
-                                            <div className="text-base font-bold text-white">
-                                                {employee.username}
+            {/* Main Content Card */}
+            <Card className="border-0 bg-[#0f172a]/60 backdrop-blur-xl shadow-2xl ring-1 ring-white/10 overflow-hidden">
+                <div className="overflow-x-auto">
+                    <Table className="!divide-white/5">
+                        <Table.Header className="!bg-white/5">
+                            <tr className="!border-b !border-white/5">
+                                <Table.Cell header className="!text-indigo-200 !font-semibold !text-sm !py-4 !pl-6 !uppercase !tracking-wider">Employee Details</Table.Cell>
+                                <Table.Cell header className="!text-indigo-200 !font-semibold !text-sm !py-4 !uppercase !tracking-wider">Contact</Table.Cell>
+                                <Table.Cell header className="!text-indigo-200 !font-semibold !text-sm !py-4 !uppercase !tracking-wider">Role & Designation</Table.Cell>
+                                <Table.Cell header className="!text-indigo-200 !font-semibold !text-sm !py-4 !pr-6 !text-right !uppercase !tracking-wider">Actions</Table.Cell>
+                            </tr>
+                        </Table.Header>
+                        <Table.Body className="!bg-transparent !divide-white/5">
+                            {employees.map((employee, index) => (
+                                <Table.Row
+                                    key={employee.id}
+                                    className="!bg-transparent hover:!bg-white/5 transition-colors duration-200 !border-b !border-white/5 last:!border-0"
+                                >
+                                    <Table.Cell className="!py-4 !pl-6 !text-gray-300">
+                                        <div className="flex items-center">
+                                            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-indigo-500/10 to-violet-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold mr-4 group-hover:scale-110 transition-transform duration-300 !text-xl">
+                                                {employee.username.charAt(0).toUpperCase()}
                                             </div>
-                                            <div className="text-sm text-gray-300 bg-gray-800/50 px-2 py-1 rounded-md backdrop-blur-sm mt-1">
-                                                ID: {employee.id}
+                                            <div>
+                                                <div className="font-semibold text-white group-hover:text-indigo-300 transition-colors !text-base">
+                                                    {employee.username}
+                                                </div>
+                                                <div className="text-sm text-slate-500 font-mono mt-0.5">
+                                                    ID: #{employee.id}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </Table.Cell>
-                                <Table.Cell className="px-6 py-5">
-                                    <div className="text-base font-medium text-white bg-gradient-to-br from-blue-600/20 via-blue-500/15 to-indigo-600/20 border border-blue-500/30 px-4 py-2 rounded-lg backdrop-blur-sm group-hover:from-blue-600/30 group-hover:via-blue-500/25 group-hover:to-indigo-600/30 group-hover:scale-105 transition-all duration-200 ease-in-out">
-                                        {employee.email}
-                                    </div>
-                                </Table.Cell>
-                                <Table.Cell className="px-6 py-5">
-                                    <div className="text-base font-medium text-white bg-gradient-to-br from-gray-700/30 via-gray-600/20 to-gray-700/30 border border-gray-600/30 px-4 py-2 rounded-lg backdrop-blur-sm group-hover:from-gray-700/40 group-hover:via-gray-600/30 group-hover:to-gray-700/40 group-hover:scale-105 transition-all duration-200 ease-in-out">
-                                        {employee.designation}
-                                    </div>
-                                </Table.Cell>
-                                <Table.Cell className="px-6 py-5">
-                                    <Badge 
-                                        variant={employee.role === 'ADMIN' ? 'danger' : 'success'}
-                                        className="transition-all duration-200 ease-in-out group-hover:scale-105 text-base font-bold px-3 py-1"
-                                    >
-                                        {employee.role}
-                                    </Badge>
-                                </Table.Cell>
-                                <Table.Cell className="px-6 py-5">
-                                    <div className="flex space-x-2">
-                                        <Button
-                                            variant="secondary"
-                                            size="sm"
-                                            onClick={() => handleEditEmployee(employee)}
-                                            className="transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-md text-base font-medium px-4 py-2"
-                                        >
-                                             Edit
-                                        </Button>
-                                        <Button
-                                            variant="danger"
-                                            size="sm"
-                                            onClick={() => setDeleteModal({ isOpen: true, employee })}
-                                            className="transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-md text-base font-medium px-4 py-2"
-                                        >
-                                             Delete
-                                        </Button>
-                                    </div>
-                                </Table.Cell>
-                            </Table.Row>
-                        ))}
-                    </Table.Body>
+                                    </Table.Cell>
+
+                                    <Table.Cell className="!py-4 !text-gray-300 !text-sm">
+                                        <div className="flex items-center text-slate-300">
+                                            <Mail size={18} className="mr-2 text-slate-500" />
+                                            {employee.email}
+                                        </div>
+                                    </Table.Cell>
+
+                                    <Table.Cell className="!py-4 !text-gray-300 !text-sm">
+                                        <div className="space-y-1.5">
+                                            <div className="flex items-center font-medium text-white">
+                                                <Briefcase size={18} className="mr-2 text-indigo-400" />
+                                                {employee.designation || 'Not Specified'}
+                                            </div>
+                                            <div className="flex items-center">
+                                                <Shield size={18} className={`mr-2 ${employee.role === 'ADMIN' ? 'text-emerald-400' : 'text-slate-500'}`} />
+                                                <Badge
+                                                    variant={employee.role === 'ADMIN' ? 'success' : 'neutral'}
+                                                    className={`${employee.role === 'ADMIN'
+                                                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                                                        : 'bg-slate-700/30 text-slate-300 border-slate-600/30'
+                                                        } border !text-sm !px-2.5 !py-1`}
+                                                >
+                                                    {employee.role}
+                                                </Badge>
+                                            </div>
+                                        </div>
+                                    </Table.Cell>
+
+                                    <Table.Cell className="!py-4 !pr-6 !text-right">
+                                        <div className="flex items-center justify-end space-x-2">
+                                            <button
+                                                onClick={() => handleEditEmployee(employee)}
+                                                className="p-2.5 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 hover:text-blue-300 border border-blue-500/20 transition-all font-medium flex items-center"
+                                                title="Edit Employee"
+                                            >
+                                                <Edit2 size={18} />
+                                            </button>
+                                            <button
+                                                onClick={() => setDeleteModal({ isOpen: true, employee })}
+                                                disabled={deleteMutation.isLoading && deleteModal.employee?.id === employee.id}
+                                                className="p-2.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300 border border-red-500/20 transition-all font-medium flex items-center"
+                                                title="Delete Employee"
+                                            >
+                                                <Trash2 size={18} />
+                                            </button>
+                                        </div>
+                                    </Table.Cell>
+                                </Table.Row>
+                            ))}
+                            {employees.length === 0 && (
+                                <tr className="!border-b !border-white/5">
+                                    <td colSpan="4" className="py-12 text-center text-slate-400">
+                                        <div className="flex flex-col items-center justify-center">
+                                            <Users size={48} className="text-slate-600 mb-4" />
+                                            <p className="text-lg font-medium">No employees found</p>
+                                            <p className="text-sm">Get started by adding a new team member.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )}
+                        </Table.Body>
                     </Table>
                 </div>
             </Card>
@@ -236,6 +311,8 @@ const EmployeeManagement = () => {
                             <Button
                                 variant="danger"
                                 onClick={handleDeleteEmployee}
+                                loading={deleteMutation.isLoading}
+                                disabled={deleteMutation.isLoading}
                                 className="transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-md"
                             >
                                 Delete
@@ -281,7 +358,7 @@ const EmployeeManagement = () => {
                                     />
                                 </div>
                             </div>
-                            
+
                             <div className="transform transition-all duration-200 ease-in-out hover:scale-105">
                                 <Input
                                     label="Email"
@@ -306,21 +383,21 @@ const EmployeeManagement = () => {
                             </div>
 
                             <div className="transform transition-all duration-200 ease-in-out hover:scale-105">
-                                <label className="block text-sm font-semibold text-white mb-2 tracking-wide uppercase">
+                                <label className="block text-sm font-medium text-white mb-2">
                                     Role
                                 </label>
                                 <select
                                     name="role"
                                     value={editingEmployee.role || 'USER'}
                                     onChange={handleInputChange}
-                                    className="w-full px-4 py-3 border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-800/50 text-white transition-all duration-200 ease-in-out hover:shadow-md"
+                                    className="w-full px-4 py-2.5 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-800/50 text-white transition-all duration-200 text-sm"
                                     required
                                 >
                                     <option value="USER" className="bg-gray-800 text-white">USER</option>
                                     <option value="ADMIN" className="bg-gray-800 text-white">ADMIN</option>
                                 </select>
                             </div>
-                            
+
                             <div className="flex justify-end space-x-4 pt-4">
                                 <Button
                                     type="button"
@@ -333,8 +410,10 @@ const EmployeeManagement = () => {
                                 >
                                     Cancel
                                 </Button>
-                                <Button 
+                                <Button
                                     type="submit"
+                                    loading={updateMutation.isLoading}
+                                    disabled={updateMutation.isLoading}
                                     className="transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-md bg-gradient-to-r from-blue-500 to-indigo-600"
                                 >
                                     Update Employee
@@ -343,6 +422,98 @@ const EmployeeManagement = () => {
                         </form>
                     </div>
                 )}
+            </Modal>
+
+            {/* Create Employee Modal */}
+            <Modal
+                isOpen={createModal}
+                onClose={() => setCreateModal(false)}
+                title="Create New User"
+                size="lg"
+            >
+                <div className="bg-gradient-to-br from-gray-800/30 via-gray-800/20 to-gray-900/30 backdrop-blur-sm p-6 rounded-lg border border-blue-500/30">
+                    <form onSubmit={handleCreateUser} className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="transform transition-all duration-200 ease-in-out hover:scale-105">
+                                <Input
+                                    label="Username"
+                                    name="username"
+                                    value={newEmployee.username}
+                                    onChange={handleCreateInputChange}
+                                    required
+                                    placeholder="Enter username"
+                                />
+                            </div>
+                            <div className="transform transition-all duration-200 ease-in-out hover:scale-105">
+                                <Input
+                                    label="Password"
+                                    name="password"
+                                    type="password"
+                                    value={newEmployee.password}
+                                    onChange={handleCreateInputChange}
+                                    required
+                                    placeholder="Enter password"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="transform transition-all duration-200 ease-in-out hover:scale-105">
+                            <Input
+                                label="Email"
+                                name="email"
+                                type="email"
+                                value={newEmployee.email}
+                                onChange={handleCreateInputChange}
+                                required
+                                placeholder="Enter email"
+                            />
+                        </div>
+
+                        <div className="transform transition-all duration-200 ease-in-out hover:scale-105">
+                            <Input
+                                label="Designation"
+                                name="designation"
+                                value={newEmployee.designation}
+                                onChange={handleCreateInputChange}
+                                required
+                                placeholder="e.g., Software Developer, Manager"
+                            />
+                        </div>
+
+                        <div className="transform transition-all duration-200 ease-in-out hover:scale-105">
+                            <label className="block text-sm font-medium text-white mb-2">
+                                Role
+                            </label>
+                            <select
+                                name="role"
+                                value={newEmployee.role}
+                                onChange={handleCreateInputChange}
+                                className="w-full px-4 py-2.5 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-800/50 text-white transition-all duration-200 text-sm"
+                                required
+                            >
+                                <option value="USER" className="bg-gray-800 text-white">USER</option>
+                                <option value="ADMIN" className="bg-gray-800 text-white">ADMIN</option>
+                            </select>
+                        </div>
+
+                        <div className="flex justify-end space-x-4 pt-4">
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                onClick={() => setCreateModal(false)}
+                                className="transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-md"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                type="submit"
+                                className="transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-md bg-gradient-to-r from-blue-500 to-indigo-600"
+                            >
+                                Create User
+                            </Button>
+                        </div>
+                    </form>
+                </div>
             </Modal>
         </div>
     );

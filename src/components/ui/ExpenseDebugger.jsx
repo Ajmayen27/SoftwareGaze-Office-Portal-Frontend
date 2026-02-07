@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { adminService } from '../../services/apiService';
+import { adminService } from '../../services/admin.service';
 
 const ExpenseDebugger = () => {
     const [debugInfo, setDebugInfo] = useState({});
@@ -51,7 +51,7 @@ const ExpenseDebugger = () => {
 
             // 3. Test API endpoints
             const endpointTests = [];
-            
+
             // Test GET expenses
             try {
                 const getResponse = await adminService.getExpenses();
@@ -103,23 +103,23 @@ const ExpenseDebugger = () => {
 
             // 4. Generate recommendations
             let recommendations = [];
-            
+
             if (!authStatus.isAuthenticated) {
                 recommendations.push('❌ User is not authenticated. Please login first.');
             }
-            
+
             if (!authStatus.isAdmin) {
                 recommendations.push('⚠️ User does not have ADMIN role. Check if user has correct permissions.');
             }
-            
+
             if (!tokenValid) {
                 recommendations.push('❌ JWT token is invalid or expired. Please login again.');
             }
-            
+
             if (endpointTests.some(test => test.status === 'error' && test.statusCode === 403)) {
                 recommendations.push('❌ 403 Forbidden: Check backend Spring Security configuration. Ensure /api/admin/** endpoints are allowed for ADMIN role.');
             }
-            
+
             if (endpointTests.some(test => test.status === 'error' && test.statusCode === 404)) {
                 recommendations.push('❌ 404 Not Found: Check if backend endpoint exists and is properly mapped.');
             }
@@ -140,7 +140,7 @@ const ExpenseDebugger = () => {
     return (
         <div className="bg-white p-6 rounded-lg shadow-md">
             <h3 className="text-lg font-semibold mb-4">Expense Debugger</h3>
-            
+
             <button
                 onClick={runDiagnostics}
                 disabled={isLoading}
@@ -160,17 +160,14 @@ const ExpenseDebugger = () => {
                     </div>
 
                     {/* Token Status */}
-                    <div className={`border rounded-lg p-4 ${
-                        debugInfo.tokenValid ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
-                    }`}>
-                        <h4 className={`font-medium mb-2 ${
-                            debugInfo.tokenValid ? 'text-green-900' : 'text-red-900'
+                    <div className={`border rounded-lg p-4 ${debugInfo.tokenValid ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
                         }`}>
+                        <h4 className={`font-medium mb-2 ${debugInfo.tokenValid ? 'text-green-900' : 'text-red-900'
+                            }`}>
                             JWT Token Status:
                         </h4>
-                        <p className={`text-sm ${
-                            debugInfo.tokenValid ? 'text-green-800' : 'text-red-800'
-                        }`}>
+                        <p className={`text-sm ${debugInfo.tokenValid ? 'text-green-800' : 'text-red-800'
+                            }`}>
                             {debugInfo.tokenValid ? '✅ Valid' : `❌ ${debugInfo.tokenError}`}
                         </p>
                     </div>
@@ -183,11 +180,10 @@ const ExpenseDebugger = () => {
                                 <div key={index} className="flex items-center justify-between p-2 rounded">
                                     <span className="font-medium">{test.endpoint}</span>
                                     <div className="flex items-center space-x-2">
-                                        <span className={`px-2 py-1 rounded text-xs ${
-                                            test.status === 'success' 
-                                                ? 'bg-green-100 text-green-800' 
+                                        <span className={`px-2 py-1 rounded text-xs ${test.status === 'success'
+                                                ? 'bg-green-100 text-green-800'
                                                 : 'bg-red-100 text-red-800'
-                                        }`}>
+                                            }`}>
                                             {test.statusCode}
                                         </span>
                                         <span className="text-sm text-gray-600">{test.message}</span>

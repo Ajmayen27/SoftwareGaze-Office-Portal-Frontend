@@ -69,12 +69,12 @@ A comprehensive, modern office portal built with React, featuring dynamic UI, ro
 ## 🔧 Configuration
 
 ### Backend API
-The application is configured to connect to a backend API running on `http://localhost:8081`. Make sure your backend server is running before starting the frontend.
+The application is configured to connect to a backend API running on `http://localhost:8080`. Make sure your backend server is running before starting the frontend.
 
 ### Environment Variables
 Create a `.env` file in the root directory:
 ```env
-VITE_API_BASE_URL=http://localhost:8081/api
+VITE_API_BASE_URL=http://localhost:8080/api
 ```
 
 ## 📱 Responsive Design

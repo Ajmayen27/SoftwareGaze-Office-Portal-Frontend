@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { adminService } from '../../services/apiService';
+import { adminService } from '../../services/admin.service';
 import { useNotification } from '../../contexts/NotificationContext';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
@@ -27,7 +27,7 @@ const MonthlyExpenseBreakdown = () => {
                 // Fallback: Get all expenses and calculate monthly breakdown
                 const expensesResponse = await adminService.getExpenses();
                 const expenses = expensesResponse.data || [];
-                
+
                 // Calculate monthly breakdown from expenses data
                 const monthlyBreakdown = calculateMonthlyBreakdown(expenses);
                 setBreakdown(monthlyBreakdown);
@@ -44,17 +44,17 @@ const MonthlyExpenseBreakdown = () => {
     const calculateMonthlyBreakdown = (expenses) => {
         const currentYear = new Date().getFullYear();
         const monthlyData = {};
-        
+
         // Initialize all months with 0
         const monthNames = [
             'january', 'february', 'march', 'april', 'may', 'june',
             'july', 'august', 'september', 'october', 'november', 'december'
         ];
-        
+
         monthNames.forEach(month => {
             monthlyData[month] = 0;
         });
-        
+
         // Calculate expenses for each month
         expenses.forEach(expense => {
             const expenseDate = new Date(expense.date);
@@ -64,7 +64,7 @@ const MonthlyExpenseBreakdown = () => {
                 monthlyData[monthName] = (monthlyData[monthName] || 0) + expense.amount;
             }
         });
-        
+
         return monthlyData;
     };
 
@@ -93,14 +93,14 @@ const MonthlyExpenseBreakdown = () => {
     const getHighestMonth = () => {
         let highestMonth = '';
         let highestAmount = 0;
-        
+
         Object.entries(breakdown).forEach(([month, amount]) => {
             if (amount > highestAmount) {
                 highestAmount = amount;
                 highestMonth = month;
             }
         });
-        
+
         return { month: highestMonth, amount: highestAmount };
     };
 
@@ -136,7 +136,7 @@ const MonthlyExpenseBreakdown = () => {
                     <div className="p-6">
                         <div className="flex items-center">
                             <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg">
-                                <span className="text-2xl">💰</span>
+                                <span className="text-2xl"></span>
                             </div>
                             <div className="ml-4">
                                 <p className="text-sm font-medium text-blue-300">Total Year</p>
@@ -150,7 +150,7 @@ const MonthlyExpenseBreakdown = () => {
                     <div className="p-6">
                         <div className="flex items-center">
                             <div className="p-2 bg-gradient-to-br from-green-500 to-green-600 rounded-lg">
-                                <span className="text-2xl">📈</span>
+                                <span className="text-2xl"></span>
                             </div>
                             <div className="ml-4">
                                 <p className="text-sm font-medium text-green-300">Highest Month</p>
@@ -167,7 +167,7 @@ const MonthlyExpenseBreakdown = () => {
                     <div className="p-6">
                         <div className="flex items-center">
                             <div className="p-2 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg">
-                                <span className="text-2xl">📊</span>
+
                             </div>
                             <div className="ml-4">
                                 <p className="text-sm font-medium text-purple-300">Average/Month</p>
@@ -190,7 +190,7 @@ const MonthlyExpenseBreakdown = () => {
                         {Object.entries(breakdown).map(([month, amount]) => {
                             const percentage = totalForYear > 0 ? (amount / totalForYear) * 100 : 0;
                             const isCurrentMonth = new Date().getMonth() === Object.keys(breakdown).indexOf(month);
-                            
+
                             return (
                                 <div key={month} className="flex items-center justify-between">
                                     <div className="flex items-center space-x-3">
@@ -198,10 +198,9 @@ const MonthlyExpenseBreakdown = () => {
                                             {getMonthName(month)}
                                         </div>
                                         <div className="flex-1 bg-gray-200 rounded-full h-2">
-                                            <div 
-                                                className={`h-2 rounded-full ${
-                                                    isCurrentMonth ? 'bg-blue-600' : 'bg-gray-400'
-                                                }`}
+                                            <div
+                                                className={`h-2 rounded-full ${isCurrentMonth ? 'bg-blue-600' : 'bg-gray-400'
+                                                    }`}
                                                 style={{ width: `${Math.max(percentage, 2)}%` }}
                                             ></div>
                                         </div>
@@ -248,7 +247,7 @@ const MonthlyExpenseBreakdown = () => {
                             {Object.entries(breakdown).map(([month, amount]) => {
                                 const percentage = totalForYear > 0 ? (amount / totalForYear) * 100 : 0;
                                 const isCurrentMonth = new Date().getMonth() === Object.keys(breakdown).indexOf(month);
-                                
+
                                 return (
                                     <tr key={month} className={isCurrentMonth ? 'bg-blue-50' : ''}>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
