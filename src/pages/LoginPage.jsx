@@ -102,14 +102,7 @@ const LoginPage = () => {
                         </Button>
                     </form>
 
-                    <div className="mt-6 text-center">
-                        <p className="text-sm text-gray-300">
-                            Don't have an account?{' '}
-                            <Link to="/signup" className="text-blue-400 hover:text-blue-300 font-medium">
-                                Sign up here
-                            </Link>
-                        </p>
-                    </div>
+
                 </Card>
             </div>
         </div>
