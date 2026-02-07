@@ -29,17 +29,22 @@ const Settings = () => {
     const fetchGracePeriod = useCallback(async () => {
         setLoadingGracePeriod(true);
         try {
-            const response = await adminService.getGracePeriod();
-            // Assuming GET might return same structure or just the value
+            // Use the new API endpoint for latest grace period
+            const response = await adminService.getLatestGracePeriod();
             const data = response.data;
-            if (data && typeof data === 'object') {
-                setCurrentGracePeriod(data.newGraceHours || data.graceHours || 0);
-                if (data.updatedAt) setLastUpdatedAt(formatDateArray(data.updatedAt));
+
+            if (data) {
+                // Handle the response structure: { graceHours: 1.0, updatedAt: [...] }
+                setCurrentGracePeriod(data.graceHours !== undefined ? data.graceHours : 0);
+                if (data.updatedAt && Array.isArray(data.updatedAt)) {
+                    setLastUpdatedAt(formatDateArray(data.updatedAt));
+                }
             } else {
-                setCurrentGracePeriod(data || 0);
+                setCurrentGracePeriod(0);
             }
         } catch (err) {
             console.error('Failed to fetch grace period:', err);
+            // Fallback to old API if new one fails, or just log error
         } finally {
             setLoadingGracePeriod(false);
         }

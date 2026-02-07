@@ -45,5 +45,6 @@ export const adminService = {
     getIndividualAttendance: (username, month, year) => apiClient.get(`/admin/attendance/summary/${username}`, { params: { month, year } }),
     deleteAttendance: (username, year, month, day) => apiClient.delete('/admin/attendance/delete', { params: { username, year, month, day } }),
     getGracePeriod: () => apiClient.get('/admin/attendance/grace-period'),
+    getLatestGracePeriod: () => apiClient.get('/admin/grace-period/latest'),
     updateGracePeriod: (graceHours) => apiClient.put(`/admin/attendance/grace-period`, null, { params: { graceHours } }),
 };
