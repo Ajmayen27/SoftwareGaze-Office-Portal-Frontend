@@ -1,3 +1,15 @@
+<img width="1917" height="926" alt="Screenshot 2026-02-16 203722" src="https://github.com/user-attachments/assets/63c0f21f-1ec7-47b0-ab59-5d818983693c" />
+<img width="1916" height="935" alt="Screenshot 2026-02-16 203704" src="https://github.com/user-attachments/assets/e20d852a-104c-4d84-bc00-a29d68e7a12a" />
+<img width="1917" height="946" alt="Screenshot 2026-02-16 202452" src="https://github.com/user-attachments/assets/aced257e-1a3c-4a60-b713-d4341184b806" />
+<img width="1908" height="942" alt="Screenshot 2026-02-16 202325" src="https://github.com/user-attachments/assets/80d36b37-d49a-4798-9f7c-816e1b5ee13d" />
+<img width="1918" height="940" alt="Screenshot 2026-02-16 202311" src="https://github.com/user-attachments/assets/a7cfe6e9-18cb-4feb-a25b-b76c2a775de9" />
+<img width="1919" height="935" alt="Screenshot 2026-02-16 202233" src="https://github.com/user-attachments/assets/8fe58ea8-1301-4a88-a421-cc1b0e833339" />
+<img width="1916" height="938" alt="Screenshot 2026-02-16 202215" src="https://github.com/user-attachments/assets/8d21e44a-9a7d-45fb-a6e4-1b01cf74d842" />
+<img width="1913" height="936" alt="Screenshot 2026-02-16 201912" src="https://github.com/user-attachments/assets/3e11844d-5d0b-45dc-84f7-65ec2a2e8533" />
+<img width="1913" height="946" alt="Screenshot 2026-02-16 201856" src="https://github.com/user-attachments/assets/6b40f6af-a3b4-4e15-a1b7-53182020fd53" />
+<img width="1916" height="935" alt="Screenshot 2026-02-16 201831" src="https://github.com/user-attachments/assets/6128759d-9ff5-4589-8860-eaeca0168573" />
+<img width="1917" height="937" alt="Screenshot 2026-02-16 201809" src="https://github.com/user-attachments/assets/f0888ed0-fec4-46b4-a4f1-fffd4d983995" />
+<img width="1913" height="938" alt="Screenshot 2026-02-16 201752" src="https://github.com/user-attachments/assets/74f0b2ef-865b-4a9c-8ae1-14f61a2989f3" />
 # Software Gaze — Office Portal (Frontend)
 
 > Frontend for the Software Gaze Office Portal. Responsive, Vite-powered, and designed to work seamlessly with the backend API.
