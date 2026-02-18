@@ -1,15 +1,27 @@
-<img width="1917" height="926" alt="Screenshot 2026-02-16 203722" src="https://github.com/user-attachments/assets/2b87e921-d527-42ee-b4c4-83d83e3d9839" />
-<img width="1916" height="935" alt="Screenshot 2026-02-16 203704" src="https://github.com/user-attachments/assets/72f15e97-995d-43db-999b-97629ebaf373" />
-<img width="1917" height="946" alt="Screenshot 2026-02-16 202452" src="https://github.com/user-attachments/assets/e81a4341-a98a-4519-acd4-037f730db76c" />
-<img width="1908" height="942" alt="Screenshot 2026-02-16 202325" src="https://github.com/user-attachments/assets/c8f38ef1-613b-42bf-bb6a-46abe12d8fa2" />
-<img width="1918" height="940" alt="Screenshot 2026-02-16 202311" src="https://github.com/user-attachments/assets/64921190-9124-46cb-b0e8-b2f06f73e69d" />
-<img width="1919" height="935" alt="Screenshot 2026-02-16 202233" src="https://github.com/user-attachments/assets/62d88909-86df-48de-97ae-4a077e39b2da" />
-<img width="1916" height="938" alt="Screenshot 2026-02-16 202215" src="https://github.com/user-attachments/assets/4501b4d8-492b-4635-8fe6-ce8743fece51" />
-<img width="1913" height="936" alt="Screenshot 2026-02-16 201912" src="https://github.com/user-attachments/assets/592dc7ab-3f26-46fc-a308-42877e437a4e" />
-<img width="1913" height="946" alt="Screenshot 2026-02-16 201856" src="https://github.com/user-attachments/assets/6dc035f0-45c0-47d9-95d5-b2bb11462abe" />
-<img width="1916" height="935" alt="Screenshot 2026-02-16 201831" src="https://github.com/user-attachments/assets/de515805-5a72-4910-a7b6-9c77a97e2a0b" />
-<img width="1917" height="937" alt="Screenshot 2026-02-16 201809" src="https://github.com/user-attachments/assets/3ae00e1a-479c-439c-a208-ba01ffad07c3" />
 <img width="1913" height="938" alt="Screenshot 2026-02-16 201752" src="https://github.com/user-attachments/assets/d977284c-67b2-4361-9d12-b7ad56b884d4" />
+<img width="1917" height="937" alt="Screenshot 2026-02-16 201809" src="https://github.com/user-attachments/assets/3ae00e1a-479c-439c-a208-ba01ffad07c3" />
+<img width="1916" height="935" alt="Screenshot 2026-02-16 201831" src="https://github.com/user-attachments/assets/de515805-5a72-4910-a7b6-9c77a97e2a0b" />
+<img width="1913" height="946" alt="Screenshot 2026-02-16 201856" src="https://github.com/user-attachments/assets/6dc035f0-45c0-47d9-95d5-b2bb11462abe" />
+<img width="1913" height="936" alt="Screenshot 2026-02-16 201912" src="https://github.com/user-attachments/assets/592dc7ab-3f26-46fc-a308-42877e437a4e" />
+<img width="1916" height="938" alt="Screenshot 2026-02-16 202215" src="https://github.com/user-attachments/assets/4501b4d8-492b-4635-8fe6-ce8743fece51" />
+<img width="1919" height="935" alt="Screenshot 2026-02-16 202233" src="https://github.com/user-attachments/assets/62d88909-86df-48de-97ae-4a077e39b2da" />
+<img width="1918" height="940" alt="Screenshot 2026-02-16 202311" src="https://github.com/user-attachments/assets/64921190-9124-46cb-b0e8-b2f06f73e69d" />
+<img width="1908" height="942" alt="Screenshot 2026-02-16 202325" src="https://github.com/user-attachments/assets/c8f38ef1-613b-42bf-bb6a-46abe12d8fa2" />
+<img width="1917" height="946" alt="Screenshot 2026-02-16 202452" src="https://github.com/user-attachments/assets/e81a4341-a98a-4519-acd4-037f730db76c" />
+<img width="1916" height="935" alt="Screenshot 2026-02-16 203704" src="https://github.com/user-attachments/assets/72f15e97-995d-43db-999b-97629ebaf373" />
+<img width="1917" height="926" alt="Screenshot 2026-02-16 203722" src="https://github.com/user-attachments/assets/2b87e921-d527-42ee-b4c4-83d83e3d9839" />
+
+
+
+
+
+
+
+
+
+
+
+
 # Software Gaze — Office Portal (Frontend)
 
 > Frontend for the Software Gaze Office Portal. Responsive, Vite-powered, and designed to work seamlessly with the backend API.
